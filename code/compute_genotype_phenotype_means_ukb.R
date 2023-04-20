@@ -1,5 +1,6 @@
 ###Load libraries needed
 library(optparse)
+library(data.table)
 library(bigsnpr)
 library(bigstatsr)
 
