@@ -71,10 +71,10 @@ for(i in chrs){
   if(chr==0){
     inds <- seq_len(p)
   } else {
-    inds <- which(geno$map$chromosome==chr)
+    inds <- which(geno$map$chromosome==i)
   }
   
-  geno_means <- big_colstats(X, ind.col = inds, ncores = ncores)$sum / length(inds)
+  geno_means <- big_colstats(X, ind.col = inds, ncores = ncores)$sum / geno$genotypes$nrow
   
   if(length(chrs)==1 && chrs==0){
     i <- "All"
