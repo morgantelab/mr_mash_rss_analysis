@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
 #SBATCH --time=12:00:00
-#SBATCH --mem=150G
+#SBATCH --mem=100G
 #SBATCH --output=run_fit_mrmashrss_sample_filter_ukb_caucasian_white_british_unrel_by_chr.%j.out
 #SBATCH --error=run_fit_mrmashrss_sample_filter_ukb_caucasian_white_british_unrel_by_chr.%j.err
 
