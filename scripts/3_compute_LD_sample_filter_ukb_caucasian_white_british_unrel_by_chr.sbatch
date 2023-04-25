@@ -23,9 +23,6 @@ Rscript ../code/compute_LD_matrix_ukb.R --geno ukb_caucasian_white_british_unrel
                                         --impute_missing TRUE \
                                         --ncores 16
 
-rm ../data/genotypes/ukb_caucasian_white_british_unrel_100000.bk ../data/genotypes/ukb_caucasian_white_british_unrel_100000.rds
-
-
 ###Unload module
 module unload R/4.2.3
 

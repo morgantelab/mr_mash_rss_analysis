@@ -28,10 +28,6 @@ Rscript ../code/compute_sumstats_ukb.R --pheno simulated/ukb_caucasian_white_bri
                                        --impute_missing TRUE \
                                        --ncores 5
 
-###Remove intermediate files
-rm ../data/genotypes/ukb_caucasian_white_british_unrel_100000.bk ../data/genotypes/ukb_caucasian_white_british_unrel_100000.rds
-
-
 ###Unload module
 module unload R/4.2.3
 module unload gsl/2.7
