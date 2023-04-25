@@ -98,7 +98,7 @@ simulate_mr_mash_data_from_given_big_X <- function(X, p_causal, r, r_causal, int
 
 ###Parse option
 parser <- OptionParser()
-parser <- add_option(parser, c("--input"), type="character")
+parser <- add_option(parser, c("--geno"), type="character")
 parser <- add_option(parser, c("--p_causal"), type="integer")
 parser <- add_option(parser, c("--r"), type="integer")
 parser <- add_option(parser, c("--pve"), type="numeric")
@@ -107,7 +107,7 @@ parser <- add_option(parser, c("--V_cor"), type="numeric")
 parser <- add_option(parser, c("--data_id"), type="integer")
 outparse <- parse_args(parser)
 
-input <- outparse$input
+input <- outparse$geno
 p_causal <- outparse$p_causal
 r <- outparse$r
 pve <- outparse$pve
@@ -119,7 +119,8 @@ data_id <- outparse$data_id
 set.seed(data_id)
 
 ###Read in genotype data
-rds <- snp_readBed2(paste0("../data/genotypes/", input, ".bed"), ncores=1)
+tmp <- tempfile()
+rds <- snp_readBed2(paste0("../data/genotypes/", input, ".bed"), backingfile=tmp, ncores=1)
 dat <- snp_attach(rds)
 
 ###Impute missing values

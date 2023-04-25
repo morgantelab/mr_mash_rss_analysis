@@ -18,7 +18,7 @@ export MKL_NUM_THREADS=16
 export OMP_NUM_THREADS=16
 
 ###Run script
-Rscript ../code/sim_pheno_ukb.R --input ukb_caucasian_white_british_unrel_100000 \
+Rscript ../code/sim_pheno_ukb.R --geno ukb_caucasian_white_british_unrel_100000 \
 				--p_causal 2000 --r 5 --pve 0.5 --B_cor 1 \
 				--V_cor 0 --data_id 1
 
