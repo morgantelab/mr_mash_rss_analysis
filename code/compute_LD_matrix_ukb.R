@@ -35,7 +35,7 @@ test_ids <- fread(paste0("../data/phenotypes/", test_ids, "_", data_id, ".txt"),
 training_inds <- which(!(geno_fam[,2] %in% test_ids[,2])) ##Get only training individuals
 rm(list=c("geno_fam", "test_ids"))
 
-tmp <- tempfile()
+tmp <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
 rds <- snp_readBed2(paste0("../data/genotypes/", geno_dat, ".bed"), ind.row=training_inds, backingfile=tmp, ncores=ncores)
 geno <- snp_attach(rds)
 

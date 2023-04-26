@@ -38,7 +38,7 @@ pheno <- readRDS(paste0("../data/phenotypes/", pheno_dat, "_", data_id, ".rds"))
 training_inds_pheno <- which(!(rownames(pheno) %in% test_ids[,2])) ##Get only training individuals
 pheno <- pheno[training_inds_pheno, ]
 
-tmp <- tempfile()
+tmp <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
 rds <- snp_readBed2(paste0("../data/genotypes/", geno_dat, ".bed"), ind.row=training_inds_geno, backingfile=tmp, ncores=ncores)
 geno <- snp_attach(rds)
 

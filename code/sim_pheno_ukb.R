@@ -119,7 +119,7 @@ data_id <- outparse$data_id
 set.seed(data_id)
 
 ###Read in genotype data
-tmp <- tempfile()
+tmp <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
 rds <- snp_readBed2(paste0("../data/genotypes/", input, ".bed"), backingfile=tmp, ncores=1)
 dat <- snp_attach(rds)
 
