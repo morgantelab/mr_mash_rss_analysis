@@ -23,19 +23,19 @@ CHR="${SLURM_ARRAY_TASK_ID}"
 ###Run R script
 echo "Start analyzing chromosome ${CHR} ..."
 
-Rscript ../code/fit_mrmashrss_ukb.R --sumstats ukb_caucasian_white_british_unrel_100000_chr"$CHR"_sumstats \
-                                    --LD_matrix ukb_caucasian_white_british_unrel_100000_chr"$CHR"_LD \
+Rscript ../code/fit_mrmashrss_ukb.R --sumstats ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_sumstats \
+                                    --LD_matrix ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_LD \
                                     --pheno_cov ukb_caucasian_white_british_unrel_100000_phenotypic_cov \
                                     --residual_cov ukb_caucasian_white_british_unrel_100000_residual_cov \
                                     --n 100000 \
-                                    --standardize TRUE \
+                                    --standardize FALSE \
                                     --update_V_method full \
                                     --w0_threshold 1e-8 \
-                                    --X_colmeans ukb_caucasian_white_british_unrel_100000_chr"$CHR"_geno_means \
+                                    --X_colmeans ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_geno_means \
                                     --Y_colmeans ukb_caucasian_white_british_unrel_100000_pheno_means \
                                     --ncores 4 \
                                     --data_id 1 \
-                                    --outprefix ukb_caucasian_white_british_unrel_100000_chr"$CHR"
+                                    --outprefix ukb_caucasian_white_british_unrel_100000_chr"${CHR}"
 
 echo "Finished analyzing chromosome ${CHR}."
 
