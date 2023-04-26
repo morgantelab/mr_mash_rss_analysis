@@ -9,11 +9,11 @@ is_strong <- function(x){
 
 ###Parse arguments
 parser <- OptionParser()
-parser <- add_option(parser, c("--input"), type="character")
+parser <- add_option(parser, c("--sumstats"), type="character")
 parser <- add_option(parser, c("--data_id"), type="integer")
 outparse <- parse_args(parser)
 
-input <- outparse$input
+input <- outparse$sumstats
 data_id <- outparse$data_id
 
 ###Extract weak effects

@@ -1,12 +1,12 @@
 #!/bin/bash
 
-#SBATCH --job-name=run_compute_compute_phenotypic_cov_ukb_caucasian_white_british_unrel
+#SBATCH --job-name=run_compute_phenotypic_cov_ukb_caucasian_white_british_unrel
 #SBATCH --cpus-per-task=8
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
 #SBATCH --time=02:00:00
 #SBATCH --mem=6G
-#SBATCH --output=run_compute_compute_phenotypic_cov_ukb_caucasian_white_british_unrel.%j.out
-#SBATCH --error=run_compute_compute_phenotypic_cov_ukb_caucasian_white_british_unrel.%j.err
+#SBATCH --output=run_compute_phenotypic_cov_ukb_caucasian_white_british_unrel.%j.out
+#SBATCH --error=run_compute_phenotypic_cov_ukb_caucasian_white_british_unrel.%j.err
 
 ###Load module
 module load gsl/2.7
