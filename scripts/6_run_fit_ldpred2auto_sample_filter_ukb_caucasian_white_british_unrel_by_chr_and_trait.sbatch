@@ -20,7 +20,7 @@ export OMP_NUM_THREADS=1
 CHR="${SLURM_ARRAY_TASK_ID}"
 
 ###Set some variables
-H2_INIT=$((0.5/22))
+H2_INIT=0.023
 TRAIT=${1}
 
 ###Run R script

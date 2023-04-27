@@ -13,7 +13,7 @@ source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
 module load R/4.2.3
 
 ###Run R script
-Rscript ../code/compute_residual_cov_all_chr_ukb.R --sumstas ukb_caucasian_white_british_unrel_100000 \
+Rscript ../code/compute_residual_cov_all_chr_ukb.R --sumstats ukb_caucasian_white_british_unrel_100000 \
                                                    --data_id 1
 
 ###Unload module

@@ -57,4 +57,4 @@ fit_ldpred2_auto <- snp_ldpred2_auto(corr=corr, df_beta=df_beta, h2_init=h2_init
                                      burn_in=burn_in, num_iter=num_iter, sparse=sparse, verbose=verbose,
                                      allow_jump_sign=allow_jump_sign, shrink_corr=shrink_corr, ncores=ncores)
 
-saveRDS(fit_ldpred2_auto, file=paste0("../output/ldpred2_auto/", outprefix, "_ldpred2_auto_fit_trait", trait, "_", data_id, ".rds"))
+saveRDS(fit_ldpred2_auto, file=paste0("../output/ldpred2_auto_fit/", outprefix, "_ldpred2_auto_fit_trait", trait, "_", data_id, ".rds"))
