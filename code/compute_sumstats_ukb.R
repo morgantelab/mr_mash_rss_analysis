@@ -126,3 +126,5 @@ for(i in chrs){
   saveRDS(out, file=paste0("../output/summary_statistics/", outprefix,"_chr", i, "_sumstats_", data_id, ".rds"))
 }
 
+###Remove temprary files
+file.remove(paste0(tmp, c(".bk", ".rds")))

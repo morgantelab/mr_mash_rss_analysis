@@ -84,3 +84,5 @@ for(i in chrs){
   saveRDS(geno_means, file=paste0("../output/misc/", outprefix, "_chr", i, "_geno_means_", data_id, ".rds"))
 }
 
+###Remove temprary files
+file.remove(paste0(tmp, c(".bk", ".rds")))

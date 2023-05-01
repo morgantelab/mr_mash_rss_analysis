@@ -143,5 +143,7 @@ saveRDS(out_sim, file=paste0("../data/phenotypes/simulated/", input, "_pheno_", 
 fwrite(x=pheno_file, file=paste0("../data/phenotypes/simulated/", input, "_pheno_", data_id, ".txt"), sep = "\t", 
        row.names=FALSE, col.names=FALSE, quote=FALSE, showProgress=FALSE)
 
+###Remove temprary files
+file.remove(paste0(tmp, c(".bk", ".rds")))
 
 

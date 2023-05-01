@@ -85,3 +85,6 @@ for(i in chrs){
   writeBin(as.numeric(LD), conn)
   close(conn)
 }
+
+###Remove temprary files
+file.remove(paste0(tmp, c(".bk", ".rds")))

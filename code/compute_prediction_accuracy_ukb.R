@@ -30,6 +30,7 @@ compute_accuracy <- function(Y, Yhat) {
 parser <- OptionParser()
 parser <- add_option(parser, c("--model"), type="character")
 parser <- add_option(parser, c("--chr"), type="character")
+parser <- add_option(parser, c("--trait"), type="character")
 parser <- add_option(parser, c("--pheno_means"), type="character")
 parser <- add_option(parser, c("--pheno"), type="character")
 parser <- add_option(parser, c("--geno"), type="character")
@@ -42,6 +43,7 @@ outparse <- parse_args(parser)
 
 model <- outparse$model
 chr <- outparse$chr
+trait <- outparse$trait
 pheno_means <- outparse$pheno_means
 pheno_dat <- outparse$pheno
 geno_dat <- outparse$geno
@@ -65,7 +67,7 @@ pheno_test <- pheno[test_inds_pheno, ]
 
 geno_fam <- fread(paste0("../data/genotypes/", geno_dat, ".fam"), showProgress=FALSE)
 test_inds_geno <- which(geno_fam[,2] %in% test_ids[,2]) ##Get only test individuals
-tmp <- tempfile()
+tmp <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
 rds <- snp_readBed2(paste0("../data/genotypes/", geno_dat, ".bed"), ind.row=test_inds_geno, backingfile=tmp, ncores=ncores)
 geno <- snp_attach(rds)
 
@@ -83,6 +85,7 @@ if(impute_missing){
 p <- geno$genotypes$ncol
 
 ###Compute predictions
+##Get chromosomes to analyze
 chrscar <- unlist(strsplit(chr, ":"))
 
 if(length(chrscar)==1){
@@ -91,8 +94,21 @@ if(length(chrscar)==1){
   chrs <- as.integer(chrscar[1]):as.integer(chrscar[2])
 }
 
-pheno_pred <- vector("list", length=length(chrs))
+##Get traits to analyze
+traitscar <- unlist(strsplit(trait, ":"))
 
+if(length(traitscar)==1){
+  traits <- as.integer(traitscar)
+} else {
+  traits <- as.integer(traitscar[1]):as.integer(traitscar[2])
+}
+
+r <- length(traits)
+
+pheno_pred <- vector("list", length=length(chrs))
+Bhat_all <- vector("list", length=length(chrs))
+
+##Loop over chromosomes
 it <- 0
 
 for(i in chrs){ 
@@ -106,20 +122,61 @@ for(i in chrs){
     inds <- which(geno$map$chromosome==i)
   }
   
-  ##Read in model fit
-  model_fit <- readRDS(paste0("../output/", model, "_fit/", prefix, "_chr", i, "_", model, "_fit_", data_id, ".rds"))
+  if(model=="mr_mash_rss"){
+    ##Read in model fit
+    model_fit <- readRDS(paste0("../output/", model, "_fit/", prefix, "_chr", i, "_", model, "_fit_", data_id, ".rds"))
+    
+    ##Compute predictions
+    pheno_pred[[it]] <- t(t(big_prodMat(X, model_fit$mu1[, traits], ind.col=inds)) + model_fit$intercept[traits])
 
-  ##Compute predictions
-  pheno_pred[[it]] <- t(t(big_prodMat(X, model_fit$mu1, ind.col=inds)) + model_fit$intercept)
+    ##Store effects
+    Bhat_all[[it]] <- model_fit$mu1[, traits]
+    
+    } else if(model=="ldpred2_auto"){
+    
+    it2 <- 0
+    
+    for(j in traits){
+      
+      it2 <- it2+1
+      
+      ##Read in model fit
+      model_fit <- readRDS(paste0("../output/", model, "_fit/", prefix, "_chr", i, "_", model, "_fit_trait", j, "_", data_id, ".rds"))
+      ##Quality control over chains
+      range_corr <- sapply(model_fit, function(auto) diff(range(auto$corr_est)))
+      to_keep <- (range_corr > (0.95 * quantile(range_corr, 0.95)))
+      ##Compute posterior mean after QC
+      if(it2==1){
+        Bhat <- rowMeans(sapply(model_fit[to_keep], function(auto) auto$beta_est))
+      } else {
+        Bhat <- cbind(Bhat, rowMeans(sapply(model_fit[to_keep], function(auto) auto$beta_est)))
+      }
+    }
+    
+    ##Compute predictions
+    pheno_pred[[it]] <- big_prodMat(X, Bhat, ind.col=inds)
+    
+    ##Store effects
+    Bhat_all[[it]] <- Bhat
+  }
 }
 
 ###Compute predictions and accuracy
 pheno_pred <- Reduce("+", pheno_pred)
-pheno_pred <- t(t(pheno_pred) - (pheno_means*(length(chrs)-1)))
+
+##Remove mean of Y_training which was over counted in the per chromosome estimate of the intercept
+if(model=="mr_mash_rss"){
+  pheno_pred <- t(t(pheno_pred) - (pheno_means[traits]*(length(chrs)-1)))
+}
 
 accuracy <- compute_accuracy(pheno_test, pheno_pred)
 
 ###Save results to file
-saveRDS(accuracy, file=paste0("../output/accuracy/", prefix, "_", model, "_pred_acc_", data_id, ".rds"))
+saveRDS(accuracy, file=paste0("../output/prediction_accuracy/", prefix, "_", model, "_pred_acc_", data_id, ".rds"))
 
+###Save effects to file
+effects <- do.call("rbind", Bhat_all)
+saveRDS(effects, file=paste0("../output/estimated_effects/", prefix, "_", model, "_effects_", data_id, ".rds"))
 
+###Remove temprary files
+file.remove(paste0(tmp, c(".bk", ".rds")))
