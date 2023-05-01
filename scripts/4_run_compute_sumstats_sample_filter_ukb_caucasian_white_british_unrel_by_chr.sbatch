@@ -20,6 +20,9 @@ export OMP_NUM_THREADS=1
 ###Get chromosome number from array task id
 CHR="${SLURM_ARRAY_TASK_ID}"
 
+###Get data_id from arguments
+DATA_ID=${1}
+
 ###Run R script
 echo "Start analyzing chromosome ${CHR} ..."
 
@@ -27,7 +30,7 @@ Rscript ../code/compute_sumstats_ukb.R --pheno simulated/ukb_caucasian_white_bri
                                        --geno ukb_caucasian_white_british_unrel_100000 \
                                        --test_ids simulated/ukb_caucasian_white_british_unrel_100000_test_ids \
                                        --outprefix ukb_caucasian_white_british_unrel_100000 \
-                                       --data_id 1 \
+                                       --data_id ${DATA_ID} \
                                        --chr ${CHR} \
                                        --standardize FALSE \
                                        --impute_missing TRUE \

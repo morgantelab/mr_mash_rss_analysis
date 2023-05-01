@@ -13,6 +13,7 @@
 					    --remove /data2/morgante_lab/data/ukbiobank/ind_to_remove/w62347_all_plink.txt \
                                             --maf 0.01 --mac 5 --geno 0.1 --hwe 1e-10 \
                                             --thin-indiv-count 105000 \
+                                            --write-snplist \
                                             --make-bed \
                                             --out ../data/genotypes/ukb_caucasian_white_british_unrel_100000 \
 					    --seed 123 \

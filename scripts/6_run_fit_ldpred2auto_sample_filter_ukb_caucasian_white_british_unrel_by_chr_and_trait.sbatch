@@ -21,7 +21,8 @@ CHR="${SLURM_ARRAY_TASK_ID}"
 
 ###Set some variables
 H2_INIT=0.023
-TRAIT=${1}
+DATA_ID=${1}
+TRAIT=${2}
 
 ###Run R script
 echo "Start analyzing trait ${TRAIT} and chromosome ${CHR} ..."
@@ -34,7 +35,7 @@ Rscript ../code/fit_ldpred2auto_ukb.R --sumstats ukb_caucasian_white_british_unr
                                       --num_iter 500 \
                                       --trait ${TRAIT} \
                                       --ncores 4 \
-                                      --data_id 1 \
+                                      --data_id ${DATA_ID} \
                                       --outprefix ukb_caucasian_white_british_unrel_100000_chr"${CHR}"
 
 echo "Finished analyzing trait ${TRAIT} and chromosome ${CHR}."
