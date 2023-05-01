@@ -56,7 +56,7 @@ set.seed(data_id)
 univ_sumstats <- readRDS(paste0("../output/summary_statistics/", sumstats, "_", data_id, ".rds"))
 p <- nrow(univ_sumstats$Bhat)
 r <- ncol(univ_sumstats$Bhat)
-LD <- matrix(readBin(paste0("../data/LD_matrices/", LD_matrix, "_", data_id, ".ld.bin"), what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
+LD <- matrix(readBin(paste0("../data/LD_matrices/", LD_matrix, ".ld.bin"), what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
 covY <- readRDS(paste0("../output/misc/", pheno_cov, "_", data_id, ".rds"))
 V <- readRDS(paste0("../output/misc/", residual_cov, "_", data_id, ".rds"))
 mu1_init <- tryCatch(readRDS(paste0("../output/misc/", mu1_init, "_", data_id, ".rds")), 

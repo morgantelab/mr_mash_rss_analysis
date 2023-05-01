@@ -43,7 +43,7 @@ set.seed(data_id)
 ###Read in data
 univ_sumstats <- readRDS(paste0("../output/summary_statistics/", sumstats, "_", data_id, ".rds"))
 p <- nrow(univ_sumstats$Bhat)
-LD <- matrix(readBin(paste0("../data/LD_matrices/", LD_matrix, "_", data_id, ".ld.bin"), what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
+LD <- matrix(readBin(paste0("../data/LD_matrices/", LD_matrix, ".ld.bin"), what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
 
 ###Prepare the sumstats and LD matrix
 df_beta <- data.frame(beta=univ_sumstats$Bhat[, trait],

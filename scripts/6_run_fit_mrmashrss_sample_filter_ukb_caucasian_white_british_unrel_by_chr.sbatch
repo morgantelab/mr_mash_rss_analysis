@@ -27,7 +27,7 @@ DATA_ID=${1}
 echo "Start analyzing chromosome ${CHR} ..."
 
 Rscript ../code/fit_mrmashrss_ukb.R --sumstats ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_sumstats \
-                                    --LD_matrix ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_LD \
+                                    --LD_matrix ukb_caucasian_white_british_unrel_chr"${CHR}"_LD \
                                     --pheno_cov ukb_caucasian_white_british_unrel_100000_phenotypic_cov \
                                     --residual_cov ukb_caucasian_white_british_unrel_100000_residual_cov \
                                     --n 100000 \

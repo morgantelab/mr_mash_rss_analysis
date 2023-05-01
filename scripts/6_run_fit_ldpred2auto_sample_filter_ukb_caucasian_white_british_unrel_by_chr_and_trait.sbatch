@@ -28,7 +28,7 @@ TRAIT=${2}
 echo "Start analyzing trait ${TRAIT} and chromosome ${CHR} ..."
 
 Rscript ../code/fit_ldpred2auto_ukb.R --sumstats ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_sumstats \
-                                      --LD_matrix ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_LD \
+                                      --LD_matrix ukb_caucasian_white_british_unrel_chr"${CHR}"_LD \
                                       --n 100000 \
                                       --h2_init "${H2_INIT}" \
                                       --burn_in 500 \
