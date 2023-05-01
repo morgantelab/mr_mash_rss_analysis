@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=sample_filter_ukb_caucasian_white_british_unrel
-#SBATCH --cpus-per-task=36
+#SBATCH --cpus-per-task=1
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
 #SBATCH --time=4:00:00
 #SBATCH --mem=100G
@@ -17,5 +17,5 @@
                                             --make-bed \
                                             --out ../data/genotypes/ukb_caucasian_white_british_unrel_100000 \
 					    --seed 123 \
-                                            --threads 36 
+                                            --threads 1 
 
