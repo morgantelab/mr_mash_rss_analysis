@@ -30,7 +30,10 @@ Rscript ../code/fit_mrmashrss_ukb.R --sumstats ukb_caucasian_white_british_unrel
                                     --LD_matrix ukb_caucasian_white_british_unrel_chr"${CHR}"_LD \
                                     --pheno_cov ukb_caucasian_white_british_unrel_100000_phenotypic_cov \
                                     --residual_cov ukb_caucasian_white_british_unrel_100000_residual_cov \
+                                    --data_driven_cov ukb_caucasian_white_british_unrel_100000_bovy_data_driven_cov \
+                                    --canonical_cov FALSE \
                                     --n 100000 \
+                                    --prop_nonzero 0.01 \
                                     --standardize FALSE \
                                     --update_V_method full \
                                     --w0_threshold 1e-8 \

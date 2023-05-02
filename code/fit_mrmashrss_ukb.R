@@ -8,7 +8,10 @@ parser <- add_option(parser, c("--sumstats"), type="character")
 parser <- add_option(parser, c("--LD_matrix"), type="character")
 parser <- add_option(parser, c("--pheno_cov"), type="character")
 parser <- add_option(parser, c("--residual_cov"), type="character")
+parser <- add_option(parser, c("--canonical_cov"), type="logical")
+parser <- add_option(parser, c("--data_driven_cov"), type="character", default=NULL)
 parser <- add_option(parser, c("--n"), type="integer")
+parser <- add_option(parser, c("--prop_nonzero"), type="numeric", default=0.05)
 parser <- add_option(parser, c("--update_w0"), type="logical", default=TRUE)
 parser <- add_option(parser, c("--tol"), type="numeric", default=1e-2)
 parser <- add_option(parser, c("--check_R"), type="logical", default=FALSE)
@@ -31,7 +34,10 @@ sumstats <- outparse$sumstats
 LD_matrix <- outparse$LD_matrix
 pheno_cov <- outparse$pheno_cov
 residual_cov <- outparse$residual_cov
+data_driven_cov <- outparse$data_driven_cov
+canonical_cov <- outparse$canonical_cov
 n <- outparse$n
+prop_nonzero <- outparse$prop_nonzero
 update_w0 <- outparse$update_w0
 tol <- outparse$tol
 check_R <- outparse$check_R
@@ -59,6 +65,14 @@ r <- ncol(univ_sumstats$Bhat)
 LD <- matrix(readBin(paste0("../data/LD_matrices/", LD_matrix, ".ld.bin"), what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
 covY <- readRDS(paste0("../output/misc/", pheno_cov, "_", data_id, ".rds"))
 V <- readRDS(paste0("../output/misc/", residual_cov, "_", data_id, ".rds"))
+S0_data <- tryCatch(readRDS(paste0("../output/misc/", data_driven_cov, "_", data_id, ".rds")), 
+                     error = function(e) {
+                       return(NULL)
+                     },
+                     warning = function(w) {
+                       return(NULL)
+                     }
+)
 mu1_init <- tryCatch(readRDS(paste0("../output/misc/", mu1_init, "_", data_id, ".rds")), 
                       error = function(e) {
                         return(NULL)
@@ -84,13 +98,23 @@ Y_colmeans <- tryCatch(readRDS(paste0("../output/misc/", Y_colmeans, "_", data_i
                      }
 )
 
-###Compute prior covariance matrices (S0) with canonical matrices
-S0_can <- compute_canonical_covs(r, singletons=TRUE, hetgrid=c(0, 0.25, 0.5, 0.75, 1))
+###Compute prior covariance matrices (S0)
+if(canonical_cov){
+  S0_can <- compute_canonical_covs(r, singletons=TRUE, hetgrid=c(0, 0.25, 0.5, 0.75, 1))
+}
+
+if(!is.null(S0_data) && canonical_cov){
+  S0 <- c(S0_data, S0_can)
+} else if(is.null(S0_data) && canonical_cov){
+  S0 <- S0_can
+} else if(!is.null(S0_data) && !canonical_cov){
+  S0 <- S0_data
+}
+
 grid <- autoselect.mixsd(univ_sumstats, mult=sqrt(2))^2
-S0 <- expand_covs(S0_can, grid, zeromat=TRUE)
+S0 <- expand_covs(S0, grid, zeromat=TRUE)
 
 ###Compute initial estimates of prior weights (w0)
-prop_nonzero <- 0.05
 w0 <- c((1-prop_nonzero), rep(prop_nonzero/(length(S0)-1), (length(S0)-1)))
 
 ###Fit mr.mash.rss
