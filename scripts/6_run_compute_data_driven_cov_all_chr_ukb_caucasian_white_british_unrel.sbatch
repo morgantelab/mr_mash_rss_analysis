@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
 #SBATCH --time=24:00:00
-#SBATCH --mem=20G
+#SBATCH --mem=7G
 #SBATCH --output=run_compute_data_driven_cov_all_chr_ukb_caucasian_white_british_unrel.%j.out
 #SBATCH --error=run_compute_data_driven_cov_all_chr_ukb_caucasian_white_british_unrel.%j.err
 
