@@ -10,29 +10,43 @@ is_strong <- function(x, thresh){
 
 ###Parse arguments
 parser <- OptionParser()
-parser <- add_option(parser, c("--sumstats"), type="character")
+parser <- add_option(parser, c("--sumstats_prefix"), type="character")
+parser <- add_option(parser, c("--sumstats_suffix"), type="character")
+parser <- add_option(parser, c("--output"), type="character")
+parser <- add_option(parser, c("--chr"), type="character")
 parser <- add_option(parser, c("--residual_cov"), type="character")
 parser <- add_option(parser, c("--strong_Z_thresh"), type="integer")
 parser <- add_option(parser, c("--n_PCs"), type="integer")
 parser <- add_option(parser, c("--flash_remove_singleton"), type="logical")
 parser <- add_option(parser, c("--ED_algorithm"), type="character", )
-parser <- add_option(parser, c("--data_id"), type="integer")
+parser <- add_option(parser, c("--seed"), type="integer")
 outparse <- parse_args(parser)
 
-input <- outparse$sumstats
+sumstats_prefix <- outparse$sumstats_prefix
+sumstats_suffix <- outparse$sumstats_suffix
+output <- outparse$output
+chr <- outparse$chr
 residual_cov <- outparse$residual_cov
 strong_thresh <- outparse$strong_Z_thresh
 npcs <- outparse$n_PCs
 flash_remove_singleton <- outparse$flash_remove_singleton
 ED_algorithm <- outparse$ED_algorithm
-data_id <- outparse$data_id
+seed <- outparse$seed
 
 ###Set seed
-set.seed(data_id)
+set.seed(seed)
+
+chrscar <- unlist(strsplit(chr, ":"))
+
+if(length(chrscar)==1){
+  chrs <- as.integer(chrscar)
+} else {
+  chrs <- as.integer(chrscar[1]):as.integer(chrscar[2])
+}
 
 ###Extract strong effects
-for(i in 1:22){
-  dat <- readRDS(paste0("../output/summary_statistics/", input,"_chr", i, "_sumstats_", data_id, ".rds"))
+for(i in chrs){
+  dat <- readRDS(paste0(sumstats_prefix, i, sumstats_suffix))
   Z <- dat$Bhat/dat$Shat
   strong <- which(apply(Z, 1, is_strong, strong_thresh))
   
@@ -53,7 +67,7 @@ if(nrow(Bhat_strong) < 20){
 if(residual_cov=="diagonal"){
   V <- diag(ncol(Bhat_strong))
 } else {
-  V <- readRDS(paste0("../output/misc/", residual_cov, "_", data_id, ".rds"))
+  V <- readRDS(residual_cov)
 }
 
 dat_mash <- mash_set_data(Bhat_strong, Shat_strong, V=cov2cor(V))
@@ -84,4 +98,6 @@ U_ed <- lapply(res$U,"[[",2)
 
 
 ###Save file
-saveRDS(U_ed, file=paste0("../output/misc/", input, "_", ED_algorithm, "_data_driven_cov_", data_id, ".rds"))
+saveRDS(U_ed, file=output)
+
+

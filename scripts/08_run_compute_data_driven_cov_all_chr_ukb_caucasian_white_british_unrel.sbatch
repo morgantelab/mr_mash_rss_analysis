@@ -10,6 +10,7 @@
 
 ###Set some variable
 DATA_ID=${1}
+ED=bovy
 
 ###Load module
 module load gsl/2.7
@@ -21,13 +22,16 @@ export MKL_NUM_THREADS=8
 export OMP_NUM_THREADS=8
 
 ###Run R script
-Rscript ../code/compute_data_driven_cov_all_chr_ukb.R --sumstats ukb_caucasian_white_british_unrel_100000 \
-                                                      --residual_cov ukb_caucasian_white_british_unrel_100000_residual_cov \
+Rscript ../code/compute_data_driven_cov_all_chr_ukb.R --sumstats_prefix ../output/summary_statistics/ukb_caucasian_white_british_unrel_100000_chr \
+                                                      --sumstats_suffix _sumstats_"${DATA_ID}".rds \
+                                                      --chr 1:22 \
+                                                      --residual_cov ../output/misc/ukb_caucasian_white_british_unrel_100000_residual_cov_"${DATA_ID}".rds \
                                                       --strong_Z_thresh 3 \
                                                       --n_PCs 3 \
                                                       --flash_remove_singleton TRUE \
-                                                      --ED_algorithm bovy \
-                                                      --data_id ${DATA_ID}
+                                                      --ED_algorithm ${ED} \
+                                                      --output ../output/misc/ukb_caucasian_white_british_unrel_100000_"${ED}"_data_driven_cov_"${DATA_ID}".rds \
+                                                      --seed ${DATA_ID}
 
 ###Unload module
 module unload R/4.2.3

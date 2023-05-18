@@ -35,10 +35,12 @@ parser <- add_option(parser, c("--pheno_means"), type="character")
 parser <- add_option(parser, c("--pheno"), type="character")
 parser <- add_option(parser, c("--geno"), type="character")
 parser <- add_option(parser, c("--test_ids"), type="character")
-parser <- add_option(parser, c("--prefix"), type="character")
+parser <- add_option(parser, c("--model_fit_dir"), type="character")
 parser <- add_option(parser, c("--data_id"), type="integer")
 parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--impute_missing"), type="logical", default=TRUE)
+parser <- add_option(parser, c("--output_eff"), type="character")
+parser <- add_option(parser, c("--output_pred_acc"), type="character")
 outparse <- parse_args(parser)
 
 model <- outparse$model
@@ -48,10 +50,12 @@ pheno_means <- outparse$pheno_means
 pheno_dat <- outparse$pheno
 geno_dat <- outparse$geno
 test_ids <- outparse$test_ids
-prefix <- outparse$prefix
+model_fit_dir <- outparse$model_fit_dir
 data_id <- outparse$data_id
 ncores <- outparse$ncores
 impute_missing <- outparse$impute_missing
+output_eff <- outparse$output_eff
+output_pred_acc <- outparse$output_pred_acc
 
 
 ###Set seed
@@ -59,19 +63,19 @@ set.seed(data_id)
 
 ###Read in data
 options(datatable.fread.datatable=FALSE)
-test_ids <- fread(paste0("../data/phenotypes/", test_ids, "_", data_id, ".txt"), showProgress=FALSE)
+test_ids <- fread(test_ids, showProgress=FALSE)
 
-pheno <- readRDS(paste0("../data/phenotypes/", pheno_dat, "_", data_id, ".rds"))$Y
+pheno <- readRDS(pheno_dat)$Y
 test_inds_pheno <- which(rownames(pheno) %in% test_ids[,2]) ##Get only test individuals
 pheno_test <- pheno[test_inds_pheno, ]
 
-geno_fam <- fread(paste0("../data/genotypes/", geno_dat, ".fam"), showProgress=FALSE)
+geno_fam <- fread(paste0("..", unlist(strsplit(geno_dat, ".", fixed=TRUE))[3], ".fam"), showProgress=FALSE)
 test_inds_geno <- which(geno_fam[,2] %in% test_ids[,2]) ##Get only test individuals
 tmp <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
-rds <- snp_readBed2(paste0("../data/genotypes/", geno_dat, ".bed"), ind.row=test_inds_geno, backingfile=tmp, ncores=ncores)
+rds <- snp_readBed2(geno_dat, ind.row=test_inds_geno, backingfile=tmp, ncores=ncores)
 geno <- snp_attach(rds)
 
-pheno_means <- readRDS(paste0("../output/misc/", pheno_means, "_", data_id, ".rds"))
+pheno_means <- readRDS(pheno_means)
 
 rm(list=c("geno_fam", "test_ids", "test_inds_geno", "test_inds_pheno", "pheno"))
 
@@ -105,6 +109,8 @@ if(length(traitscar)==1){
 
 r <- length(traits)
 
+prefix <- unlist(strsplit(unlist(strsplit(geno_dat, "/", fixed=TRUE))[4], ".", fixed=TRUE))[1]
+
 pheno_pred <- vector("list", length=length(chrs))
 Bhat_all <- vector("list", length=length(chrs))
 
@@ -118,13 +124,14 @@ for(i in chrs){
   ##Chromosome SNP indexes
   if(chr==0){
     inds <- seq_len(p)
+    i <- "All"
   } else {
     inds <- which(geno$map$chromosome==i)
   }
   
   if(model=="mr_mash_rss"){
     ##Read in model fit
-    model_fit <- readRDS(paste0("../output/", model, "_fit/", prefix, "_chr", i, "_", model, "_fit_", data_id, ".rds"))
+    model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_", data_id, ".rds"))
     
     ##Compute predictions
     pheno_pred[[it]] <- t(t(big_prodMat(X, model_fit$mu1[, traits], ind.col=inds)) + model_fit$intercept[traits])
@@ -141,7 +148,7 @@ for(i in chrs){
       it2 <- it2+1
       
       ##Read in model fit
-      model_fit <- readRDS(paste0("../output/", model, "_fit/", prefix, "_chr", i, "_", model, "_fit_trait", j, "_", data_id, ".rds"))
+      model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_trait", j, "_", data_id, ".rds"))
       ##Quality control over chains
       range_corr <- sapply(model_fit, function(auto) diff(range(auto$corr_est)))
       to_keep <- (range_corr > (0.95 * quantile(range_corr, 0.95)))
@@ -171,12 +178,12 @@ if(model=="mr_mash_rss"){
 
 accuracy <- compute_accuracy(pheno_test, pheno_pred)
 
-###Save results to file
-saveRDS(accuracy, file=paste0("../output/prediction_accuracy/", prefix, "_", model, "_pred_acc_", data_id, ".rds"))
+###Save accuracy to file
+saveRDS(accuracy, file=output_pred_acc)
 
 ###Save effects to file
 effects <- do.call("rbind", Bhat_all)
-saveRDS(effects, file=paste0("../output/estimated_effects/", prefix, "_", model, "_effects_", data_id, ".rds"))
+saveRDS(effects, file=output_eff)
 
 ###Remove temprary files
 file.remove(paste0(tmp, c(".bk", ".rds")))

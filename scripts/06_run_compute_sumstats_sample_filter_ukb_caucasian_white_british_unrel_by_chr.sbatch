@@ -26,11 +26,11 @@ DATA_ID=${1}
 ###Run R script
 echo "Start analyzing chromosome ${CHR} ..."
 
-Rscript ../code/compute_sumstats_ukb.R --pheno simulated/ukb_caucasian_white_british_unrel_100000_pheno \
-                                       --geno ukb_caucasian_white_british_unrel_100000 \
-                                       --test_ids simulated/ukb_caucasian_white_british_unrel_100000_test_ids \
-                                       --outprefix ukb_caucasian_white_british_unrel_100000 \
-                                       --data_id ${DATA_ID} \
+Rscript ../code/compute_sumstats_ukb.R --pheno ../data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_pheno_"${DATA_ID}".rds \
+                                       --geno ../data/genotypes/ukb_caucasian_white_british_unrel_100000.bed \
+                                       --test_ids ../data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_test_ids_"${DATA_ID}".txt \
+                                       --output ../output/summary_statistics/ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_sumstats_"${DATA_ID}".rds \
+                                       --seed ${DATA_ID} \
                                        --chr ${CHR} \
                                        --standardize FALSE \
                                        --impute_missing TRUE \

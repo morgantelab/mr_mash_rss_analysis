@@ -1,34 +1,34 @@
 ###Load libraries needed
 library(optparse)
 library(data.table)
-library(Rfast)
+library(bigsnpr)
+library(bigstatsr)
 
 ###Parse arguments
 parser <- OptionParser()
 parser <- add_option(parser, c("--pheno"), type="character")
-parser <- add_option(parser, c("--output"), type="character")
-parser <- add_option(parser, c("--seed"), type="integer")
 parser <- add_option(parser, c("--test_ids"), type="character")
+parser <- add_option(parser, c("--outprefix"), type="character")
+parser <- add_option(parser, c("--seed"), type="integer")
 outparse <- parse_args(parser)
 
-input <- outparse$pheno
+pheno_dat <- outparse$pheno
+test_ids <- outparse$test_ids
 output <- outparse$output
 seed <- outparse$seed
-test_ids <- outparse$test_ids
 
+###Set seed
 set.seed(seed)
 
 ###Read in data
 options(datatable.fread.datatable=FALSE)
-pheno <- readRDS(input)$Y
 test_ids <- fread(test_ids, showProgress=FALSE)
-
-###Keep only training individuals 
+pheno <- readRDS(pheno_dat,)$Y
 training_inds_pheno <- which(!(rownames(pheno) %in% test_ids[,2])) ##Get only training individuals
 pheno <- pheno[training_inds_pheno, ]
 
-###Compute phenotypic covariance
-covY <- cova(pheno, center=TRUE, large = TRUE)
+###Compute phenotype means
+pheno_means <- colMeans(pheno)
 
-###Save file
-saveRDS(covY, file=output)
+saveRDS(pheno_means, file=output)
+

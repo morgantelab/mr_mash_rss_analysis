@@ -22,26 +22,27 @@ CHR="${SLURM_ARRAY_TASK_ID}"
 
 ###Set some variable
 DATA_ID=${1}
+ED=bovy
 
 ###Run R script
 echo "Start analyzing chromosome ${CHR} ..."
 
-Rscript ../code/fit_mrmashrss_ukb.R --sumstats ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_sumstats \
-                                    --LD_matrix ukb_caucasian_white_british_unrel_chr"${CHR}"_LD \
-                                    --pheno_cov ukb_caucasian_white_british_unrel_100000_phenotypic_cov \
-                                    --residual_cov ukb_caucasian_white_british_unrel_100000_residual_cov \
-                                    --data_driven_cov ukb_caucasian_white_british_unrel_100000_bovy_data_driven_cov \
+Rscript ../code/fit_mrmashrss_ukb.R --sumstats ../output/summary_statistics/ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_sumstats_"${DATA_ID}".rds \
+                                    --LD_matrix ../data/LD_matrices/ukb_caucasian_white_british_unrel_chr"${CHR}"_LD.ld.bin \
+                                    --pheno_cov ../output/misc/ukb_caucasian_white_british_unrel_100000_phenotypic_cov_"${DATA_ID}".rds \
+                                    --residual_cov ../output/misc/ukb_caucasian_white_british_unrel_100000_residual_cov_"${DATA_ID}".rds \
+                                    --data_driven_cov ../output/misc/ukb_caucasian_white_british_unrel_100000_"${ED}"_data_driven_cov_"${DATA_ID}".rds \
                                     --canonical_cov FALSE \
                                     --n 100000 \
                                     --prop_nonzero 0.01 \
                                     --standardize FALSE \
                                     --update_V_method full \
                                     --w0_threshold 1e-8 \
-                                    --X_colmeans ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_geno_means \
-                                    --Y_colmeans ukb_caucasian_white_british_unrel_100000_pheno_means \
+                                    --X_colmeans ../output/misc/ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_geno_means_"${DATA_ID}".rds \
+                                    --Y_colmeans ../output/misc/ukb_caucasian_white_british_unrel_100000_pheno_means_"${DATA_ID}".rds \
                                     --ncores 4 \
-                                    --data_id ${DATA_ID} \
-                                    --outprefix ukb_caucasian_white_british_unrel_100000_chr"${CHR}"
+                                    --seed ${DATA_ID} \
+                                    --outprefix ../output/mr_mash_rss_fit/ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_mr_mash_rss_fit_"${DATA_ID}".rds
 
 echo "Finished analyzing chromosome ${CHR}."
 

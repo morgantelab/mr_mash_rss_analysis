@@ -99,28 +99,30 @@ simulate_mr_mash_data_from_given_big_X <- function(X, p_causal, r, r_causal, int
 ###Parse option
 parser <- OptionParser()
 parser <- add_option(parser, c("--geno"), type="character")
+parser <- add_option(parser, c("--output"), type="character")
 parser <- add_option(parser, c("--p_causal"), type="integer")
 parser <- add_option(parser, c("--r"), type="integer")
 parser <- add_option(parser, c("--pve"), type="numeric")
 parser <- add_option(parser, c("--B_cor"), type="numeric")
 parser <- add_option(parser, c("--V_cor"), type="numeric")
-parser <- add_option(parser, c("--data_id"), type="integer")
+parser <- add_option(parser, c("--seed"), type="integer")
 outparse <- parse_args(parser)
 
-input <- outparse$geno
+geno <- outparse$geno
+output <- outparse$output
 p_causal <- outparse$p_causal
 r <- outparse$r
 pve <- outparse$pve
 B_cor <- outparse$B_cor
 V_cor <- outparse$V_cor
-data_id <- outparse$data_id
+seed <- outparse$seed
 
 ###Set seed
-set.seed(data_id)
+set.seed(seed)
 
 ###Read in genotype data
 tmp <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
-rds <- snp_readBed2(paste0("../data/genotypes/", input, ".bed"), backingfile=tmp, ncores=1)
+rds <- snp_readBed2(geno, backingfile=tmp, ncores=1)
 dat <- snp_attach(rds)
 
 ###Impute missing values
@@ -132,16 +134,16 @@ IID <- dat$fam$sample.ID
 
 ###Simulate phenotype
 out_sim <- simulate_mr_mash_data_from_given_big_X(X=X, p_causal=p_causal, r=r, r_causal=list(1:r), intercepts=rep(1, r),
-                                                  pve=pve, B_cor=B_cor, B_scale=1, w=1, V_cor=V_cor, seed=data_id)
+                                                  pve=pve, B_cor=B_cor, B_scale=1, w=1, V_cor=V_cor, seed=seed)
 colnames(out_sim$Y) <- paste0("y", 1:r)
 rownames(out_sim$Y) <- IID
 
 pheno_file <- data.frame(FID=FID, IID=IID, out_sim$Y)
 
 ###Write out phenotypes
-saveRDS(out_sim, file=paste0("../data/phenotypes/simulated/", input, "_pheno_", data_id, ".rds"))
-fwrite(x=pheno_file, file=paste0("../data/phenotypes/simulated/", input, "_pheno_", data_id, ".txt"), sep = "\t", 
-       row.names=FALSE, col.names=FALSE, quote=FALSE, showProgress=FALSE)
+saveRDS(out_sim, file=output)
+# fwrite(x=pheno_file, file=paste0((output, ".txt"), sep = "\t", 
+#        row.names=FALSE, col.names=FALSE, quote=FALSE, showProgress=FALSE)
 
 ###Remove temprary files
 file.remove(paste0(tmp, c(".bk", ".rds")))

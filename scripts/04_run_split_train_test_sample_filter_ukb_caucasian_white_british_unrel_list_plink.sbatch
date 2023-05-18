@@ -16,9 +16,10 @@ source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
 module load R/4.2.3
 
 ###Run script
-Rscript ../code/split_train_test_ukb_list_plink.R --input ukb_caucasian_white_british_unrel_100000 \
+Rscript ../code/split_train_test_ukb_list_plink.R --input ../data/genotypes/ukb_caucasian_white_british_unrel_100000.fam \
 						  --n_train 100000 \
-                                                  --data_id ${DATA_ID}
+                                                  --seed ${DATA_ID} \
+                                                  --output ../data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_test_ids_"${DATA_ID}".txt
 
 ###Unload module
 module unload R/4.2.3

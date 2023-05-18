@@ -26,7 +26,7 @@ parser <- add_option(parser, c("--X_colmeans"), type="character", default=NULL)
 parser <- add_option(parser, c("--Y_colmeans"), type="character", default=NULL)
 parser <- add_option(parser, c("--mu1_init"), type="character", default=NULL)
 parser <- add_option(parser, c("--ncores"), type="integer")
-parser <- add_option(parser, c("--outprefix"), type="character")
+parser <- add_option(parser, c("--output"), type="character")
 parser <- add_option(parser, c("--data_id"), type="integer")
 outparse <- parse_args(parser)
 
@@ -52,20 +52,20 @@ X_colmeans <- outparse$X_colmeans
 Y_colmeans <- outparse$Y_colmeans
 mu1_init <- outparse$mu1_init
 ncores <- outparse$ncores
-outprefix <- outparse$outprefix
-data_id <- outparse$data_id
+output <- outparse$output
+seed <- outparse$seed
 
 ###Set seed
-set.seed(data_id)
+set.seed(seed)
 
 ###Read in data
-univ_sumstats <- readRDS(paste0("../output/summary_statistics/", sumstats, "_", data_id, ".rds"))
+univ_sumstats <- readRDS(sumstats)
 p <- nrow(univ_sumstats$Bhat)
 r <- ncol(univ_sumstats$Bhat)
-LD <- matrix(readBin(paste0("../data/LD_matrices/", LD_matrix, ".ld.bin"), what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
-covY <- readRDS(paste0("../output/misc/", pheno_cov, "_", data_id, ".rds"))
-V <- readRDS(paste0("../output/misc/", residual_cov, "_", data_id, ".rds"))
-S0_data <- tryCatch(readRDS(paste0("../output/misc/", data_driven_cov, "_", data_id, ".rds")), 
+LD <- matrix(readBin(LD_matrix, what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
+covY <- readRDS(pheno_cov)
+V <- readRDS(residual_cov)
+S0_data <- tryCatch(readRDS(data_driven_cov), 
                      error = function(e) {
                        return(NULL)
                      },
@@ -73,7 +73,7 @@ S0_data <- tryCatch(readRDS(paste0("../output/misc/", data_driven_cov, "_", data
                        return(NULL)
                      }
 )
-mu1_init <- tryCatch(readRDS(paste0("../output/misc/", mu1_init, "_", data_id, ".rds")), 
+mu1_init <- tryCatch(readRDS(mu1_init), 
                       error = function(e) {
                         return(NULL)
                       },
@@ -81,7 +81,7 @@ mu1_init <- tryCatch(readRDS(paste0("../output/misc/", mu1_init, "_", data_id, "
                         return(NULL)
                       }
 )
-X_colmeans <- tryCatch(readRDS(paste0("../output/misc/", X_colmeans, "_", data_id, ".rds")), 
+X_colmeans <- tryCatch(readRDS(X_colmeans), 
                      error = function(e) {
                        return(NULL)
                      },
@@ -89,7 +89,7 @@ X_colmeans <- tryCatch(readRDS(paste0("../output/misc/", X_colmeans, "_", data_i
                        return(NULL)
                      }
 )
-Y_colmeans <- tryCatch(readRDS(paste0("../output/misc/", Y_colmeans, "_", data_id, ".rds")), 
+Y_colmeans <- tryCatch(readRDS(Y_colmeans), 
                      error = function(e) {
                        return(NULL)
                      },
@@ -125,4 +125,6 @@ fit_mrmash_rss <- mr.mash.rss(Bhat=univ_sumstats$Bhat, Shat=univ_sumstats$Shat, 
                               w0_threshold=w0_threshold, ca_update_order=ca_update_order, mu1_init=mu1_init,
                               X_colmeans=X_colmeans, Y_colmeans=Y_colmeans, nthreads=ncores)
 
-saveRDS(fit_mrmash_rss, file=paste0("../output/mr_mash_rss_fit/", outprefix, "_mr_mash_rss_fit_", data_id, ".rds"))
+saveRDS(fit_mrmash_rss, file=output)
+
+

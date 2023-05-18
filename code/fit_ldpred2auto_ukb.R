@@ -15,8 +15,8 @@ parser <- add_option(parser, c("--verbose"), type="logical", default=FALSE)
 parser <- add_option(parser, c("--burn_in"), type="integer", default=500)
 parser <- add_option(parser, c("--num_iter"), type="integer", default=500)
 parser <- add_option(parser, c("--ncores"), type="integer")
-parser <- add_option(parser, c("--outprefix"), type="character")
-parser <- add_option(parser, c("--data_id"), type="integer")
+parser <- add_option(parser, c("--output"), type="character")
+parser <- add_option(parser, c("--seed"), type="integer")
 parser <- add_option(parser, c("--trait"), type="integer")
 outparse <- parse_args(parser)
 
@@ -38,12 +38,12 @@ trait <- outparse$trait
 vec_p_init <- seq_log(1e-4, 0.2, length.out = 30)
 
 ###Set seed
-set.seed(data_id)
+set.seed(seed)
 
 ###Read in data
-univ_sumstats <- readRDS(paste0("../output/summary_statistics/", sumstats, "_", data_id, ".rds"))
+univ_sumstats <- readRDS(sumstats)
 p <- nrow(univ_sumstats$Bhat)
-LD <- matrix(readBin(paste0("../data/LD_matrices/", LD_matrix, ".ld.bin"), what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
+LD <- matrix(readBin(LD_matrix, what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
 
 ###Prepare the sumstats and LD matrix
 df_beta <- data.frame(beta=univ_sumstats$Bhat[, trait],
@@ -57,4 +57,4 @@ fit_ldpred2_auto <- snp_ldpred2_auto(corr=corr, df_beta=df_beta, h2_init=h2_init
                                      burn_in=burn_in, num_iter=num_iter, sparse=sparse, verbose=verbose,
                                      allow_jump_sign=allow_jump_sign, shrink_corr=shrink_corr, ncores=ncores)
 
-saveRDS(fit_ldpred2_auto, file=paste0("../output/ldpred2_auto_fit/", outprefix, "_ldpred2_auto_fit_trait", trait, "_", data_id, ".rds"))
+saveRDS(fit_ldpred2_auto, file=output)

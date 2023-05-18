@@ -20,23 +20,23 @@ export OMP_NUM_THREADS=1
 CHR="${SLURM_ARRAY_TASK_ID}"
 
 ###Set some variables
-H2_INIT=0.023
+H2_INIT=0.013
 DATA_ID=${1}
 TRAIT=${2}
 
 ###Run R script
 echo "Start analyzing trait ${TRAIT} and chromosome ${CHR} ..."
 
-Rscript ../code/fit_ldpred2auto_ukb.R --sumstats ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_sumstats \
-                                      --LD_matrix ukb_caucasian_white_british_unrel_chr"${CHR}"_LD \
+Rscript ../code/fit_ldpred2auto_ukb.R --sumstats ../output/summary_statistics/ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_sumstats_"${DATA_ID}".rds \
+                                      --LD_matrix ../data/LD_matrices/ukb_caucasian_white_british_unrel_chr"${CHR}"_LD.ld.bin \
                                       --n 100000 \
                                       --h2_init "${H2_INIT}" \
                                       --burn_in 500 \
                                       --num_iter 500 \
                                       --trait ${TRAIT} \
                                       --ncores 4 \
-                                      --data_id ${DATA_ID} \
-                                      --outprefix ukb_caucasian_white_british_unrel_100000_chr"${CHR}"
+                                      --seed ${DATA_ID} \
+                                      --output ../output/ldpred2_auto_fit/ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_ldpred2_auto_fit_trait"${TRAIT}"_"${DATA_ID}".rds
 
 echo "Finished analyzing trait ${TRAIT} and chromosome ${CHR}."
 

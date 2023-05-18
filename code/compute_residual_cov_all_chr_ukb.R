@@ -9,16 +9,32 @@ is_strong <- function(x){
 
 ###Parse arguments
 parser <- OptionParser()
-parser <- add_option(parser, c("--sumstats"), type="character")
-parser <- add_option(parser, c("--data_id"), type="integer")
+parser <- add_option(parser, c("--sumstats_prefix"), type="character")
+parser <- add_option(parser, c("--sumstats_suffix"), type="character")
+parser <- add_option(parser, c("--chr"), type="character")
+parser <- add_option(parser, c("--output"), type="character")
+parser <- add_option(parser, c("--seed"), type="integer")
 outparse <- parse_args(parser)
 
-input <- outparse$sumstats
-data_id <- outparse$data_id
+sumstats_prefix <- outparse$sumstats_prefix
+sumstats_suffix <- outparse$sumstats_suffix
+chr <- outparse$chr
+output <- outparse$output
+seed <- outparse$seed
+
+set.seed(seed)
+
+chrscar <- unlist(strsplit(chr, ":"))
+
+if(length(chrscar)==1){
+  chrs <- as.integer(chrscar)
+} else {
+  chrs <- as.integer(chrscar[1]):as.integer(chrscar[2])
+}
 
 ###Extract weak effects
-for(i in 1:22){
-  dat <- readRDS(paste0("../output/summary_statistics/", input,"_chr", i, "_sumstats_", data_id, ".rds"))
+for(i in chrs){
+  dat <- readRDS(paste0(sumstats_prefix, i, sumstats_suffix))
   Z <- dat$Bhat/dat$Shat
   strong <- which(apply(Z, 1, is_strong))
   
@@ -40,4 +56,4 @@ for(j in 1:nrow(Z_weak)){
 Vhat <- Vhat/nrow(Z_weak)
 
 ###Save file
-saveRDS(Vhat, file=paste0("../output/misc/", input, "_residual_cov_", data_id, ".rds"))
+saveRDS(Vhat, file=output)

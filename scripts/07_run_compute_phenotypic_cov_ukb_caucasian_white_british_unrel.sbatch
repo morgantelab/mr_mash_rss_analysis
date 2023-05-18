@@ -17,9 +17,10 @@ source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
 module load R/4.2.3
 
 ###Run R script
-Rscript ../code/compute_phenotypic_cov_ukb_sim.R --input ukb_caucasian_white_british_unrel_100000 \
-                                                 --test_ids simulated/ukb_caucasian_white_british_unrel_100000_test_ids \
-                                                 --data_id ${DATA_ID}
+Rscript ../code/compute_phenotypic_cov_ukb_sim.R --pheno ../data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_pheno_"${DATA_ID}".rds \
+                                                 --test_ids ../data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_test_ids_"${DATA_ID}".txt \
+                                                 --seed ${DATA_ID} \
+                                                 --output ../output/misc/ukb_caucasian_white_british_unrel_100000_pheno_phenotypic_cov_"${DATA_ID}".rds
 
 ###Unload module
 module unload R/4.2.3
