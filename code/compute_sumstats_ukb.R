@@ -92,8 +92,8 @@ set.seed(seed)
 
 ###Read in data and filter them
 options(datatable.fread.datatable=FALSE)
-geno_fam <- fread(paste0("..", unlist(strsplit(geno_dat, ".", fixed=TRUE))[3], ".fam"), showProgress=FALSE)
-test_ids <- fread(test_ids, showProgress=FALSE)
+geno_fam <- fread(paste0("..", unlist(strsplit(geno_dat, ".", fixed=TRUE))[3], ".fam"), showProgress=FALSE, header=FALSE)
+test_ids <- fread(test_ids, showProgress=FALSE, header=FALSE)
 training_inds_geno <- which(!(geno_fam[,2] %in% test_ids[,2])) ##Get only training individuals
 
 pheno <- readRDS(pheno_dat)$Y

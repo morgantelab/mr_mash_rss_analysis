@@ -20,7 +20,7 @@ set.seed(seed)
 
 ###Read in data
 options(datatable.fread.datatable=FALSE)
-geno_fam <- fread(input, showProgress=FALSE)
+geno_fam <- fread(input, showProgress=FALSE, header=FALSE)
 
 ###Spilt train-test
 idx_train <- sample(x=1:nrow(geno_fam), size=n_train)

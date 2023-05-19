@@ -63,13 +63,13 @@ set.seed(data_id)
 
 ###Read in data
 options(datatable.fread.datatable=FALSE)
-test_ids <- fread(test_ids, showProgress=FALSE)
+test_ids <- fread(test_ids, showProgress=FALSE, header=FALSE)
 
 pheno <- readRDS(pheno_dat)$Y
 test_inds_pheno <- which(rownames(pheno) %in% test_ids[,2]) ##Get only test individuals
 pheno_test <- pheno[test_inds_pheno, ]
 
-geno_fam <- fread(paste0("..", unlist(strsplit(geno_dat, ".", fixed=TRUE))[3], ".fam"), showProgress=FALSE)
+geno_fam <- fread(paste0("..", unlist(strsplit(geno_dat, ".", fixed=TRUE))[3], ".fam"), showProgress=FALSE, header=FALSE)
 test_inds_geno <- which(geno_fam[,2] %in% test_ids[,2]) ##Get only test individuals
 tmp <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
 rds <- snp_readBed2(geno_dat, ind.row=test_inds_geno, backingfile=tmp, ncores=ncores)

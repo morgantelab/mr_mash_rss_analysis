@@ -16,8 +16,8 @@ output <- outparse$output
 ###Read in the data
 options(datatable.fread.datatable=FALSE)
 
-geno_fam <- fread(geno_dat, showProgress=FALSE)[, 1:2]
-withdr <- fread(withdrawn_inds, showProgress=FALSE)
+geno_fam <- fread(geno_dat, showProgress=FALSE, header=FALSE)[, 1:2]
+withdr <- fread(withdrawn_inds, showProgress=FALSE, header=FALSE)
 
 ###Merge the data
 total <- rbind(geno_fam, withdr)

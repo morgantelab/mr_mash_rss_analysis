@@ -37,7 +37,7 @@ set.seed(seed)
 
 ###Read in data
 options(datatable.fread.datatable=FALSE)
-geno_fam <- fread(paste0(unlist(strsplit(geno_dat, ".", fixed=TRUE))[1], ".fam"), showProgress=FALSE)
+geno_fam <- fread(paste0(unlist(strsplit(geno_dat, ".", fixed=TRUE))[1], ".fam"), showProgress=FALSE, header=FALSE)
 inds_to_remove <- fread(inds_to_remove, header=FALSE, showProgress=FALSE)
 inds_to_keep <- which(!(geno_fam[,2] %in% inds_to_remove[,2])) ##Get only individuals not used in simulations
 

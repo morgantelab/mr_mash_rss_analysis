@@ -21,7 +21,7 @@ set.seed(seed)
 ###Read in data
 options(datatable.fread.datatable=FALSE)
 pheno <- readRDS(input)$Y
-test_ids <- fread(test_ids, showProgress=FALSE)
+test_ids <- fread(test_ids, showProgress=FALSE, header=FALSE)
 
 ###Keep only training individuals 
 training_inds_pheno <- which(!(rownames(pheno) %in% test_ids[,2])) ##Get only training individuals

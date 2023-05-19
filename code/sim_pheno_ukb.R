@@ -2,7 +2,7 @@
 library(Matrix)
 library(bigsnpr)
 library(optparse)
-library(data.table)
+# library(data.table)
 
 ###Simulate data from given big X
 simulate_mr_mash_data_from_given_big_X <- function(X, p_causal, r, r_causal, intercepts,
