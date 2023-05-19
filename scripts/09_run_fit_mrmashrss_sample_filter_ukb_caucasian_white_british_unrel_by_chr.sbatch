@@ -42,7 +42,7 @@ Rscript ../code/fit_mrmashrss_ukb.R --sumstats ../output/summary_statistics/ukb_
                                     --Y_colmeans ../output/misc/ukb_caucasian_white_british_unrel_100000_pheno_means_"${DATA_ID}".rds \
                                     --ncores 4 \
                                     --seed ${DATA_ID} \
-                                    --outprefix ../output/mr_mash_rss_fit/ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_mr_mash_rss_fit_"${DATA_ID}".rds
+                                    --output ../output/mr_mash_rss_fit/ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_mr_mash_rss_fit_"${DATA_ID}".rds
 
 echo "Finished analyzing chromosome ${CHR}."
 

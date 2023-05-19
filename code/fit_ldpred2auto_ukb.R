@@ -31,8 +31,8 @@ verbose <- outparse$verbose
 burn_in <- outparse$burn_in
 num_iter <- outparse$num_iter
 ncores <- outparse$ncores
-outprefix <- outparse$outprefix
-data_id <- outparse$data_id
+output <- outparse$output
+seed <- outparse$seed
 trait <- outparse$trait
 
 vec_p_init <- seq_log(1e-4, 0.2, length.out = 30)

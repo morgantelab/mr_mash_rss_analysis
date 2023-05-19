@@ -20,7 +20,7 @@ module load R/4.2.3
 Rscript ../code/compute_phenotypic_cov_ukb_sim.R --pheno ../data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_pheno_"${DATA_ID}".rds \
                                                  --test_ids ../data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_test_ids_"${DATA_ID}".txt \
                                                  --seed ${DATA_ID} \
-                                                 --output ../output/misc/ukb_caucasian_white_british_unrel_100000_pheno_phenotypic_cov_"${DATA_ID}".rds
+                                                 --output ../output/misc/ukb_caucasian_white_british_unrel_100000_phenotypic_cov_"${DATA_ID}".rds
 
 ###Unload module
 module unload R/4.2.3

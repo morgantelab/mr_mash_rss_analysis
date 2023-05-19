@@ -27,7 +27,7 @@ parser <- add_option(parser, c("--Y_colmeans"), type="character", default=NULL)
 parser <- add_option(parser, c("--mu1_init"), type="character", default=NULL)
 parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--output"), type="character")
-parser <- add_option(parser, c("--data_id"), type="integer")
+parser <- add_option(parser, c("--seed"), type="integer")
 outparse <- parse_args(parser)
 
 sumstats <- outparse$sumstats
