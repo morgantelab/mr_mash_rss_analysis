@@ -20,7 +20,7 @@ export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=1
 
 ###Run R script
-Rscript ../code/computephenotype_means_ukb.R --pheno ../data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_pheno_"${DATA_ID}".rds \
+Rscript ../code/compute_phenotype_means_ukb.R --pheno ../data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_pheno_"${DATA_ID}".rds \
                                              --test_ids ../data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_test_ids_"${DATA_ID}".txt \
                                              --output ../output/misc/ukb_caucasian_white_british_unrel_100000_pheno_means_"${DATA_ID}".rds \
                                              --seed ${DATA_ID}
