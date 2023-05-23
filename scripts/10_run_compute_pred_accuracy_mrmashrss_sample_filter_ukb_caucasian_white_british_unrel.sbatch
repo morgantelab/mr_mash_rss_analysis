@@ -30,8 +30,7 @@ Rscript ../code/compute_prediction_accuracy_ukb.R --model mr_mash_rss \
                                                   --trait 1:5 \
                                                   --impute_missing TRUE \
                                                   --output_eff ../output/estimated_effects/ukb_caucasian_white_british_unrel_100000_mr_mash_rss_effects_"${DATA_ID}".rds \
-                                                  --output_pred_acc ../output/estimated_effects/ukb_caucasian_white_british_unrel_100000_mr_mash_rss_pred_acc_"${DATA_ID}".rds \
-
+                                                  --output_pred_acc ../output/prediction_accuracy/ukb_caucasian_white_british_unrel_100000_mr_mash_rss_pred_acc_"${DATA_ID}".rds \
                                                   --ncores 4
 
 ###Unload module
