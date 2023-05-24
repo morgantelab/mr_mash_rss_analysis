@@ -23,7 +23,6 @@ Rscript ../code/compute_prediction_accuracy_ukb.R --model ldpred2_auto \
                                                   --model_fit_dir ../output/ldpred2_auto_fit/ \
                                                   --pheno ../data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_pheno_"${DATA_ID}".rds \
                                                   --geno ../data/genotypes/ukb_caucasian_white_british_unrel_100000.bed \
-                                                  --pheno_means ../output/misc/ukb_caucasian_white_british_unrel_100000_pheno_means_"${DATA_ID}".rds \
                                                   --test_ids ../data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_test_ids_"${DATA_ID}".txt \
                                                   --data_id ${DATA_ID} \
                                                   --chr 1:22 \

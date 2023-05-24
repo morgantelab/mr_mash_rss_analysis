@@ -75,7 +75,15 @@ tmp <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
 rds <- snp_readBed2(geno_dat, ind.row=test_inds_geno, backingfile=tmp, ncores=ncores)
 geno <- snp_attach(rds)
 
-pheno_means <- readRDS(pheno_means)
+pheno_means <- tryCatch(readRDS(pheno_means), 
+                       error = function(e) {
+                         return(NULL)
+                       },
+                       warning = function(w) {
+                         return(NULL)
+                       }
+)
+
 
 rm(list=c("geno_fam", "test_ids", "test_inds_geno", "test_inds_pheno", "pheno"))
 
