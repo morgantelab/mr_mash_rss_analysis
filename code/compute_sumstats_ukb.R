@@ -75,6 +75,7 @@ parser <- add_option(parser, c("--standardize"), type="logical")
 parser <- add_option(parser, c("--seed"), type="integer")
 parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--impute_missing"), type="logical")
+parser <- add_option(parser, c("--temp_dir"), type="character")
 outparse <- parse_args(parser)
 
 pheno_dat <- outparse$pheno
@@ -86,6 +87,7 @@ chr <- outparse$chr
 standardize <- outparse$standardize
 ncores <- outparse$ncores
 impute_missing <- outparse$impute_missing
+temp_dir <- outparse$temp_dir
 
 ###Set seed
 set.seed(seed)
@@ -100,7 +102,7 @@ pheno <- readRDS(pheno_dat)$Y
 training_inds_pheno <- which(!(rownames(pheno) %in% test_ids[,2])) ##Get only training individuals
 pheno <- pheno[training_inds_pheno, ]
 
-tmp <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
+tmp <- tempfile(tmpdir=temp_dir)
 rds <- snp_readBed2(geno_dat, ind.row=training_inds_geno, backingfile=tmp, ncores=ncores)
 geno <- snp_attach(rds)
 

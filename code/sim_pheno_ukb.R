@@ -106,6 +106,7 @@ parser <- add_option(parser, c("--pve"), type="numeric")
 parser <- add_option(parser, c("--B_cor"), type="numeric")
 parser <- add_option(parser, c("--V_cor"), type="numeric")
 parser <- add_option(parser, c("--seed"), type="integer")
+parser <- add_option(parser, c("--temp_dir"), type="character")
 outparse <- parse_args(parser)
 
 geno <- outparse$geno
@@ -116,12 +117,13 @@ pve <- outparse$pve
 B_cor <- outparse$B_cor
 V_cor <- outparse$V_cor
 seed <- outparse$seed
+temp_dir <- outparse$temp_dir
 
 ###Set seed
 set.seed(seed)
 
 ###Read in genotype data
-tmp <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
+tmp <- tempfile(tmpdir=temp_dir)
 rds <- snp_readBed2(geno, backingfile=tmp, ncores=1)
 dat <- snp_attach(rds)
 

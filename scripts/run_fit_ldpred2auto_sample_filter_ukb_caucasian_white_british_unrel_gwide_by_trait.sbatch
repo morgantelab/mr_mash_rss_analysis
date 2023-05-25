@@ -36,6 +36,7 @@ Rscript ../code/fit_ldpred2auto_gwide_ukb.R --sumstats_prefix ../output/summary_
                                             --trait ${TRAIT} \
                                             --ncores 4 \
                                             --seed ${DATA_ID} \
+                                            --temp_dir /data2/morgante_lab/fabiom/tmp \
                                             --output ../output/ldpred2_auto_fit/ukb_caucasian_white_british_unrel_100000_chrAll_ldpred2_auto_fit_trait"${TRAIT}"_"${DATA_ID}".rds
 
 echo "Finished analyzing trait ${TRAIT}."

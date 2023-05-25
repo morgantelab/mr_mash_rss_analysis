@@ -29,6 +29,7 @@ Rscript ../code/sim_pheno_ukb.R --geno ../data/genotypes/ukb_caucasian_white_bri
                                 --B_cor 1 \
 				--V_cor 0 \
                                 --seed ${DATA_ID} \
+                                --temp_dir /data2/morgante_lab/fabiom/tmp \
                                 --output ../data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_pheno_"${DATA_ID}".rds
 
 ###Unload module

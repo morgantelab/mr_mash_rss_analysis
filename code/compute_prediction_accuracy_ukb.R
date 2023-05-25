@@ -41,6 +41,7 @@ parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--impute_missing"), type="logical", default=TRUE)
 parser <- add_option(parser, c("--output_eff"), type="character")
 parser <- add_option(parser, c("--output_pred_acc"), type="character")
+parser <- add_option(parser, c("--temp_dir"), type="character")
 outparse <- parse_args(parser)
 
 model <- outparse$model
@@ -56,7 +57,7 @@ ncores <- outparse$ncores
 impute_missing <- outparse$impute_missing
 output_eff <- outparse$output_eff
 output_pred_acc <- outparse$output_pred_acc
-
+temp_dir <- outparse$temp_dir
 
 ###Set seed
 set.seed(data_id)
@@ -71,7 +72,7 @@ pheno_test <- pheno[test_inds_pheno, ]
 
 geno_fam <- fread(paste0("..", unlist(strsplit(geno_dat, ".", fixed=TRUE))[3], ".fam"), showProgress=FALSE, header=FALSE)
 test_inds_geno <- which(geno_fam[,2] %in% test_ids[,2]) ##Get only test individuals
-tmp <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
+tmp <- tempfile(tmpdir=temp_dir)
 rds <- snp_readBed2(geno_dat, ind.row=test_inds_geno, backingfile=tmp, ncores=ncores)
 geno <- snp_attach(rds)
 

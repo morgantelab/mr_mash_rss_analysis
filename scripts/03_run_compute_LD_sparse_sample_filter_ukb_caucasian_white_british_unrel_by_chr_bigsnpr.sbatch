@@ -31,6 +31,7 @@ Rscript ../code/compute_LD_matrix_ukb.R --geno /data2/morgante_lab/data/ukbioban
                                         --window_size 0.003 \
                                         --impute_missing FALSE \
                                         --seed 1 \
+                                        --temp_dir /data2/morgante_lab/fabiom/tmp \
                                         --output ../data/LD_matrices/ukb_caucasian_white_british_unrel_chr"${CHR}"_LD_sparse.ld.bin \
                                         --ncores 8
 

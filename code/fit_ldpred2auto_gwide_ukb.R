@@ -21,6 +21,7 @@ parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--output"), type="character")
 parser <- add_option(parser, c("--seed"), type="integer")
 parser <- add_option(parser, c("--trait"), type="integer")
+parser <- add_option(parser, c("--temp_dir"), type="character")
 outparse <- parse_args(parser)
 
 sumstats_prefix <- outparse$sumstats_prefix
@@ -40,6 +41,7 @@ ncores <- outparse$ncores
 output <- outparse$output
 seed <- outparse$seed
 trait <- outparse$trait
+temp_dir <- outparse$temp_dir
 
 vec_p_init <- seq_log(1e-4, 0.2, length.out = 30)
 
@@ -57,7 +59,7 @@ if(length(chrscar)==1){
 
 ###Loop through chromosomes
 it <- 0
-tmp <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
+tmp <- tempfile(tmpdir=temp_dir)
 
 for(i in chrs){
   it <- it+1

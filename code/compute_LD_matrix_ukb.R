@@ -17,6 +17,7 @@ parser <- add_option(parser, c("--thr_r2"), type="numeric", default=0)
 parser <- add_option(parser, c("--impute_missing"), type="logical", default=FALSE)
 parser <- add_option(parser, c("--sparse"), type="logical")
 parser <- add_option(parser, c("--output"), type="character")
+parser <- add_option(parser, c("--temp_dir"), type="character")
 outparse <- parse_args(parser)
 
 geno_dat <- outparse$geno
@@ -31,6 +32,7 @@ thr_r2 <- outparse$thr_r2
 impute_missing <- outparse$impute_missing
 sparse <- outparse$sparse
 output <- outparse$output
+temp_dir <- outparse$temp_dir
 
 ###Set seed
 set.seed(seed)
@@ -41,14 +43,14 @@ geno_fam <- fread(paste0(unlist(strsplit(geno_dat, ".", fixed=TRUE))[1], ".fam")
 inds_to_remove <- fread(inds_to_remove, header=FALSE, showProgress=FALSE)
 inds_to_keep <- which(!(geno_fam[,2] %in% inds_to_remove[,2])) ##Get only individuals not used in simulations
 
-tmp <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
+tmp <- tempfile(tmpdir=temp_dir)
 rds <- snp_readBed2(geno_dat, ind.row=inds_to_keep, backingfile=tmp, ncores=ncores)
 geno <- snp_attach(rds)
 
 vars_to_keep <- fread(vars_to_keep, header=FALSE, showProgress=FALSE)
 vars_to_keep <- which(geno$map$marker.ID %in% vars_to_keep[,1]) ##Get only variants used in simulations
 
-tmp1 <- tempfile(tmpdir="/data2/morgante_lab/fabiom/tmp")
+tmp1 <- tempfile(tmpdir=temp_dir)
 rds1 <- snp_subset(geno, ind.col=vars_to_keep, backingfile=tmp1)
 geno1 <- snp_attach(rds1)
 

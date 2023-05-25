@@ -31,6 +31,7 @@ Rscript ../code/compute_genotype_means_ukb.R --geno ../data/genotypes/ukb_caucas
                                              --seed ${DATA_ID} \
                                              --chr ${CHR} \
                                              --impute_missing TRUE \
+                                             --temp_dir /data2/morgante_lab/fabiom/tmp \
                                              --ncores 1
 
 echo "Finished analyzing chromosome ${CHR}."

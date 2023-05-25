@@ -34,6 +34,7 @@ Rscript ../code/compute_sumstats_ukb.R --pheno ../data/phenotypes/simulated/ukb_
                                        --chr ${CHR} \
                                        --standardize FALSE \
                                        --impute_missing TRUE \
+                                       --temp_dir /data2/morgante_lab/fabiom/tmp \
                                        --ncores 1
 
 echo "Finished analyzing chromosome ${CHR}."
