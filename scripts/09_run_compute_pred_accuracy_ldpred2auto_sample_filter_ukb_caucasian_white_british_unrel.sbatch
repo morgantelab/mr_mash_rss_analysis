@@ -31,6 +31,7 @@ Rscript ../code/compute_prediction_accuracy_ukb.R --model ldpred2_auto \
                                                   --impute_missing TRUE \
                                                   --output_eff ../output/estimated_effects/ukb_caucasian_white_british_unrel_100000_ldpred2_auto_effects_"${DATA_ID}".rds \
                                                   --output_pred_acc ../output/prediction_accuracy/ukb_caucasian_white_british_unrel_100000_ldpred2_auto_pred_acc_"${DATA_ID}".rds \
+                                                  --prefix ukb_caucasian_white_british_unrel_100000 \ 
                                                   --ncores 4
 
 ###Unload module
