@@ -1,17 +1,17 @@
 rule all:
   input:
-    expand(config["DEST"]+"output/estimated_effects/mr_mash_rss_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/prediction_accuracy/mr_mash_rss_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/estimated_effects/ldpred2_auto_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/prediction_accuracy/ldpred2_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/estimated_effects/ldpred2_auto_gwide_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/prediction_accuracy/ldpred2_auto_gwide_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mr_mash_rss_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mr_mash_rss_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_ldpred2_auto_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_ldpred2_auto_gwide_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_gwide_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])
 
 rule split_train_test:
   input:
     config["FAM"]
   output:
-    config["DEST"]+"data/phenotypes/simulated/test_ids_{DATASET}.txt"
+    config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
   params:
     script=config["SCRIPT"]+"split_train_test_ukb_list_plink.R",
     n=config["N_TRAIN"],
@@ -32,9 +32,9 @@ rule split_train_test:
 rule compute_genotype_means:
   input:
     geno=config["BED"],
-    tids=config["DEST"]+"data/phenotypes/simulated/test_ids_{DATASET}.txt"
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
   output:
-    config["DEST"]+"output/misc/chr{CHR}_geno_means_{DATASET}.rds"
+    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_chr{CHR}_geno_means_{DATASET}.rds"
   params:
     script=config["SCRIPT"]+"compute_genotype_means_ukb.R",
     dataset="{DATASET}",
@@ -65,7 +65,7 @@ rule simulate_phenotype:
   input:
     config["BED"]
   output:
-    config["DEST"]+"data/phenotypes/simulated/pheno_{DATASET}.rds"
+    config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds"
   params:
     p_causal=config["P_CAUSAL"],
     r=config["R"],
@@ -97,11 +97,11 @@ rule simulate_phenotype:
 
 rule compute_summary_stats:
   input:
-    pheno=config["DEST"]+"data/phenotypes/simulated/pheno_{DATASET}.rds",
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
     geno=config["BED"],
-    tids=config["DEST"]+"data/phenotypes/simulated/test_ids_{DATASET}.txt"
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
   output:
-    config["DEST"]+"output/summary_statistics/chr{CHR}_sumstats_{DATASET}.rds"
+    config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds"
   params:
     dataset="{DATASET}",
     chr="{CHR}",
@@ -136,10 +136,10 @@ rule compute_summary_stats:
 
 rule compute_phenotype_means:
   input:
-    pheno=config["DEST"]+"data/phenotypes/simulated/pheno_{DATASET}.rds",
-    tids=config["DEST"]+"data/phenotypes/simulated/test_ids_{DATASET}.txt"
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
   output:
-    config["DEST"]+"output/misc/pheno_means_{DATASET}.rds"
+    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds"
   params:
     dataset="{DATASET}",
     script=config["SCRIPT"]+"compute_phenotype_means_ukb.R"
@@ -160,10 +160,10 @@ rule compute_phenotype_means:
 
 rule compute_phenotype_covariance:
   input:
-    pheno=config["DEST"]+"data/phenotypes/simulated/pheno_{DATASET}.rds",
-    tids=config["DEST"]+"data/phenotypes/simulated/test_ids_{DATASET}.txt"
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
   output:
-    config["DEST"]+"output/misc/phenotypic_cov_{DATASET}.rds"
+    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_phenotypic_cov_{DATASET}.rds"
   params:
     dataset="{DATASET}",
     script=config["SCRIPT"]+"compute_phenotypic_cov_ukb_sim.R"
@@ -184,13 +184,13 @@ rule compute_phenotype_covariance:
 
 def get_sumstats_input_files(wildcards):
     DATASET = wildcards.DATASET
-    return expand(config["DEST"]+"output/summary_statistics/chr{CHR}_sumstats_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"])
+    return expand(config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"])
 
 rule compute_residual_covariance_all_chr:
   input:
     lambda wildcards: get_sumstats_input_files(wildcards)
   output:
-    config["DEST"]+"output/misc/residual_cov_{DATASET}.rds"
+    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_residual_cov_{DATASET}.rds"
   params:
     prefix="output/summary_statistics/chr",
     suffix="_sumstats_{DATASET}.rds",
@@ -214,9 +214,9 @@ rule compute_residual_covariance_all_chr:
 rule compute_data_driven_covariance_all_chr:
   input:
     sum_stat=lambda wildcards: get_sumstats_input_files(wildcards),
-    res_cov=config["DEST"]+"output/misc/residual_cov_{DATASET}.rds"
+    res_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_residual_cov_{DATASET}.rds"
   output:
-    config["DEST"]+"output/misc/"+config["DD_ED"]+"_data_driven_cov_{DATASET}.rds"
+    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_"+config["DD_ED"]+"_data_driven_cov_{DATASET}.rds"
   params:
     prefix="output/summary_statistics/chr",
     suffix="_sumstats_{DATASET}.rds",
@@ -250,7 +250,7 @@ rule compute_data_driven_covariance_all_chr:
 
 rule fit_ldpred2auto_by_chr_trait:
   input:
-    sumstats=config["DEST"]+"output/summary_statistics/chr{CHR}_sumstats_{DATASET}.rds",
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
     ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD.ld.bin"
   output:
     config["DEST"]+"output/ldpred2_auto_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds"
@@ -286,13 +286,13 @@ rule fit_ldpred2auto_by_chr_trait:
 
 rule fit_mrmash_rss:
   input:
-    sumstats=config["DEST"]+"output/summary_statistics/chr{CHR}_sumstats_{DATASET}.rds",
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
     ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD.ld.bin",
-    pheno_cov=config["DEST"]+"output/misc/phenotypic_cov_{DATASET}.rds",
-    res_cov=config["DEST"]+"output/misc/residual_cov_{DATASET}.rds",
-    dd_cov=config["DEST"]+"output/misc/"+config["DD_ED"]+"_data_driven_cov_{DATASET}.rds",
-    x_colm=config["DEST"]+"output/misc/chr{CHR}_geno_means_{DATASET}.rds",
-    y_colm=config["DEST"]+"output/misc/pheno_means_{DATASET}.rds"
+    pheno_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_phenotypic_cov_{DATASET}.rds",
+    res_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_residual_cov_{DATASET}.rds",
+    dd_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_"+config["DD_ED"]+"_data_driven_cov_{DATASET}.rds",
+    x_colm=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_chr{CHR}_geno_means_{DATASET}.rds",
+    y_colm=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds"
   output:
     config["DEST"]+"output/mr_mash_rss_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mr_mash_rss_fit_{DATASET}.rds"
   params:
@@ -389,13 +389,13 @@ def get_pred_input_files(wildcards):
 
 rule compute_prediction_accuracy_ldpred:
   input:
-    pheno=config["DEST"]+"data/phenotypes/simulated/pheno_{DATASET}.rds",
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
     geno=config["BED"],
-    tids=config["DEST"]+"data/phenotypes/simulated/test_ids_{DATASET}.txt",
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
     list=lambda wildcards: get_pred_input_files(wildcards)
   output:
-    eff=config["DEST"]+"output/estimated_effects/ldpred2_auto_effects_{DATASET}.rds",
-    pred_acc=config["DEST"]+"output/prediction_accuracy/ldpred2_auto_pred_acc_{DATASET}.rds"
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_ldpred2_auto_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_pred_acc_{DATASET}.rds"
   params:
     model=config["LDPRED_MODEL"],
     model_fit_dir=config["LDPRED_MODEL_FIT_DIR"],
@@ -436,14 +436,14 @@ def get_mrmashrss_input_files(wildcards):
 
 rule compute_prediction_accuracy_mrmashrss:
   input:
-    pheno=config["DEST"]+"data/phenotypes/simulated/pheno_{DATASET}.rds",
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
     geno=config["BED"],
-    pheno_means=config["DEST"]+"output/misc/pheno_means_{DATASET}.rds",
-    tids=config["DEST"]+"data/phenotypes/simulated/test_ids_{DATASET}.txt",
+    pheno_means=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds",
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
     list=lambda wildcards: get_mrmashrss_input_files(wildcards)
   output:
-    eff=config["DEST"]+"output/estimated_effects/mr_mash_rss_effects_{DATASET}.rds",
-    pred_acc=config["DEST"]+"output/prediction_accuracy/mr_mash_rss_pred_acc_{DATASET}.rds"
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mr_mash_rss_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mr_mash_rss_pred_acc_{DATASET}.rds"
   params:
     model=config["MRMASH_MODEL"],
     model_fit_dir=config["MRMASH_MODEL_FIT_DIR"],
@@ -485,13 +485,13 @@ def get_ldpred_gwide_input_files(wildcards):
 
 rule compute_prediction_accuracy_ldpred_gwide:
   input:
-    pheno=config["DEST"]+"data/phenotypes/simulated/pheno_{DATASET}.rds",
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
     geno=config["BED"],
-    tids=config["DEST"]+"data/phenotypes/simulated/test_ids_{DATASET}.txt",
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
     list=lambda wildcards: get_ldpred_gwide_input_files(wildcards)
   output:
-    eff=config["DEST"]+"output/estimated_effects/ldpred2_auto_gwide_effects_{DATASET}.rds",
-    pred_acc=config["DEST"]+"output/prediction_accuracy/ldpred2_auto_gwide_pred_acc_{DATASET}.rds"
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_ldpred2_auto_gwide_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_gwide_pred_acc_{DATASET}.rds"
   params:
     model=config["LDPRED_MODEL"],
     model_fit_dir=config["LDPRED_MODEL_FIT_GWIDE_DIR"],
