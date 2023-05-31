@@ -3,7 +3,7 @@
 #SBATCH --job-name=run_fit_bayesR_sample_filter_ukb_caucasian_white_british_unrel_by_chr_and_trait
 #SBATCH --cpus-per-task=4
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
-#SBATCH --time=12:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mem=100G
 #SBATCH --output=run_fit_bayesR_sample_filter_ukb_caucasian_white_british_unrel_by_chr_and_trait.%j.out
 #SBATCH --error=run_fit_bayesR_sample_filter_ukb_caucasian_white_british_unrel_by_chr_and_trait.%j.err
@@ -37,10 +37,11 @@ Rscript ../code/fit_qgg_sbayes_ukb.R --sumstats ../output/summary_statistics/ukb
                                       --updateB TRUE \
                                       --updateE TRUE \
                                       --updatePi TRUE \
+                                      --updateG TRUE \
                                       --adjustE FALSE \
                                       --trait ${TRAIT} \
                                       --seed ${DATA_ID} \
-                                      --output ../output/ldpred2_auto_fit/ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_bayesR_fit_trait"${TRAIT}"_"${DATA_ID}".rds
+                                      --output ../output/bayesR_fit/ukb_caucasian_white_british_unrel_100000_chr"${CHR}"_bayesR_fit_trait"${TRAIT}"_"${DATA_ID}".rds
 
 echo "Finished analyzing trait ${TRAIT} and chromosome ${CHR}."
 

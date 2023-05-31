@@ -27,7 +27,7 @@ gbayes_wrap <- function(bhat, shat, n, R, method, vg=NULL, vb=NULL, ve=NULL,
   wy <- bhat*ww
   b2 <- bhat^2
   seb2 <- shat^2
-  yy <- (b2 + (stat$n-2)*seb2)*ww
+  yy <- (b2 + (n-2)*seb2)*ww
   yy <- median(yy)
   
   n <- as.integer(median(n))
