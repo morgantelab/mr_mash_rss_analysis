@@ -47,8 +47,6 @@ rule compute_genotype_means:
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
         export MKL_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
-        echo "Start analyzing chromosome {params.chr} ..."
         Rscript {params.script} \
                                   --geno {input.geno} \
                                   --test_ids {input.tids} \
@@ -117,7 +115,6 @@ rule compute_summary_stats:
         module load R/4.2.3
         export MKL_NUM_THREADS=1
         export OMP_NUM_THREADS=1
-        echo "Start analyzing chromosome {params.chr} ..."
         Rscript {params.script} \
                                     --pheno {input.pheno} \
                                     --geno {input.geno} \
@@ -129,7 +126,6 @@ rule compute_summary_stats:
                                     --impute_missing {params.imp_flag} \
                                     --temp_dir {params.tmp} \
                                     --ncores 2
-        echo "Finished analyzing chromosome {params.chr}."
         module unload R/4.2.3
         module unload gsl/2.7
         """
@@ -148,8 +144,6 @@ rule compute_phenotype_means:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
-        export MKL_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
         Rscript {params.script} \
                                     --pheno {input.pheno} \
                                     --test_ids {input.tids} \
@@ -192,7 +186,7 @@ rule compute_residual_covariance_all_chr:
   output:
     config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_residual_cov_{DATASET}.rds"
   params:
-    prefix="output/summary_statistics/chr",
+    prefix="output/summary_statistics/"+config["DATA_PREFIX"]+"_chr",
     suffix="_sumstats_{DATASET}.rds",
     chr_r=config["CHR_RANGE"],
     dataset="{DATASET}",
@@ -218,7 +212,7 @@ rule compute_data_driven_covariance_all_chr:
   output:
     config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_"+config["DD_ED"]+"_data_driven_cov_{DATASET}.rds"
   params:
-    prefix="output/summary_statistics/chr",
+    prefix="output/summary_statistics/"+config["DATA_PREFIX"]+"_chr",
     suffix="_sumstats_{DATASET}.rds",
     chr_r=config["CHR_RANGE"],
     str_z_thr=config["DD_STRONG_Z_THR"],
@@ -268,7 +262,7 @@ rule fit_ldpred2auto_by_chr_trait:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
-        echo "Start analyzing trait {params.trait} and chromosome {params.chr} ..."
+        export MKL_NUM_THREADS=1
         Rscript {params.script} \
                                     --sumstats {input.sumstats} \
                                     --LD_matrix {input.ldmat} \
@@ -313,7 +307,6 @@ rule fit_mrmash_rss:
         module load R/4.2.3
         export MKL_NUM_THREADS=1
         export OMP_NUM_THREADS=1
-        echo "Start analyzing chromosome {params.chr} ..."
         Rscript {params.script} \
                                     --sumstats {input.sumstats} \
                                     --LD_matrix {input.ldmat} \
@@ -331,7 +324,6 @@ rule fit_mrmash_rss:
                                     --ncores 4 \
                                     --seed {params.dataset} \
                                     --output {output}
-        echo "Finished analyzing chromosome {params.chr}."
         module unload R/4.2.3
         module unload gsl/2.7
         """
@@ -339,11 +331,11 @@ rule fit_mrmash_rss:
 rule fit_ldpred2auto_gwide_by_trait:
   input:
     sumstats=lambda wildcards: get_sumstats_input_files(wildcards),
-    ldmat=expand(config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD.ld.bin", CHR=config["CHR"])
+    ldmat=expand(config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.ld.bin", CHR=config["CHR"])
   output:
     config["DEST"]+"output/ldpred2_auto_gwide_fit/"+config["DATA_PREFIX"]+"_chrAll_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds"
   params:
-    ss_prefix="output/summary_statistics/chr",
+    ss_prefix="output/summary_statistics/"+config["DATA_PREFIX"]+"_chr",
     ss_suffix="_sumstats_{DATASET}.rds",
     ld_prefix="data/LD_matrices/"+config["LDMAT_PREFIX"],
     ld_suffix="_LD.ld.bin",
@@ -362,8 +354,6 @@ rule fit_ldpred2auto_gwide_by_trait:
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
         export MKL_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
-        echo "Start analyzing trait {params.trait} ..."
         Rscript {params.script} \
                                     --sumstats_prefix {params.ss_prefix} \
                                     --sumstats_suffix {params.ss_suffix} \
@@ -508,7 +498,6 @@ rule compute_prediction_accuracy_ldpred_gwide:
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
         export MKL_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
         Rscript {params.script} \
                                     --model {params.model} \
                                     --model_fit_dir {params.model_fit_dir} \
