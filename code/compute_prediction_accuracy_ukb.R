@@ -148,7 +148,7 @@ for(i in chrs){
     ##Store effects
     Bhat_all[[it]] <- model_fit$mu1[, traits]
     
-    } else if(model=="ldpred2_auto"){
+    } else if(model %in% c("ldpred2_auto","bayesN","bayesA","bayesL","bayesC","bayesR")){
     
     it2 <- 0
     
@@ -158,14 +158,23 @@ for(i in chrs){
       
       ##Read in model fit
       model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_trait", j, "_", data_id, ".rds"))
-      ##Quality control over chains
-      range_corr <- sapply(model_fit, function(auto) diff(range(auto$corr_est)))
-      to_keep <- (range_corr > (0.95 * quantile(range_corr, 0.95)))
-      ##Compute posterior mean after QC
-      if(it2==1){
-        Bhat <- rowMeans(sapply(model_fit[to_keep], function(auto) auto$beta_est))
-      } else {
-        Bhat <- cbind(Bhat, rowMeans(sapply(model_fit[to_keep], function(auto) auto$beta_est)))
+      
+      if(model=="ldpred2_auto"){
+        ##Quality control over chains
+        range_corr <- sapply(model_fit, function(auto) diff(range(auto$corr_est)))
+        to_keep <- (range_corr > (0.95 * quantile(range_corr, 0.95)))
+        ##Compute posterior mean after QC
+        if(it2==1){
+          Bhat <- rowMeans(sapply(model_fit[to_keep], function(auto) auto$beta_est))
+        } else {
+          Bhat <- cbind(Bhat, rowMeans(sapply(model_fit[to_keep], function(auto) auto$beta_est)))
+        }
+      } else if(model %in% c("bayesN","bayesA","bayesL","bayesC","bayesR")){
+        if(it2==1){
+          Bhat <- model_fit$bm
+        } else {
+          Bhat <- cbind(Bhat, model_fit$bm)
+        }
       }
     }
     
