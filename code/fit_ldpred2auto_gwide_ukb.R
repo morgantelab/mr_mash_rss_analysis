@@ -43,7 +43,7 @@ seed <- outparse$seed
 trait <- outparse$trait
 temp_dir <- outparse$temp_dir
 
-vec_p_init <- seq_log(1e-5, 1, length.out = 30)
+vec_p_init <- seq_log(1e-4, 1, length.out = 30)
 
 ###Set seed
 set.seed(seed)
