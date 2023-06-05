@@ -3,7 +3,7 @@
 #SBATCH --job-name=ukb_sim_sm
 #SBATCH --ntasks=1
 #SBATCH --partition=compute
-#SBATCH --time=96:00:00
+#SBATCH --time=168:00:00
 #SBATCH --mem=2gb
 #SBATCH --output=run/log/ukb_caucasian_white_british_unrel_100000_equal_effects_indep_resid.%j.out
 #SBATCH --error=run/log/ukb_caucasian_white_british_unrel_100000_equal_effects_indep_resid.%j.err
