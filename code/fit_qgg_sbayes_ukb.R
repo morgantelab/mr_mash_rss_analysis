@@ -23,7 +23,7 @@ gbayes_wrap <- function(bhat, shat, n, R, method, vg=NULL, vb=NULL, ve=NULL,
   mask <- rep(FALSE, m)
   
   # Compute XtX, Xty, yty 
-  ww <- 1/(shat^2 + bhat/n)
+  ww <- 1/(shat^2 + bhat^2/n)
   wy <- bhat*ww
   b2 <- bhat^2
   seb2 <- shat^2
