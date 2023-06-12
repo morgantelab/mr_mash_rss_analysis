@@ -1,7 +1,7 @@
-name: "mr_mash_rss"
+name: "mr_mash_rss_analysis"
 output_dir: ../docs
 navbar:
-  title: "mr_mash_rss"
+  title: "mr_mash_rss_analysis"
   left:
   - text: Home
     href: index.html
@@ -9,9 +9,14 @@ navbar:
     href: about.html
   - text: License
     href: license.html
+  right:
+  - icon: fa-github
+    text: Source code
+    href: https://github.com/morgante_lab/mr_mash_rss_analysis
 output:
   workflowr::wflow_html:
     toc: yes
     toc_float: yes
-    theme: cosmo
+    theme: readable
     highlight: textmate
+    code_folding: hide
