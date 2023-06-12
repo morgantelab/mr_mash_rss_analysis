@@ -102,9 +102,12 @@ parser <- add_option(parser, c("--geno"), type="character")
 parser <- add_option(parser, c("--output"), type="character")
 parser <- add_option(parser, c("--p_causal"), type="integer")
 parser <- add_option(parser, c("--r"), type="integer")
-parser <- add_option(parser, c("--pve"), type="numeric")
-parser <- add_option(parser, c("--B_cor"), type="numeric")
+parser <- add_option(parser, c("--r_causal"), type="character")
+parser <- add_option(parser, c("--pve"), type="character")
+parser <- add_option(parser, c("--B_scale"), type="character")
+parser <- add_option(parser, c("--B_cor"), type="character")
 parser <- add_option(parser, c("--V_cor"), type="numeric")
+parser <- add_option(parser, c("--w"), type="character")
 parser <- add_option(parser, c("--seed"), type="integer")
 parser <- add_option(parser, c("--temp_dir"), type="character")
 outparse <- parse_args(parser)
@@ -113,8 +116,11 @@ geno <- outparse$geno
 output <- outparse$output
 p_causal <- outparse$p_causal
 r <- outparse$r
-pve <- outparse$pve
-B_cor <- outparse$B_cor
+r_causal <- eval(parse(text=outparse$r_causal))
+pve <- eval(parse(text=outparse$pve))
+B_scale <- eval(parse(text=outparse$B_scale))
+B_cor <- eval(parse(text=outparse$B_cor))
+w <- eval(parse(text=outparse$w))
 V_cor <- outparse$V_cor
 seed <- outparse$seed
 temp_dir <- outparse$temp_dir
@@ -135,8 +141,8 @@ FID <- dat$fam$family.ID
 IID <- dat$fam$sample.ID
 
 ###Simulate phenotype
-out_sim <- simulate_mr_mash_data_from_given_big_X(X=X, p_causal=p_causal, r=r, r_causal=list(1:r), intercepts=rep(1, r),
-                                                  pve=pve, B_cor=B_cor, B_scale=1, w=1, V_cor=V_cor, seed=seed)
+out_sim <- simulate_mr_mash_data_from_given_big_X(X=X, p_causal=p_causal, r=r, r_causal=r_causal, intercepts=rep(1, r),
+                                                  pve=pve, B_cor=B_cor, B_scale=B_scale, w=w, V_cor=V_cor, seed=seed)
 colnames(out_sim$Y) <- paste0("y", 1:r)
 rownames(out_sim$Y) <- IID
 

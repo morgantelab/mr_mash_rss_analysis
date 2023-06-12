@@ -67,9 +67,12 @@ rule simulate_phenotype:
   params:
     p_causal=config["P_CAUSAL"],
     r=config["R"],
+    r_causal=config["R_CAUSAL"],
     pve=config["PVE"],
+    B_scale=config["B_SCALE"],
     B_cor=config["B_COR"],
     V_cor=config["V_COR"],
+    w=config["W"],
     dataset="{DATASET}",
     tmp=config["TMP"],
     script=config["SCRIPT"]+"sim_pheno_ukb.R"
@@ -83,9 +86,12 @@ rule simulate_phenotype:
                                     --geno {input} \
                                     --p_causal {params.p_causal} \
                                     --r {params.r} \
+                                    --r_causal {params.r_causal} \
                                     --pve {params.pve} \
+                                    --B_scale {params.B_scale} \
                                     --B_cor {params.B_cor} \
                                     --V_cor {params.V_cor} \
+                                    --w {params.w} \
                                     --seed {params.dataset} \
                                     --temp_dir {params.tmp} \
                                     --output {output}
