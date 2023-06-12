@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree2df58211a62688bf93c0e5c29ce6b901e5407e3atargetblank2df5821a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreee56eb434f45568a4ad5f21982f3bbe098fd7cf67targetblanke56eb43a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/2df58211a62688bf93c0e5c29ce6b901e5407e3a" target="_blank">2df5821</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/e56eb434f45568a4ad5f21982f3bbe098fd7cf67" target="_blank">e56eb43</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree2df58211a62688bf93c0e5c29ce6b901e5407e3atargetblank2df5821a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreee56eb434f45568a4ad5f21982f3bbe098fd7cf67targetblanke56eb43a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/2df58211a62688bf93c0e5c29ce6b901e5407e3a" target="_blank">2df5821</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/e56eb434f45568a4ad5f21982f3bbe098fd7cf67" target="_blank">e56eb43</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -574,6 +574,7 @@ Ignored files:
     Ignored:    tmp/
 
 Untracked files:
+    Untracked:  .test.sbatch.swp
     Untracked:  Snakefile_old
     Untracked:  code/merge_sumstats_all_chr_ukb.R
     Untracked:  scripts/OLD/run_merge_sumstats_all_chr_ukb.sbatch
@@ -581,6 +582,7 @@ Untracked files:
     Untracked:  scripts/create_test_data_for_vijay.sbatch
     Untracked:  scripts/readme.txt
     Untracked:  scripts/run_extract_list_inds_to_remove_from_LD_test_data_for_vijay_plink.sbatch
+    Untracked:  test.sbatch
 
 </code></pre>
 <p>
@@ -631,6 +633,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/e56eb434f45568a4ad5f21982f3bbe098fd7cf67/analysis/ukb_sim_results.Rmd" target="_blank">e56eb43</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-12
+</td>
+<td>
+workflowr::wflow_publish("analysis/ukb_sim_results.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/886b637db7c94561b72b44893f3be231f0361769/docs/ukb_sim_results.html" target="_blank">886b637</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/2df58211a62688bf93c0e5c29ce6b901e5407e3a/analysis/ukb_sim_results.Rmd" target="_blank">2df5821</a>
 </td>
 <td>
@@ -655,15 +691,52 @@ wflow_publish("analysis/ukb_sim_results.Rmd")
 <p>The goal of this analysis is to benchmark the newly developed
 <em>mr.mash.rss</em> (aka <em>mr.mash</em> with summary statistics)
 against already existing methods in the task of predicting phenotypes
-from genotypes. To do so, we used real genotypes from the array data of
-the UK Biobank. We randomly sampled 105,000 nominally unrelated (<span
-class="math inline">\(r_A\)</span> &lt; 0.025) individuals of European
-ancestry (i.e., Caucasian and white British fields). After retaining
-variants with minor allele frequency (MAF) &gt; 0.01, minor allele count
-(MAC) &gt; 5 genotype missing rate &lt; 0.1 and Hardy-Weinberg
-Equilibrium (HWE) test p-value &gt; <span class="math inline">\(1
-*10^{-10}\)</span>, our data consisted of 595,071 genetic variants
-(i.e., our predictors).</p>
+from genotypes using only summary data. To do so, we used real genotypes
+from the array data of the UK Biobank. We randomly sampled 105,000
+nominally unrelated (<span class="math inline">\(r_A\)</span> &lt; 0.025
+between any pair) individuals of European ancestry (i.e., Caucasian and
+white British fields). After retaining variants with minor allele
+frequency (MAF) &gt; 0.01, minor allele count (MAC) &gt; 5 genotype
+missing rate &lt; 0.1 and Hardy-Weinberg Equilibrium (HWE) test p-value
+&gt; <span class="math inline">\(1 *10^{-10}\)</span>, our data
+consisted of 595,071 genetic variants (i.e., our predictors). Missing
+genotypes were imputed with the mean genotype for the respective genetic
+variant.</p>
+<p>The linkage disequilibrium (LD) matrices were computed using 146,288
+nominally unrelated (<span class="math inline">\(r_A\)</span> &lt; 0.025
+between any pair) individuals of European ancestry (i.e., Caucasian and
+white British fields), that did not overlap with the 105,000 individuals
+used for the rest of the analyses.</p>
+<p>For each simulation replicate, we randomly sampled 5,000 (out of the
+105,000) individuals to be the test set. The test set was only used to
+evaluate prediction accuracy. All the other steps were carried out on
+the training set of 100,000 individuals.</p>
+<p>We simulated 5 traits (i.e., our responses) by randomly sampling
+5,000 variants (out of the total of 595,071) to be causal, with
+different effect sharing structures across traits (see below). The
+genetic effects explain 50% of the total per-trait variance. The
+residuals are uncorrelated across traits.</p>
+<p>Summary statistics (i.e., effect size and its standard error) were
+obtained by univariate simple linear regression of each trait on each
+variant, one at a time. Traits and variants were not standardized.</p>
+<p>Three different methods were fitted:</p>
+<ul>
+<li><a
+href="https://academic.oup.com/bioinformatics/article/36/22-23/5424/6039173">LDpred2</a>
+per-chromosome with the auto option, 500 iterations (after 500 burn-in
+iterations), <span class="math inline">\(h^2\)</span> initialized as
+0.5/22 and <span class="math inline">\(p\)</span> initialized using the
+same grid as in the original paper.</li>
+<li><em>LDpred2</em> genome-wide with the auto option, 500 iterations
+(after 500 burn-in iterations), <span class="math inline">\(h^2\)</span>
+initialized as 0.5/22 (WRONG) and <span class="math inline">\(p\)</span>
+initialized using the same grid as in the original paper.</li>
+<li><em>mr.mash.rss</em> per-chromosome, with only data-driven
+covariance matrices computed as described in the <a
+href="https://www.biorxiv.org/content/10.1101/2022.11.22.517471v4.abstract">mr.mash
+paper</a>, updating the (full rank) residual covariance and the mixture
+weights, without standardizing the variables.</li>
+</ul>
 </div>
 <div id="equal-effects-scenario" class="section level2">
 <h2>Equal effects scenario</h2>
@@ -724,6 +797,43 @@ p_methods_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
 
 print(p_methods_shared)</code></pre>
 <p><img src="figure/ukb_sim_results.Rmd/unnamed-chunk-1-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
+Past versions of unnamed-chunk-1-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/886b637db7c94561b72b44893f3be231f0361769/docs/figure/ukb_sim_results.Rmd/unnamed-chunk-1-1.png" target="_blank">886b637</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-12
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
