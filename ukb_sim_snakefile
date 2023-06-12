@@ -346,7 +346,7 @@ rule fit_ldpred2auto_gwide_by_trait:
     ld_prefix="data/LD_matrices/"+config["LDMAT_PREFIX"],
     ld_suffix="_LD.ld.bin",
     n=config["N_TRAIN"],
-    h2_init=config["H2_INIT"],
+    h2_init=config["H2_INIT_GWIDE"],
     burn_in=config["LDPRED_BURN_IN"],
     num_iter=config["LDPRED_ITER"],
     trait="{TRAIT}",
