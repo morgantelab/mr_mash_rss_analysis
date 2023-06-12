@@ -8,4 +8,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+This website includes analyses to assess the performance of *mr.mash.rss*.
+
++ [Simulations based on UK Biobank genotypes.](ukb_sim_results..html)
