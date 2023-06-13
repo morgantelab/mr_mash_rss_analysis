@@ -86,12 +86,12 @@ rule simulate_phenotype:
                                     --geno {input} \
                                     --p_causal {params.p_causal} \
                                     --r {params.r} \
-                                    --r_causal {params.r_causal} \
-                                    --pve {params.pve} \
-                                    --B_scale {params.B_scale} \
-                                    --B_cor {params.B_cor} \
+                                    --r_causal "{params.r_causal}" \
+                                    --pve "{params.pve}" \
+                                    --B_scale "{params.B_scale}" \
+                                    --B_cor "{params.B_cor}" \
                                     --V_cor {params.V_cor} \
-                                    --w {params.w} \
+                                    --w "{params.w}" \
                                     --seed {params.dataset} \
                                     --temp_dir {params.tmp} \
                                     --output {output}
