@@ -9,7 +9,7 @@ compute_univariate_sumstats_bigsnp <- function(geno_obj, Y, chr=0, standardize=F
                                                standardize.response=FALSE, mc.cores=1){
   
   if(impute_missing){
-    X <- bigsnpr::snp_fastImputeSimple(geno_obj$genotypes, method = "mean2", ncores = ncores)
+    X <- bigsnpr::snp_fastImputeSimple(geno_obj$genotypes, method = "mean2", ncores = mc.cores)
   } else {
     X <- geno_obj$genotypes
   }
