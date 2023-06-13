@@ -9,28 +9,39 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r set options}
+###Load libraries
+library(ggplot2)
+library(cowplot)
+
+repz <- 1:20
+prefix <- "output/prediction_accuracy/ukb_caucasian_white_british_unrel_100000"
+metric <- "r2"
+traitz <- 1:5
+```
+
 ## Introduction
 
 The goal of this analysis is to benchmark the newly developed *mr.mash.rss* (aka *mr.mash* with summary 
-statistics) against already existing methods in the task of predicting phenotypes from genotypes using 
+data) against already existing methods in the task of predicting phenotypes from genotypes using 
 only summary data. To do so, we used real genotypes from the array data of the UK Biobank. We randomly 
 sampled 105,000 nominally unrelated ($r_A$ < 0.025 between any pair) individuals of European ancestry 
 (i.e., Caucasian and white British fields). After retaining variants with minor allele frequency 
-(MAF) > 0.01, minor allele count (MAC) > 5 genotype missing rate < 0.1 and Hardy-Weinberg Equilibrium (HWE) 
+(MAF) > 0.01, minor allele count (MAC) > 5, genotype missing rate < 0.1 and Hardy-Weinberg Equilibrium (HWE) 
 test p-value > $1 *10^{-10}$, our data consisted of 595,071 genetic variants (i.e., our predictors). 
 Missing genotypes were imputed with the mean genotype for the respective genetic variant.
 
-The linkage disequilibrium (LD) matrices were computed using 146,288 nominally unrelated ($r_A$ < 0.025 
-between any pair) individuals of European ancestry (i.e., Caucasian and white British fields), that did 
-not overlap with the 105,000 individuals used for the rest of the analyses.
+The linkage disequilibrium (LD) matrices (i.e., the correlation matrices) were computed using 146,288 
+nominally unrelated ($r_A$ < 0.025 between any pair) individuals of European ancestry (i.e., Caucasian 
+and white British fields), that did not overlap with the 105,000 individuals used for the rest of the analyses.
 
-For each simulation replicate, we randomly sampled 5,000 (out of the 105,000) individuals to be the test 
-set. The test set was only used to evaluate prediction accuracy. All the other steps were carried out on 
-the training set of 100,000 individuals.
+For each replicate, we simulated 5 traits (i.e., our responses) by randomly sampling 5,000 variants 
+(out of the total of 595,071) to be causal, with different effect sharing structures across traits (see below). 
+The genetic effects explain 50\% of the total per-trait variance -- in genetics terminology this is called
+genomic heritability ($h_g^2$). The residuals are uncorrelated across traits.
 
-We simulated 5 traits (i.e., our responses) by randomly sampling 5,000 variants (out of the total of 
-595,071) to be causal, with different effect sharing structures across traits (see below). The genetic
-effects explain 50\% of the total per-trait variance. The residuals are uncorrelated across traits.
+We randomly sampled 5,000 (out of the 105,000) individuals to be the test set. The test set was only used to 
+evaluate prediction accuracy. All the other steps were carried out on the training set of 100,000 individuals.
 
 Summary statistics (i.e., effect size and its standard error) were obtained by univariate simple linear 
 regression of each trait on each variant, one at a time. Traits and variants were not standardized.
@@ -44,23 +55,26 @@ initialized using the same grid as in the original paper.
 initialized as 0.5/22 (WRONG) and $p$ initialized using the same grid as in the original paper.
 * _mr.mash.rss_ per-chromosome, with only data-driven covariance matrices computed as described in the
 [mr.mash paper](https://www.biorxiv.org/content/10.1101/2022.11.22.517471v4.abstract), updating the (full 
-rank) residual covariance and the mixture weights, without standardizing the variables.
+rank) residual covariance and the mixture weights, without standardizing the variables. The residual
+covariance was initialized as in the [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1)
+and the mixture weights were initialized as 90\% of the weight on the null component and 10\% of the
+weight split equally across the remaining components. The phenotypic covariance was computed  
+as the sample covariance using the individual-level data.
 
+Prediction accuracy was evaluated as the $R^2$ of the regression of true phenotypes on the predicted 
+phenotypes. This metric as the attractive property that its upper bound is $h_g^2$.
 
+20 replicates for each simulation scenario were run.
 
 ## Equal effects scenario
 
-```{r, fig.height=12, fig.width=15}
-###Load libraries
-library(ggplot2)
-library(cowplot)
+In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0
+and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1.
+This implies that the effects of the causal variants are equal across responses.
 
-repz <- 1:20
-prefix <- "output/prediction_accuracy/ukb_caucasian_white_british_unrel_100000"
+```{r equal effects, fig.height=12, fig.width=15}
 scenarioz <- "equal_effects_indep_resid"
 methodz <- c("mr_mash_rss", "ldpred2_auto", "ldpred2_auto_gwide")
-metric <- "r2"
-traitz <- 1:5
 
 i <- 0
 
@@ -68,8 +82,6 @@ n_col <- 6
 n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
 res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
 colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score")
-
-
 
 for(sce in scenarioz){
   for(met in methodz){
@@ -109,3 +121,10 @@ p_methods_shared <- ggplot(res, aes(x = trait, y = score, fill = method)) +
 print(p_methods_shared)
 ```
 
+In this scenario, there is a clear advantage to using multivariate methods. In fact, given
+that the effects are equal across traits and the residuals are uncorrelated, a multivariate
+analysis is roughly equivalent to having 5 times as many samples as in an univariate
+analysis. The results show that *mr.mash.rss* clearly does better than both flavors of 
+*LDpred2 auto*. However, in this simulation there does not seem to be much of a difference 
+between *LDpred2 auto* per-chromosome and genome-wide. Therefore, we will drop *LDpred2 auto* 
+genome-wide from further analyses since it is more computationally intensive.
