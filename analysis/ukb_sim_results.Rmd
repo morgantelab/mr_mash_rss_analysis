@@ -59,8 +59,8 @@ NB this is a univariate method.
 rank) residual covariance and the mixture weights, without standardizing the variables. The residual
 covariance was initialized as in the [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1)
 and the mixture weights were initialized as 90\% of the weight on the null component and 10\% of the
-weight split equally across the remaining components. The phenotypic covariance was computed  
-as the sample covariance using the individual-level data.
+weight split equally across the remaining components. The phenotypic covariance was computed
+as the sample covariance using the individual-level data. NB this is a multivariate method.
 
 Prediction accuracy was evaluated as the $R^2$ of the regression of true phenotypes on the predicted 
 phenotypes. This metric as the attractive property that its upper bound is $h_g^2$.
