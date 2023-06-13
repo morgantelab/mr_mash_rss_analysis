@@ -76,7 +76,7 @@ rule simulate_phenotype:
     dataset="{DATASET}",
     tmp=config["TMP"],
     script=config["SCRIPT"]+"sim_pheno_ukb.R"
-  resources: cpus=16, mem_mb=200000, time_min=240
+  resources: cpus=16, mem_mb=200000, time_min=1440
   shell:
         """
         module load gsl/2.7
