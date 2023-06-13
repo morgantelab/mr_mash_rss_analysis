@@ -11,7 +11,7 @@
 
 <meta name="author" content="Fabio Morgante &amp; Deborah Kunkel" />
 
-<meta name="date" content="2023-06-12" />
+<meta name="date" content="2023-06-13" />
 
 <title>Simulations with UK Biobank genotypes and different effect structure across traits</title>
 
@@ -374,7 +374,7 @@ div.tocify {
 <h1 class="title toc-ignore">Simulations with UK Biobank genotypes and
 different effect structure across traits</h1>
 <h4 class="author">Fabio Morgante &amp; Deborah Kunkel</h4>
-<h4 class="date">June 12, 2023</h4>
+<h4 class="date">June 13, 2023</h4>
 
 </div>
 
@@ -403,7 +403,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-06-12
+<strong>Last updated:</strong> 2023-06-13
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreee56eb434f45568a4ad5f21982f3bbe098fd7cf67targetblanke56eb43a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreea222e7bb742ba7ef5c3b6f67afe85c337c862faatargetblanka222e7ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/e56eb434f45568a4ad5f21982f3bbe098fd7cf67" target="_blank">e56eb43</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/a222e7bb742ba7ef5c3b6f67afe85c337c862faa" target="_blank">a222e7b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreee56eb434f45568a4ad5f21982f3bbe098fd7cf67targetblanke56eb43a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreea222e7bb742ba7ef5c3b6f67afe85c337c862faatargetblanka222e7ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/e56eb434f45568a4ad5f21982f3bbe098fd7cf67" target="_blank">e56eb43</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/a222e7bb742ba7ef5c3b6f67afe85c337c862faa" target="_blank">a222e7b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -574,7 +574,6 @@ Ignored files:
     Ignored:    tmp/
 
 Untracked files:
-    Untracked:  .test.sbatch.swp
     Untracked:  Snakefile_old
     Untracked:  code/merge_sumstats_all_chr_ukb.R
     Untracked:  scripts/OLD/run_merge_sumstats_all_chr_ukb.sbatch
@@ -633,6 +632,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/a222e7bb742ba7ef5c3b6f67afe85c337c862faa/analysis/ukb_sim_results.Rmd" target="_blank">a222e7b</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-13
+</td>
+<td>
+Add more details
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/409ae9178ccf146bf1bf2b7046e8611687cdea6e/docs/ukb_sim_results.html" target="_blank">409ae91</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/e56eb434f45568a4ad5f21982f3bbe098fd7cf67/analysis/ukb_sim_results.Rmd" target="_blank">e56eb43</a>
 </td>
 <td>
@@ -686,36 +719,46 @@ wflow_publish("analysis/ukb_sim_results.Rmd")
 </div>
 </div>
 </div>
+<pre class="r"><code>###Load libraries
+library(ggplot2)
+library(cowplot)
+
+repz &lt;- 1:20
+prefix &lt;- &quot;output/prediction_accuracy/ukb_caucasian_white_british_unrel_100000&quot;
+metric &lt;- &quot;r2&quot;
+traitz &lt;- 1:5</code></pre>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>The goal of this analysis is to benchmark the newly developed
-<em>mr.mash.rss</em> (aka <em>mr.mash</em> with summary statistics)
-against already existing methods in the task of predicting phenotypes
-from genotypes using only summary data. To do so, we used real genotypes
-from the array data of the UK Biobank. We randomly sampled 105,000
-nominally unrelated (<span class="math inline">\(r_A\)</span> &lt; 0.025
-between any pair) individuals of European ancestry (i.e., Caucasian and
-white British fields). After retaining variants with minor allele
-frequency (MAF) &gt; 0.01, minor allele count (MAC) &gt; 5 genotype
-missing rate &lt; 0.1 and Hardy-Weinberg Equilibrium (HWE) test p-value
-&gt; <span class="math inline">\(1 *10^{-10}\)</span>, our data
-consisted of 595,071 genetic variants (i.e., our predictors). Missing
-genotypes were imputed with the mean genotype for the respective genetic
-variant.</p>
-<p>The linkage disequilibrium (LD) matrices were computed using 146,288
-nominally unrelated (<span class="math inline">\(r_A\)</span> &lt; 0.025
-between any pair) individuals of European ancestry (i.e., Caucasian and
-white British fields), that did not overlap with the 105,000 individuals
-used for the rest of the analyses.</p>
-<p>For each simulation replicate, we randomly sampled 5,000 (out of the
-105,000) individuals to be the test set. The test set was only used to
-evaluate prediction accuracy. All the other steps were carried out on
-the training set of 100,000 individuals.</p>
-<p>We simulated 5 traits (i.e., our responses) by randomly sampling
-5,000 variants (out of the total of 595,071) to be causal, with
-different effect sharing structures across traits (see below). The
-genetic effects explain 50% of the total per-trait variance. The
-residuals are uncorrelated across traits.</p>
+<em>mr.mash.rss</em> (aka <em>mr.mash</em> with summary data) against
+already existing methods in the task of predicting phenotypes from
+genotypes using only summary data. To do so, we used real genotypes from
+the array data of the UK Biobank. We randomly sampled 105,000 nominally
+unrelated (<span class="math inline">\(r_A\)</span> &lt; 0.025 between
+any pair) individuals of European ancestry (i.e., Caucasian and white
+British fields). After retaining variants with minor allele frequency
+(MAF) &gt; 0.01, minor allele count (MAC) &gt; 5, genotype missing rate
+&lt; 0.1 and Hardy-Weinberg Equilibrium (HWE) test p-value &gt; <span
+class="math inline">\(1 *10^{-10}\)</span>, our data consisted of
+595,071 genetic variants (i.e., our predictors). Missing genotypes were
+imputed with the mean genotype for the respective genetic variant.</p>
+<p>The linkage disequilibrium (LD) matrices (i.e., the correlation
+matrices) were computed using 146,288 nominally unrelated (<span
+class="math inline">\(r_A\)</span> &lt; 0.025 between any pair)
+individuals of European ancestry (i.e., Caucasian and white British
+fields), that did not overlap with the 105,000 individuals used for the
+rest of the analyses.</p>
+<p>For each replicate, we simulated 5 traits (i.e., our responses) by
+randomly sampling 5,000 variants (out of the total of 595,071) to be
+causal, with different effect sharing structures across traits (see
+below). The genetic effects explain 50% of the total per-trait variance
+– in genetics terminology this is called genomic heritability (<span
+class="math inline">\(h_g^2\)</span>). The residuals are uncorrelated
+across traits.</p>
+<p>We randomly sampled 5,000 (out of the 105,000) individuals to be the
+test set. The test set was only used to evaluate prediction accuracy.
+All the other steps were carried out on the training set of 100,000
+individuals.</p>
 <p>Summary statistics (i.e., effect size and its standard error) were
 obtained by univariate simple linear regression of each trait on each
 variant, one at a time. Traits and variants were not standardized.</p>
@@ -735,21 +778,29 @@ initialized using the same grid as in the original paper.</li>
 covariance matrices computed as described in the <a
 href="https://www.biorxiv.org/content/10.1101/2022.11.22.517471v4.abstract">mr.mash
 paper</a>, updating the (full rank) residual covariance and the mixture
-weights, without standardizing the variables.</li>
+weights, without standardizing the variables. The residual covariance
+was initialized as in the <a
+href="https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1">mvSuSiE
+paper</a> and the mixture weights were initialized as 90% of the weight
+on the null component and 10% of the weight split equally across the
+remaining components. The phenotypic covariance was computed<br />
+as the sample covariance using the individual-level data.</li>
 </ul>
+<p>Prediction accuracy was evaluated as the <span
+class="math inline">\(R^2\)</span> of the regression of true phenotypes
+on the predicted phenotypes. This metric as the attractive property that
+its upper bound is <span class="math inline">\(h_g^2\)</span>.</p>
+<p>20 replicates for each simulation scenario were run.</p>
 </div>
 <div id="equal-effects-scenario" class="section level2">
 <h2>Equal effects scenario</h2>
-<pre class="r"><code>###Load libraries
-library(ggplot2)
-library(cowplot)
-
-repz &lt;- 1:20
-prefix &lt;- &quot;output/prediction_accuracy/ukb_caucasian_white_british_unrel_100000&quot;
-scenarioz &lt;- &quot;equal_effects_indep_resid&quot;
+<p>In this scenario, the effects were drawn from a Multivariate Normal
+distribution with mean vector 0 and covariance matrix that achieves a
+per-trait variance of 1 and a correlation across traits of 1. This
+implies that the effects of the causal variants are equal across
+responses.</p>
+<pre class="r"><code>scenarioz &lt;- &quot;equal_effects_indep_resid&quot;
 methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;, &quot;ldpred2_auto_gwide&quot;)
-metric &lt;- &quot;r2&quot;
-traitz &lt;- 1:5
 
 i &lt;- 0
 
@@ -757,8 +808,6 @@ n_col &lt;- 6
 n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
 res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
 colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
-
-
 
 for(sce in scenarioz){
   for(met in methodz){
@@ -796,44 +845,17 @@ p_methods_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
   theme(plot.title = element_text(hjust = 0.5, size=14))
 
 print(p_methods_shared)</code></pre>
-<p><img src="figure/ukb_sim_results.Rmd/unnamed-chunk-1-1.png" width="1440" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
-Past versions of unnamed-chunk-1-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-1-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/886b637db7c94561b72b44893f3be231f0361769/docs/figure/ukb_sim_results.Rmd/unnamed-chunk-1-1.png" target="_blank">886b637</a>
-</td>
-<td>
-fmorgante
-</td>
-<td>
-2023-06-12
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/ukb_sim_results.Rmd/equal%20effects-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>In this scenario, there is a clear advantage to using multivariate
+methods. In fact, given that the effects are equal across traits and the
+residuals are uncorrelated, a multivariate analysis is roughly
+equivalent to having 5 times as many samples as in an univariate
+analysis. The results show that <em>mr.mash.rss</em> clearly does better
+than both flavors of <em>LDpred2 auto</em>. However, in this simulation
+there does not seem to be much of a difference between <em>LDpred2
+auto</em> per-chromosome and genome-wide. Therefore, we will drop
+<em>LDpred2 auto</em> genome-wide from further analyses since it is more
+computationally intensive.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
