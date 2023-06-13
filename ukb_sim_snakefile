@@ -41,7 +41,7 @@ rule compute_genotype_means:
     imp_flag=config["IMPUTE_FLAG"],
     tmp=config["TMP"],
     chr="{CHR}"
-  resources: cpus=13, mem_mb=100000, time_min=1440
+  resources: cpus=20, mem_mb=100000, time_min=1440
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -55,7 +55,7 @@ rule compute_genotype_means:
                                   --chr {params.chr} \
                                   --impute_missing {params.imp_flag} \
                                   --temp_dir {params.tmp} \
-                                  --ncores 8
+                                  --ncores 20
         module unload R/4.2.3
         """
 
@@ -113,7 +113,7 @@ rule compute_summary_stats:
     imp_flag=config["IMPUTE_FLAG"],
     tmp=config["TMP"],
     script=config["SCRIPT"]+"compute_sumstats_ukb.R"
-  resources: cpus=13, mem_mb=200000, time_min=1440
+  resources: cpus=20, mem_mb=200000, time_min=1440
   shell:
         """
         module load gsl/2.7
