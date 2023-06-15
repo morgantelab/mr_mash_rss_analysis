@@ -1,7 +1,7 @@
-DATASET: ['1','2'] #,'3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20']
+DATASET: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20']
 TRAIT: ['1','2','3','4','5']
 CHR: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22']
-TMP: "/opt/ohpc/pub/tmp"
+TMP: "/scratch1/fabiom/tmp"
 SCRIPT: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/code/"
 FAM: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/data/genotypes/ukb_caucasian_white_british_unrel_100000.fam"
 BIM: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/data/genotypes/ukb_caucasian_white_british_unrel_100000.bim"
