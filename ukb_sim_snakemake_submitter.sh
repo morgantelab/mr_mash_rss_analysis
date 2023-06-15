@@ -18,8 +18,8 @@ conda activate mr_mash_rss_proj
 #-p -n \
 ## test dag generation
 # snakemake -p -n -s ukb_sim_snakefile \
-#             --configfile ukb_sim_trait_1_only_effects_indep_resid.yaml
-#             # --configfile ukb_sim_equal_effects_indep_resid.yaml
+#           --configfile ukb_sim_trait_1_only_effects_indep_resid.yaml
+            # --configfile ukb_sim_equal_effects_indep_resid.yaml
 
 snakemake \
   -s ukb_sim_snakefile \
