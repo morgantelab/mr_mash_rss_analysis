@@ -4,15 +4,21 @@ library(data.table)
 ###Set seed
 set.seed(1)
 
-###Load data cleaned up by Francesco for the GxE project
+###Load data cleaned up by Francesco for the GxE project and the ids of the imputed genotype data
 load("/data2/morgante_lab/ukbiobank_projects/GxE/datasets/data3_20230511.RData")
 load("/data2/morgante_lab/ukbiobank_projects/GxE/G/eigenG_20230413.RData")
+ids <- fread("/data2/morgante_lab/data/ukbiobank/genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample",
+             showProgress = FALSE, data.table = FALSE)
+ids <- ids[-1, ]
 
 ###Select needed variables
 eigenvec <- eigenG[[2]][1:21] ##first 20 PCs
 rm(eigenG)
 dttt <- dttt[, c("ID", "PP0a", "DP0a", "SP0a", "AOP", "Sex_SI")]
 dat <- merge(dttt, eigenvec, by="ID", all.x=FALSE, all.y=FALSE, sort=FALSE)
+
+###Subset individuals with imputed genotype data
+dat <- dat[which(dat$ID %in% ids[,2]), ]
 
 ###Assign fold
 dat$fold <- sample(rep_len(c(1:5), nrow(dat)))
