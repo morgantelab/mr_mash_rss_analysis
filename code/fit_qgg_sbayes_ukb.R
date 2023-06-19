@@ -2,70 +2,6 @@
 library(optparse)
 library(qgg)
 
-###Function needed
-gbayes_wrap <- function(bhat, shat, n, R, method, vg=NULL, vb=NULL, ve=NULL, 
-                        ssb_prior=NULL, sse_prior=NULL, lambda=NULL, h2=NULL, 
-                        pi=NULL, updateB=TRUE, updateE=TRUE, updatePi=TRUE, 
-                        updateG=TRUE, adjustE=FALSE, nub=4, nue=4, 
-                        nit=1000, nburn=200, algorithm=1){
-  
-  # Process LD
-  LDvalues <- split(R, rep(1:ncol(R), each = nrow(R)))
-  LDindices <- lapply(1:ncol(R),function(x) { (1:ncol(R))-1 } )
-  
-  # Prepare parameter input
-  methods <- c("blup","bayesN","bayesA","bayesL","bayesC","bayesR")
-  method <- match(method, methods) - 1
-  if( !sum(method%in%c(0:5))== 1 ) stop("Method specified not valid")
-  
-  m <- length(bhat)
-  b <- rep(0,m)
-  mask <- rep(FALSE, m)
-  
-  # Compute XtX, Xty, yty 
-  ww <- 1/(shat^2 + bhat^2/n)
-  wy <- bhat*ww
-  b2 <- bhat^2
-  seb2 <- shat^2
-  yy <- (b2 + (n-2)*seb2)*ww
-  yy <- median(yy)
-  
-  n <- as.integer(median(n))
-  
-  # Fit BLR model
-  out <- qgg:::sbayes_sparse(yy=yy,
-                             wy=wy,
-                             ww=ww,
-                             b=b,
-                             LDvalues=LDvalues,
-                             LDindices=LDindices,
-                             n=n,
-                             m=m,
-                             mask=mask,
-                             method=method,
-                             vg=vg,
-                             vb=vb,
-                             ve=ve, 
-                             ssb_prior=ssb_prior,
-                             sse_prior=sse_prior,
-                             lambda=lambda,
-                             h2=h2,
-                             pi=pi,
-                             updateB=updateB,
-                             updateE=updateE,
-                             updatePi=updatePi, 
-                             updateG=updateG,
-                             adjustE=adjustE,
-                             nub=nub,
-                             nue=nue,
-                             nit=nit,
-                             nburn=nburn,
-                             algorithm=algorithm)
-  
-  return(out)
-}
-
-
 ###Parse arguments
 parser <- OptionParser()
 parser <- add_option(parser, c("--sumstats"), type="character")
@@ -130,12 +66,15 @@ p <- nrow(univ_sumstats$Bhat)
 r <- ncol(univ_sumstats$Bhat)
 LD <- matrix(readBin(LD_matrix, what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
 
+###Organize summary stats in the format required by qgg
+stat <- data.frame(b=univ_sumstats$Bhat[, trait], seb=univ_sumstats$Shat[, trait], 
+                   n=n)
+
 ###Fit sBayesX
-fit_sbayes <- gbayes_wrap(bhat=univ_sumstats$Bhat[, trait], shat=univ_sumstats$Shat[, trait], n=n, R=LD, 
-                          method=method, vg=vg, vb=vb, ve=ve, ssb_prior=ssb_prior, sse_prior=sse_prior, 
-                          lambda=lambda, h2=h2, pi=Pi, updateB=updateB, updateE=updateE, updatePi=updatePi, 
-                          updateG=updateG, adjustE=adjustE, nub=nub, nue=nue, nit=nit, nburn=nburn, 
-                          algorithm=algorithm) 
+fit_sbayes <- qgg:::sbayes(stat=stat, LD=LD, method=method, lambda=lambda, vg=vg, vb=vb, ve=ve,  
+                          h2=h2, pi=Pi, ssb_prior=ssb_prior, sse_prior=sse_prior, nub=nub, nue=nue,
+                          updateB=updateB, updateE=updateE, updatePi=updatePi, updateG=updateG, 
+                          adjustE=adjustE, nit=nit, nburn=nburn, algorithm=algorithm) 
 
 saveRDS(fit_sbayes, file=output)
 
