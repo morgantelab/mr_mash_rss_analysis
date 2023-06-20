@@ -18,7 +18,7 @@ dttt <- dttt[, c("ID", "PP0a", "DP0a", "SP0a", "AOP", "Sex_SI")]
 dat <- merge(dttt, eigenvec, by="ID", all.x=FALSE, all.y=FALSE, sort=FALSE)
 
 ###Subset individuals with imputed genotype data
-dat <- dat[which(dat$ID %in% ids[,2]), ]
+dat <- dat[which(as.character(dat$ID) %in% as.character(ids[,2])), ]
 
 ###Assign fold
 dat$fold <- sample(rep_len(c(1:5), nrow(dat)))

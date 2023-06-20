@@ -19,10 +19,10 @@ sel_ids <- bigreadr::fread2("../data/misc/ukb_tiezzi_cleaned_BP_ind_ids.txt")
 
 ###Get list of HM3 SNPs to use
 cl <- makeCluster(22)
-clusterExport(cl, "map_hapmap3")
-list_snp_id <- parLapply(1:22, function(chr) {
+clusterExport(cl, c("map_hapmap3", "ukb_data_location"))
+list_snp_id <- parLapply(cl, 1:22, function(chr) {
   mfi <- paste0(ukb_data_location, "ukb_mfi_chr", chr, "_v3.txt")
-  infos_chr <- fread2(mfi, showProgress = FALSE)
+  infos_chr <- bigreadr::fread2(mfi, showProgress = FALSE)
   joined <- dplyr::inner_join(cbind(chr = chr, infos_chr), map_hapmap3[, c("chr", "rsid")],
                               by = c("chr" = "chr", "V2" = "rsid"))
   with(joined[!vctrs::vec_duplicate_detect(joined$V2), ],
@@ -32,7 +32,7 @@ stopCluster(cl)
 
 ###Keep only individuals retained by Francesco
 ids <- ids[-1, ]
-inds_to_keep <- which(ids[,2] %in% sel_ids[,2])
+inds_to_keep <- which(as.character(ids[,2]) %in% as.character(sel_ids[,2]))
 
 ###Read in the genotype data and save the backing file
 rds <- bigsnpr::snp_readBGEN(
@@ -42,5 +42,3 @@ rds <- bigsnpr::snp_readBGEN(
   ind_row     = inds_to_keep,
   ncores      = 22
 )  
-  
-rds$save()
