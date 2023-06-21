@@ -227,6 +227,7 @@ rule compute_data_driven_covariance_all_chr:
     n_pcs=config["DD_N_PCS"],
     frs=config["DD_FLASH_REMOVE_SINGLE"],
     ed=config["DD_ED"],
+    ted_zero=config["DD_TED_ZERO_THRESH"],
     dataset="{DATASET}",
     script=config["SCRIPT"]+"compute_data_driven_cov_all_chr_ukb.R"
   resources: cpus=8, mem_mb=7000, time_min=1440
@@ -244,6 +245,7 @@ rule compute_data_driven_covariance_all_chr:
                                     --n_PCs {params.n_pcs} \
                                     --flash_remove_singleton {params.frs} \
                                     --ED_algorithm {params.ed} \
+                                    --ted_zero_thresh {params.ted_zero} \
                                     --output {output} \
                                     --seed {params.dataset}
         module unload R/4.2.3
