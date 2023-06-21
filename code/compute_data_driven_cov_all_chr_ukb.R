@@ -18,7 +18,8 @@ parser <- add_option(parser, c("--residual_cov"), type="character")
 parser <- add_option(parser, c("--strong_Z_thresh"), type="integer")
 parser <- add_option(parser, c("--n_PCs"), type="integer")
 parser <- add_option(parser, c("--flash_remove_singleton"), type="logical")
-parser <- add_option(parser, c("--ED_algorithm"), type="character", )
+parser <- add_option(parser, c("--ED_algorithm"), type="character")
+parser <- add_option(parser, c("--ted_zero_thresh"), type="numeric", default=1e-10)
 parser <- add_option(parser, c("--seed"), type="integer")
 outparse <- parse_args(parser)
 
@@ -31,6 +32,7 @@ strong_thresh <- outparse$strong_Z_thresh
 npcs <- outparse$n_PCs
 flash_remove_singleton <- outparse$flash_remove_singleton
 ED_algorithm <- outparse$ED_algorithm
+ted_zero_thresh <- outparse$ted_zero_thresh
 seed <- outparse$seed
 
 ###Set seed
@@ -72,28 +74,40 @@ if(residual_cov=="diagonal"){
 
 dat_mash <- mash_set_data(Bhat_strong, Shat_strong, V=cov2cor(V))
 
-##Compute data-driven matrices
-U_pca <- cov_pca(data=dat_mash, npc=npcs)
-U_flash_default <- cov_flash(data=dat_mash, factors="default", tag="default",
-                              remove_singleton=flash_remove_singleton, output_model=NULL)
-U_flash_nonneg <- cov_flash(data=dat_mash, factors="nonneg", tag="nonneg",
-                             remove_singleton=flash_remove_singleton, output_model=NULL)
-U_emp <- mr.mash.alpha:::cov_empirical(data=dat_mash)
-
-##De-noise data-driven matrices via extreme deconvolution
-U_datadriven <- c(U_pca, U_flash_default, U_flash_nonneg, list(BB=U_emp))
 if(ED_algorithm=="bovy"){
-  U_ed <- cov_ed(dat_mash, U_datadriven)
-} else if(ED_algorithm=="ted" || ED_algorithm=="ed"){
-  library(udr)
-  f0 <- ud_init(X = as.matrix(Bhat_strong/Shat_strong), V = V, U_scaled = list(), 
-                U_unconstrained = U_datadriven, n_rank1=0)
-  res <-ud_fit(f0, X = na.omit(f0$X), control = list(unconstrained.update = ED_algorithm, 
-                                                     resid.update = "none",
-                                                     maxiter=5000, tol.lik = 1e-3), 
-                                                     verbose=TRUE)
+  ##Compute factor analyses
+  U_pca <- cov_pca(data=dat_mash, npc=npcs)
+  U_flash_default <- cov_flash(data=dat_mash, factors="default", tag="default",
+                               remove_singleton=flash_remove_singleton, output_model=NULL)
+  U_flash_nonneg <- cov_flash(data=dat_mash, factors="nonneg", tag="nonneg",
+                              remove_singleton=flash_remove_singleton, output_model=NULL)
+  U_emp <- mr.mash.alpha:::cov_empirical(data=dat_mash)
 
-U_ed <- lapply(res$U,"[[",2)
+  ##De-noise data-driven matrices via extreme deconvolution
+  U_datadriven <- c(list(BB=U_emp), U_pca)
+
+  if(!is.null(U_flash_default)){
+    U_datadriven <- c(U_datadriven, U_flash_default)
+  }
+
+  if(!is.null(U_flash_nonneg)){
+    U_datadriven <- c(U_datadriven, U_flash_nonneg)
+  }
+
+  U_ed <- cov_ed(dat_mash, U_datadriven)
+} else if(ED_algorithm=="ted"){
+  library(udr)
+  # 1. Initialize 50 unconstrained covariance matrices for udr.
+  R <- nrow(V)
+  K <- 50
+
+  # 2. Add small amount of penalty(inverse-Wishart), strength = R. When sample size is large, 
+  # the penalty amount R is small.
+  fit0 <- ud_init(dat_mash, n_unconstrained = K)
+  fit1 <- ud_fit(fit0, control = list(unconstrained.update = "ted", lambda = R, penalty.type = "iw",                                      maxiter=5000, tol = 1e-2, tol.lik = 1e-3), verbose=TRUE,
+                                      zero.threshold=ted_zero_thresh)
+
+  U_ed <- fit1$U
 }
 
 
