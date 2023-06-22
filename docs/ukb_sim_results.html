@@ -11,7 +11,7 @@
 
 <meta name="author" content="Fabio Morgante &amp; Deborah Kunkel" />
 
-<meta name="date" content="2023-06-13" />
+<meta name="date" content="2023-06-22" />
 
 <title>Simulations with UK Biobank genotypes and different effect structure across traits</title>
 
@@ -374,7 +374,7 @@ div.tocify {
 <h1 class="title toc-ignore">Simulations with UK Biobank genotypes and
 different effect structure across traits</h1>
 <h4 class="author">Fabio Morgante &amp; Deborah Kunkel</h4>
-<h4 class="date">June 13, 2023</h4>
+<h4 class="date">June 22, 2023</h4>
 
 </div>
 
@@ -403,7 +403,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-06-13
+<strong>Last updated:</strong> 2023-06-22
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree67a612786eacea35bca236294be69805f5d5d5e3targetblank67a6127a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreeee36241f370d43da905ea284732f5f43dd5c0f63targetblankee36241a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/67a612786eacea35bca236294be69805f5d5d5e3" target="_blank">67a6127</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/ee36241f370d43da905ea284732f5f43dd5c0f63" target="_blank">ee36241</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree67a612786eacea35bca236294be69805f5d5d5e3targetblank67a6127a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreeee36241f370d43da905ea284732f5f43dd5c0f63targetblankee36241a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/67a612786eacea35bca236294be69805f5d5d5e3" target="_blank">67a6127</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/ee36241f370d43da905ea284732f5f43dd5c0f63" target="_blank">ee36241</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -575,13 +575,13 @@ Ignored files:
 
 Untracked files:
     Untracked:  Snakefile_old
+    Untracked:  code/compute_train_phenotypic_cov_and_adjust_test_pheno_BP_ukb.R
     Untracked:  code/merge_sumstats_all_chr_ukb.R
-    Untracked:  scripts/OLD/run_merge_sumstats_all_chr_ukb.sbatch
-    Untracked:  scripts/compute_LD_test_data_for_vijay_by_chr_plink.sbatch
-    Untracked:  scripts/create_test_data_for_vijay.sbatch
-    Untracked:  scripts/readme.txt
-    Untracked:  scripts/run_extract_list_inds_to_remove_from_LD_test_data_for_vijay_plink.sbatch
-    Untracked:  test.sbatch
+    Untracked:  scripts/6_run_compute_train_phenotypic_cov_and_adjust_test_pheno_BP_ukb.sbatch
+    Untracked:  ukb_sim_blocks_shared_effects_indep_resid.yaml
+
+Unstaged changes:
+    Modified:   ukb_sim_snakemake_submitter.sh
 
 </code></pre>
 <p>
@@ -627,6 +627,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/ee36241f370d43da905ea284732f5f43dd5c0f63/analysis/ukb_sim_results.Rmd" target="_blank">ee36241</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-22
+</td>
+<td>
+Add mostly null scenario
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/42fe7e0abd0fbcf5359cbd3c2a546556b9da0433/docs/ukb_sim_results.html" target="_blank">42fe7e0</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1052,6 +1086,65 @@ there does not seem to be much of a difference between <em>LDpred2
 auto</em> per-chromosome and genome-wide. Therefore, we will drop
 <em>LDpred2 auto</em> genome-wide from further analyses since it is more
 computationally intensive.</p>
+</div>
+<div id="mostly-null-scenario" class="section level2">
+<h2>Mostly null scenario</h2>
+<p>In this scenario, the effects were drawn from a Multivariate Normal
+distribution with mean vector 0 and covariance matrix that achieves
+effects (with variance 1) to be present only trait 1. The other 4 traits
+are only random noise.</p>
+<pre class="r"><code>scenarioz &lt;- &quot;trait_1_only_effects_indep_resid&quot;
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)
+
+i &lt;- 0
+
+n_col &lt;- 6
+n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
+      
+      for(trait in traitz){
+        i &lt;- i + 1
+        
+        res[i, 1] &lt;- repp
+        res[i, 2] &lt;- sce
+        res[i, 3] &lt;- met
+        res[i, 4] &lt;- trait
+        res[i, 5] &lt;- metric
+        res[i, 6] &lt;- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res &lt;- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_methods_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = &quot;single&quot;)) +
+  ylim(0.0, 0.51) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;green&quot;)) +
+  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
+  geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
+  theme_cowplot(font_size = 18)
+
+print(p_methods_shared)</code></pre>
+<p><img src="figure/ukb_sim_results.Rmd/mostly%20null-1.png" width="1248" style="display: block; margin: auto;" /></p>
+<p>In this scenario, there is no advantage to using multivariate
+methods. In fact, there is potential for multivariate methods to do
+worse than univariate methods because of the large amount of noise
+modeled jointly with the signal. However, the results show that
+<em>mr.mash.rss</em> can learn this structure from the data and,
+reassuringly, performs similarly to <em>LDpred2 auto</em>.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1069,10 +1162,12 @@ Matrix products: default
 BLAS/LAPACK: /opt/ohpc/pub/libs/gnu9/openblas/0.3.7/lib/libopenblasp-r0.3.7.so
 
 locale:
- [1] LC_CTYPE=en_US.UTF-8 LC_NUMERIC=C         LC_TIME=C           
- [4] LC_COLLATE=C         LC_MONETARY=C        LC_MESSAGES=C       
- [7] LC_PAPER=C           LC_NAME=C            LC_ADDRESS=C        
-[10] LC_TELEPHONE=C       LC_MEASUREMENT=C     LC_IDENTIFICATION=C 
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
