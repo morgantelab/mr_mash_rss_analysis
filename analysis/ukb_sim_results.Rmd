@@ -128,3 +128,63 @@ analysis. The results show that *mr.mash.rss* clearly does better than both flav
 *LDpred2 auto*. However, in this simulation there does not seem to be much of a difference 
 between *LDpred2 auto* per-chromosome and genome-wide. Therefore, we will drop *LDpred2 auto* 
 genome-wide from further analyses since it is more computationally intensive.
+
+## Mostly null scenario
+
+In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0
+and covariance matrix that achieves effects (with variance 1) to be present only trait 1. The other 
+4 traits are only random noise.
+
+```{r mostly null, fig.height=10, fig.width=13}
+scenarioz <- "trait_1_only_effects_indep_resid"
+methodz <- c("mr_mash_rss", "ldpred2_auto")
+
+i <- 0
+
+n_col <- 6
+n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score")
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds"))
+      
+      for(trait in traitz){
+        i <- i + 1
+        
+        res[i, 1] <- repp
+        res[i, 2] <- sce
+        res[i, 3] <- met
+        res[i, 4] <- trait
+        res[i, 5] <- metric
+        res[i, 6] <- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res <- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_methods_shared <- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = "black", outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom="point", shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = "single")) +
+  ylim(0.0, 0.51) +
+  scale_fill_manual(values = c("pink", "red", "green")) +
+  labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
+  geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
+  theme_cowplot(font_size = 18)
+
+print(p_methods_shared)
+```
+
+In this scenario, there is no advantage to using multivariate methods. In fact, there is potential
+for multivariate methods to do worse than univariate methods because of the large amount of noise
+modeled jointly with the signal. However, the results show that *mr.mash.rss* can learn this structure
+from the data and, reassuringly, performs similarly to *LDpred2 auto*.
+
