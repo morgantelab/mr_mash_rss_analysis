@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreeee36241f370d43da905ea284732f5f43dd5c0f63targetblankee36241a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree632734314cba1d91a69dbeaa07df9217a635c018targetblank6327343a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/ee36241f370d43da905ea284732f5f43dd5c0f63" target="_blank">ee36241</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/632734314cba1d91a69dbeaa07df9217a635c018" target="_blank">6327343</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreeee36241f370d43da905ea284732f5f43dd5c0f63targetblankee36241a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree632734314cba1d91a69dbeaa07df9217a635c018targetblank6327343a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/ee36241f370d43da905ea284732f5f43dd5c0f63" target="_blank">ee36241</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/632734314cba1d91a69dbeaa07df9217a635c018" target="_blank">6327343</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -575,13 +575,7 @@ Ignored files:
 
 Untracked files:
     Untracked:  Snakefile_old
-    Untracked:  code/compute_train_phenotypic_cov_and_adjust_test_pheno_BP_ukb.R
     Untracked:  code/merge_sumstats_all_chr_ukb.R
-    Untracked:  scripts/6_run_compute_train_phenotypic_cov_and_adjust_test_pheno_BP_ukb.sbatch
-    Untracked:  ukb_sim_blocks_shared_effects_indep_resid.yaml
-
-Unstaged changes:
-    Modified:   ukb_sim_snakemake_submitter.sh
 
 </code></pre>
 <p>
@@ -627,6 +621,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/632734314cba1d91a69dbeaa07df9217a635c018/analysis/ukb_sim_results.Rmd" target="_blank">6327343</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-22
+</td>
+<td>
+Minor change
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/033b73667501582194434f1b7e8435ccf58db11c/docs/ukb_sim_results.html" target="_blank">033b736</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1132,13 +1160,50 @@ p_methods_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
   ylim(0.0, 0.51) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;green&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;green&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
 
 print(p_methods_shared)</code></pre>
 <p><img src="figure/ukb_sim_results.Rmd/mostly%20null-1.png" width="1248" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-mostly-null-1">
+Past versions of "mostly null-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-mostly-null-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/033b73667501582194434f1b7e8435ccf58db11c/docs/figure/ukb_sim_results.Rmd/mostly null-1.png" target="_blank">033b736</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>In this scenario, there is no advantage to using multivariate
 methods. In fact, there is potential for multivariate methods to do
 worse than univariate methods because of the large amount of noise
