@@ -97,7 +97,7 @@ RhpcBLASctl::blas_set_num_threads(1)
 set.seed(1)
 
 ###
-if(chr %in% c("1", "2", "3", "4", "5" , "6", "7", "8", "9")){
+if(chr %in% c("1", "2", "3", "4", "5", "6", "7", "8", "9")){
   chr <- paste0("0", chr)
 }
 
@@ -127,6 +127,8 @@ out <- compute_univariate_sumstats_bigsnp(geno_obj=geno, Y=pheno_dat[, 1:3], Z=p
 
 if(chr=="0"){
   chr <- "All"
+} else if(chr %in% c("01", "02", "03", "04", "05", "06", "07", "08", "09")){
+  chr <- unlist(strsplit(chr, split=""))[2]
 }
 
 saveRDS(out, file=paste0("../output/summary_statistics/ukb_tiezzi_BP_chr", chr, "_sumstats_", fold, ".rds"))
