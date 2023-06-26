@@ -26,7 +26,7 @@ TRAIT=${2}
 ###Run R script
 echo "Start analyzing trait ${TRAIT} and chromosome ${CHR} ..."
 
-Rscript ../code/fit_ldpred2auto_ukb.R --sumstats ../output/summary_statistics/ukb_tiezzi_BP_chr"${CHR}"_sumstats_"${folD}".rds \
+Rscript ../code/fit_ldpred2auto_ukb.R --sumstats ../output/summary_statistics/ukb_tiezzi_BP_chr"${CHR}"_sumstats_"${FOLD}".rds \
                                       --LD_matrix ../data/LD_matrices/ukb_caucasian_white_british_unrel_for_tiezzi_BP_chr"${CHR}"_LD.ld.bin \
                                       --n 78809 \
                                       --h2_init "${H2_INIT}" \
