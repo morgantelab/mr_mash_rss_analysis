@@ -266,6 +266,7 @@ rule fit_ldpred2auto_by_chr_trait:
     trait="{TRAIT}",
     dataset="{DATASET}",
     chr="{CHR}",
+    tmp=config["TMP"],
     script=config["SCRIPT"]+"fit_ldpred2auto_ukb.R"
   resources: cpus=4, mem_mb=100000, time_min=720
   shell:
@@ -283,6 +284,7 @@ rule fit_ldpred2auto_by_chr_trait:
                                     --trait {params.trait} \
                                     --ncores 4 \
                                     --seed {params.dataset} \
+                                    --temp_dir {params.tmp} \
                                     --output {output}
         module unload R/4.2.3
         """

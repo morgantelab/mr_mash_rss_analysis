@@ -18,6 +18,7 @@ parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--output"), type="character")
 parser <- add_option(parser, c("--seed"), type="integer")
 parser <- add_option(parser, c("--trait"), type="integer")
+parser <- add_option(parser, c("--temp_dir"), type="character")
 outparse <- parse_args(parser)
 
 sumstats <- outparse$sumstats
@@ -34,6 +35,7 @@ ncores <- outparse$ncores
 output <- outparse$output
 seed <- outparse$seed
 trait <- outparse$trait
+temp_dir <- outparse$temp_dir
 
 vec_p_init <- seq_log(1e-4, 1, length.out = 30)
 
@@ -49,7 +51,8 @@ LD <- matrix(readBin(LD_matrix, what="numeric", n=p^2), nrow=p, ncol=p, byrow=TR
 df_beta <- data.frame(beta=univ_sumstats$Bhat[, trait],
                       beta_se=univ_sumstats$Shat[, trait],
                       n_eff=rep(n, times=p))
-corr <- as_SFBM(as(LD, "CsparseMatrix"))
+tmp <- tempfile(tmpdir=temp_dir)
+corr <- as_SFBM(as(LD, "CsparseMatrix"), tmp)
 rm(LD)
 
 ###Fit mr.mash.rss
@@ -58,3 +61,7 @@ fit_ldpred2_auto <- snp_ldpred2_auto(corr=corr, df_beta=df_beta, h2_init=h2_init
                                      allow_jump_sign=allow_jump_sign, shrink_corr=shrink_corr, ncores=ncores)
 
 saveRDS(fit_ldpred2_auto, file=output)
+
+###Remove temprary files
+file.remove(paste0(tmp, ".sbk"))
+

@@ -35,6 +35,7 @@ Rscript ../code/fit_ldpred2auto_ukb.R --sumstats ../output/summary_statistics/uk
                                       --trait ${TRAIT} \
                                       --ncores 4 \
                                       --seed ${FOLD} \
+                                      --temp_dir /scratch1/fabiom/tmp \
                                       --output ../output/ldpred2_auto_fit/ukb_tiezzi_BP_chr"${CHR}"_ldpred2_auto_fit_trait"${TRAIT}"_"${FOLD}".rds
 
 echo "Finished analyzing trait ${TRAIT} and chromosome ${CHR}."
