@@ -21,15 +21,15 @@ CHR="${SLURM_ARRAY_TASK_ID}"
 ###Run R script
 echo "Start analyzing chromosome ${CHR} ..."
 
-Rscript ../code/compute_LD_matrix_bgen_ukb.R --geno /scratch1/fabiom/ukb_geno_imp_HM3_tiezzi_for_LD.rds \
-                                             --chr ${CHR} \
-                                             --sparse TRUE \
-                                             --genetic_map ../data/misc/1000-genomes-genetic-maps/interpolated_OMNI \
-                                             --window_size 0.003 \
-                                             --impute_missing FALSE \
-                                             --seed 1 \
-                                             --output ../data/LD_matrices/ukb_caucasian_white_british_unrel_for_tiezzi_BP_chr"${CHR}"_LD_sparse.ld.bin \
-                                             --ncores 8
+Rscript ../code/compute_LD_matrix_bigsnp_obj_ukb.R --geno /scratch1/fabiom/ukb_geno_imp_HM3_tiezzi_for_LD.rds \
+                                                   --chr ${CHR} \
+                                                   --sparse TRUE \
+                                                   --genetic_map ../data/misc/1000-genomes-genetic-maps/interpolated_OMNI \
+                                                   --window_size 0.003 \
+                                                   --impute_missing FALSE \
+                                                   --seed 1 \
+                                                   --output ../data/LD_matrices/ukb_caucasian_white_british_unrel_for_tiezzi_BP_chr"${CHR}"_LD_sparse.ld.bin \
+                                                   --ncores 8
 
 echo "Finished analyzing chromosome ${CHR}."
 
