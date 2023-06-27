@@ -1,5 +1,18 @@
 ###Load libraries needed
+library(optparse)
 library(RhpcBLASctl)
+
+###Function needed
+inv_normalise <- function(x) { #this would also tolerate NAs
+  return( qnorm( (rank(x, na.last = "keep") - 0.5) / sum(!is.na(x))))
+}
+
+###Parse arguments
+parser <- OptionParser()
+parser <- add_option(parser, c("--normalize"), type="logical")
+outparse <- parse_args(parser)
+
+normalize <- outparse$normalize
 
 ###Set MKL threads
 RhpcBLASctl::blas_set_num_threads(1)
@@ -14,7 +27,7 @@ pheno_dat$ID <- NULL
 
 ###Set up 
 nfolds <- 5
-traits <- c("PP0a", "DP0a", "SP0a")
+traits <- c("BMI1", "DP0a", "SP0a")
 
 for(fold in 1:nfolds){
   ###Get training and test individuals indexes
@@ -37,11 +50,19 @@ for(fold in 1:nfolds){
     
     ###Fit model to the training set and get residuals
     fit_train <- lm(form, data=pheno_dat, subset=train_inds)
-    res_mat_train[, i] <- resid(fit_train) + coef(fit_train)[1]
-    
+    res_train <- resid(fit_train) + coef(fit_train)[1]
+
     ###Fit model to the test set and get residuals
     fit_test <- lm(form, data=pheno_dat, subset=test_inds)
-    res_mat_test[, i] <- resid(fit_test) + coef(fit_test)[1]
+    res_test <- resid(fit_test) + coef(fit_test)[1]
+
+    if(normalize){
+      res_mat_train[, i] <- inv_normalise(res_train)  
+      res_mat_test[, i] <- inv_normalise(res_test)
+    } else {
+      res_mat_train[, i] <- res_train
+      res_mat_test[, i] <- res_test
+    }
   }
   
   saveRDS(cov(res_mat_train), file=paste0("../output/misc/ukb_tiezzi_BP_phenotypic_cov_", fold, ".rds"))

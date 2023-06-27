@@ -25,6 +25,7 @@ Rscript ../code/compute_sumstats_BP_ukb.R --fold ${FOLD} \
                                           --chr ${CHR} \
                                           --standardize FALSE \
                                           --impute_missing FALSE \
+                                          --normalize TRUE \
                                           --ncores 3
 
 echo "Finished analyzing chromosome ${CHR}."

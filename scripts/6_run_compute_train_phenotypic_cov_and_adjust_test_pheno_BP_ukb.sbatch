@@ -13,7 +13,7 @@ source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
 module load R/4.2.3
 
 ###Run script
-Rscript ../code/compute_train_phenotypic_cov_and_adjust_test_pheno_BP_ukb.R
+Rscript ../code/compute_train_phenotypic_cov_and_adjust_test_pheno_BP_ukb.R --normalize TRUE
 
 ###Unload module
 module unload R/4.2.3

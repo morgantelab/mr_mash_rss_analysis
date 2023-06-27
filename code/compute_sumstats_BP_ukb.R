@@ -6,7 +6,8 @@ library(RhpcBLASctl)
 ###Function to compute summary stats
 compute_univariate_sumstats_bigsnp <- function(geno_obj, Y, Z=NULL, chr=0, standardize=FALSE, 
                                                impute_missing=TRUE, train_inds=NULL,
-                                               standardize.response=FALSE, mc.cores=1){
+                                               normalize=FALSE, standardize.response=FALSE, 
+                                               mc.cores=1){
   
   if(impute_missing){
     X <- bigsnpr::snp_fastImputeSimple(geno_obj$genotypes, method = "mean2", ncores = mc.cores)
@@ -41,6 +42,25 @@ compute_univariate_sumstats_bigsnp <- function(geno_obj, Y, Z=NULL, chr=0, stand
     col_inds <- which(geno_obj$map$chromosome==chr)
   }
   
+  if(normalize){
+    
+    inv_normalise <- function(x) { #this would also tolerate NAs
+      return( qnorm( (rank(x, na.last = "keep") - 0.5) / sum(!is.na(x))))
+    }
+    
+    res_mat_train <- matrix(as.numeric(NA), nrow=n, ncol=r)
+    colnames(res_mat_train) <- colnames(Y)
+    
+    for(s in 1:r){
+      fit_norm <- lm(Y[, s] ~ Z)
+      res <- resid(fit_norm) + coef(fit_norm)[1]
+      res_mat_train[, s] <- inv_normalise(res)
+    }
+    
+    Z <- NULL
+    Y <- res_mat_train
+  }
+  
   linreg <- function(i, X, Y, Z, cols, rows){
     
     fit <- bigstatsr::big_univLinReg(X=X, y=Y[, i], covar.train=Z,
@@ -51,12 +71,16 @@ compute_univariate_sumstats_bigsnp <- function(geno_obj, Y, Z=NULL, chr=0, stand
     return(list(bhat=bhat, shat=shat))
   }
   
+  if(!is.null(Z)){
+    Z <- as.matrix(Z)
+  }
+  
   if(mc.cores>1){
     cl <- parallel::makeCluster(mc.cores)
-    out <- parallel::parLapply(cl, 1:r, linreg, X, Y, as.matrix(Z), col_inds, row_inds)
+    out <- parallel::parLapply(cl, 1:r, linreg, X, Y, Z, col_inds, row_inds)
     parallel::stopCluster(cl)
   } else {
-    out <- lapply(1:r, linreg, X, Y, as.matrix(Z), col_inds, row_inds)
+    out <- lapply(1:r, linreg, X, Y, Z, col_inds, row_inds)
   }
   
   Bhat <- sapply(out,"[[","bhat")
@@ -66,7 +90,7 @@ compute_univariate_sumstats_bigsnp <- function(geno_obj, Y, Z=NULL, chr=0, stand
   
   ###Put coefficients and ses on the standardized X scale   
   if(standardize){
-    sds <- sqrt(bigstatsr::big_colstats(X, ind.col=col_inds)$var)
+    sds <- sqrt(bigstatsr::big_colstats(X, ind.col=col_inds, ind.row=row_inds)$var)
   	
     Bhat <- Bhat*sds
     Shat <- Shat*sds
@@ -82,6 +106,7 @@ parser <- add_option(parser, c("--chr"), type="character")
 parser <- add_option(parser, c("--standardize"), type="logical")
 parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--impute_missing"), type="logical")
+parser <- add_option(parser, c("--normalize"), type="logical")
 outparse <- parse_args(parser)
 
 chr <- outparse$chr
@@ -89,6 +114,7 @@ fold <- outparse$fold
 standardize <- outparse$standardize
 ncores <- outparse$ncores
 impute_missing <- outparse$impute_missing
+normalize <- outparse$normalize
 
 ###Set MKL threads
 RhpcBLASctl::blas_set_num_threads(1)
@@ -123,7 +149,7 @@ geno <- snp_attach("/scratch1/fabiom/ukb_geno_imp_HM3_tiezzi.rds")
 out <- compute_univariate_sumstats_bigsnp(geno_obj=geno, Y=pheno_dat[, 1:3], Z=pheno_dat[, 4:25],
                                           train_inds=train_inds, chr=chr, standardize=standardize,
                                           impute_missing=impute_missing, standardize.response=FALSE, 
-                                          mc.cores=ncores)
+                                          normalize=normalize, mc.cores=ncores)
 
 if(chr=="0"){
   chr <- "All"
