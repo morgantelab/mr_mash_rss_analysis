@@ -308,7 +308,7 @@ rule fit_mrmash_rss:
     script=config["SCRIPT"]+"fit_mrmashrss_ukb.R",
     chr="{CHR}",
     dataset="{DATASET}"
-  resources: cpus=4, mem_mb=100000, time_min=720
+  resources: cpus=4, mem_mb=100000, time_min=1440
   shell:
         """
         module load gsl/2.7
