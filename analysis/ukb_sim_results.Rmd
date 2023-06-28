@@ -190,8 +190,8 @@ from the data and, reassuringly, performs similarly to *LDpred2 auto*.
 
 ## Shared in subgroups scenario
 
-In this scenario, the effects were drawn from a mixture of two Multivariate Normal distributions, were drawn 
-from $w_1 MVN(0, \Sigma_1) + w_2 MVN(0, \Sigma_2)$, where $w_1$ = 0.5 and $w_2$ = 0.5. $\Sigma_1$ is such 
+In this scenario, the effects were drawn from a mixture of two Multivariate Normal distributions, i.e., 
+$w_1 MVN(0, \Sigma_1) + w_2 MVN(0, \Sigma_2)$, where $w_1$ = 0.5 and $w_2$ = 0.5. $\Sigma_1$ is such 
 that it achieves correlation across traits of 0.9 and variance of 1. $\Sigma_2$ is such that it achieves 
 correlation across traits of 0.7 and variance of 1. The first component of the mixture applies to traits 1-3
 while the second component applies to traits 4-5. The per-trait $h^2_g$ is 0.3 for traits 1-3 and 0.5 for the
