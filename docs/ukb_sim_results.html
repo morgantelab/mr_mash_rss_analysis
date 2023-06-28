@@ -11,7 +11,7 @@
 
 <meta name="author" content="Fabio Morgante &amp; Deborah Kunkel" />
 
-<meta name="date" content="2023-06-22" />
+<meta name="date" content="2023-06-28" />
 
 <title>Simulations with UK Biobank genotypes and different effect structure across traits</title>
 
@@ -374,7 +374,7 @@ div.tocify {
 <h1 class="title toc-ignore">Simulations with UK Biobank genotypes and
 different effect structure across traits</h1>
 <h4 class="author">Fabio Morgante &amp; Deborah Kunkel</h4>
-<h4 class="date">June 22, 2023</h4>
+<h4 class="date">June 28, 2023</h4>
 
 </div>
 
@@ -403,7 +403,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-06-22
+<strong>Last updated:</strong> 2023-06-28
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree632734314cba1d91a69dbeaa07df9217a635c018targetblank6327343a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree963fdb6876a2858196e585d9a2a5cbd0c4a6f726targetblank963fdb6a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/632734314cba1d91a69dbeaa07df9217a635c018" target="_blank">6327343</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/963fdb6876a2858196e585d9a2a5cbd0c4a6f726" target="_blank">963fdb6</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree632734314cba1d91a69dbeaa07df9217a635c018targetblank6327343a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree963fdb6876a2858196e585d9a2a5cbd0c4a6f726targetblank963fdb6a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/632734314cba1d91a69dbeaa07df9217a635c018" target="_blank">6327343</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/963fdb6876a2858196e585d9a2a5cbd0c4a6f726" target="_blank">963fdb6</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -576,6 +576,14 @@ Ignored files:
 Untracked files:
     Untracked:  Snakefile_old
     Untracked:  code/merge_sumstats_all_chr_ukb.R
+    Untracked:  scripts/7_run_compute_residual_cov_all_chr_BP_ukb.sbatch
+
+Unstaged changes:
+    Modified:   code/compute_pd_residual_cov_all_chr_ukb.R
+    Modified:   code/compute_sumstats_BP_ukb.R
+    Deleted:    scripts/7_run_compute_pd_residual_cov_all_chr_BP_ukb.sbatch
+    Modified:   scripts/9_run_fit_mrmashrss_by_chr_BP_ukb.sbatch
+    Modified:   ukb_sim_snakemake_submitter.sh
 
 </code></pre>
 <p>
@@ -621,6 +629,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/963fdb6876a2858196e585d9a2a5cbd0c4a6f726/analysis/ukb_sim_results.Rmd" target="_blank">963fdb6</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-28
+</td>
+<td>
+Add shared in subgroups scenario
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/6469c43904dac9825c9332290560f61b010c6108/docs/ukb_sim_results.html" target="_blank">6469c43</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1191,6 +1233,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/6469c43904dac9825c9332290560f61b010c6108/docs/figure/ukb_sim_results.Rmd/mostly null-1.png" target="_blank">6469c43</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/033b73667501582194434f1b7e8435ccf58db11c/docs/figure/ukb_sim_results.Rmd/mostly null-1.png" target="_blank">033b736</a>
 </td>
 <td>
@@ -1210,6 +1263,58 @@ worse than univariate methods because of the large amount of noise
 modeled jointly with the signal. However, the results show that
 <em>mr.mash.rss</em> can learn this structure from the data and,
 reassuringly, performs similarly to <em>LDpred2 auto</em>.</p>
+</div>
+<div id="shared-in-subgroups-scenario" class="section level2">
+<h2>Shared in subgroups scenario</h2>
+<p>In this scenario, the effects were drawn from a mixture of two
+Multivariate Normal distributions, each with mean vector 0 but with
+different covariance matrix.</p>
+<pre class="r"><code>scenarioz &lt;- &quot;blocks_shared_effects_indep_resid&quot;
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)
+
+i &lt;- 0
+
+n_col &lt;- 6
+n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
+      
+      for(trait in traitz){
+        i &lt;- i + 1
+        
+        res[i, 1] &lt;- repp
+        res[i, 2] &lt;- sce
+        res[i, 3] &lt;- met
+        res[i, 4] &lt;- trait
+        res[i, 5] &lt;- metric
+        res[i, 6] &lt;- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res &lt;- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_methods_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = &quot;single&quot;)) +
+  ylim(0.0, 0.51) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;green&quot;)) +
+  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
+  geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
+  theme_cowplot(font_size = 18)
+
+print(p_methods_shared)</code></pre>
+<p><img src="figure/ukb_sim_results.Rmd/shared%20in%20subgroups-1.png" width="1248" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
