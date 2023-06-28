@@ -30,7 +30,7 @@ echo "Start analyzing chromosome ${CHR} ..."
 Rscript ../code/fit_mrmashrss_ukb.R --sumstats ../output/summary_statistics/ukb_tiezzi_BP_chr"${CHR}"_sumstats_"${FOLD}".rds \
                                     --LD_matrix ../data/LD_matrices/ukb_caucasian_white_british_unrel_for_tiezzi_BP_chr"${CHR}"_LD.ld.bin \
                                     --pheno_cov ../output/misc/ukb_tiezzi_BP_phenotypic_cov_"${FOLD}".rds \
-                                    --residual_cov ../output/misc/ukb_tiezzi_BP_pd_residual_cov_"${FOLD}".rds \
+                                    --residual_cov ../output/misc/ukb_tiezzi_BP_residual_cov_"${FOLD}".rds \
                                     --data_driven_cov ../output/misc/ukb_tiezzi_BP_"${ED}"_data_driven_cov_"${FOLD}".rds \
                                     --canonical_cov TRUE \
                                     --n 78809 \
