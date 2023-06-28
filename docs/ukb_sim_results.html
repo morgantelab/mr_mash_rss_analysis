@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree963fdb6876a2858196e585d9a2a5cbd0c4a6f726targetblank963fdb6a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree1b792edf62830669ad8e8170a28795770f313086targetblank1b792eda">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/963fdb6876a2858196e585d9a2a5cbd0c4a6f726" target="_blank">963fdb6</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/1b792edf62830669ad8e8170a28795770f313086" target="_blank">1b792ed</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree963fdb6876a2858196e585d9a2a5cbd0c4a6f726targetblank963fdb6a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree1b792edf62830669ad8e8170a28795770f313086targetblank1b792eda"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/963fdb6876a2858196e585d9a2a5cbd0c4a6f726" target="_blank">963fdb6</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/1b792edf62830669ad8e8170a28795770f313086" target="_blank">1b792ed</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -629,6 +629,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/1b792edf62830669ad8e8170a28795770f313086/analysis/ukb_sim_results.Rmd" target="_blank">1b792ed</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-28
+</td>
+<td>
+Add a few more details
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/3da045bd41fdd9b3ecbeb196f551facb17217a4e/docs/ukb_sim_results.html" target="_blank">3da045b</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-28
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1015,8 +1049,8 @@ same grid as in the original paper. NB this is a univariate method.</li>
 initialized as 0.5/22 (WRONG) and <span class="math inline">\(p\)</span>
 initialized using the same grid as in the original paper. NB this is a
 univariate method.</li>
-<li><em>mr.mash.rss</em> per-chromosome, with only data-driven
-covariance matrices computed as described in the <a
+<li><em>mr.mash.rss</em> per-chromosome, with both canonical and
+data-driven covariance matrices computed as described in the <a
 href="https://www.biorxiv.org/content/10.1101/2022.11.22.517471v4.abstract">mr.mash
 paper</a>, updating the (full rank) residual covariance and the mixture
 weights, without standardizing the variables. The residual covariance
@@ -1196,7 +1230,7 @@ res &lt;- transform(res, scenario=as.factor(scenario),
                       method=as.factor(method),
                       trait=as.factor(trait))
 
-p_methods_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
+p_mostly_null &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
   geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
   stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
                position = position_dodge2(width = 0.87,   
@@ -1207,7 +1241,7 @@ p_methods_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
 
-print(p_methods_shared)</code></pre>
+print(p_mostly_null)</code></pre>
 <p><img src="figure/ukb_sim_results.Rmd/mostly%20null-1.png" width="1248" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-mostly-null-1">
@@ -1267,8 +1301,17 @@ reassuringly, performs similarly to <em>LDpred2 auto</em>.</p>
 <div id="shared-in-subgroups-scenario" class="section level2">
 <h2>Shared in subgroups scenario</h2>
 <p>In this scenario, the effects were drawn from a mixture of two
-Multivariate Normal distributions, each with mean vector 0 but with
-different covariance matrix.</p>
+Multivariate Normal distributions, were drawn from <span
+class="math inline">\(w_1 MVN(0, \Sigma_1) + w_2 MVN(0,
+\Sigma_2)\)</span>, where <span class="math inline">\(w_1\)</span> = 0.5
+and <span class="math inline">\(w_2\)</span> = 0.5. <span
+class="math inline">\(\Sigma_1\)</span> is such that it achieves
+correlation across traits of 0.9 and variance of 1. <span
+class="math inline">\(\Sigma_2\)</span> is such that it achieves
+correlation across traits of 0.7 and variance of 1. The first component
+of the mixture applies to traits 1-3 while the second component applies
+to traits 4-5. The per-trait <span class="math inline">\(h^2_g\)</span>
+is 0.3 for traits 1-3 and 0.5 for the traits 4-5.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;blocks_shared_effects_indep_resid&quot;
 methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)
 
@@ -1302,19 +1345,65 @@ res &lt;- transform(res, scenario=as.factor(scenario),
                       method=as.factor(method),
                       trait=as.factor(trait))
 
-p_methods_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
+p_blocks_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
   geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
   stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
-  ylim(0.0, 0.51) +
+  ylim(0.1, 0.51) +
   scale_fill_manual(values = c(&quot;pink&quot;, &quot;green&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
+  geom_hline(yintercept=0.5, linetype=&quot;dashed&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
 
-print(p_methods_shared)</code></pre>
+print(p_blocks_shared)</code></pre>
 <p><img src="figure/ukb_sim_results.Rmd/shared%20in%20subgroups-1.png" width="1248" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-shared-in-subgroups-1">
+Past versions of "shared in subgroups-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-shared-in-subgroups-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/3da045bd41fdd9b3ecbeb196f551facb17217a4e/docs/figure/ukb_sim_results.Rmd/shared in subgroups-1.png" target="_blank">3da045b</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-06-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>In this scenario, multivariate methods can have some advantage over
+univariate methods, provided that the former can adapt to the complex
+structure of the effects. The results show that <em>mr.mash.rss</em>
+does better than <em>LDpred2 auto</em> across all the traits. However,
+the improvement is more evident in traits 1-3, due to the higher effect
+correlation across traits, the larger number of traits with shared
+effects, and the smaller <span class="math inline">\(h^2_g\)</span>
+(harder scenario for univariate methods).</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
