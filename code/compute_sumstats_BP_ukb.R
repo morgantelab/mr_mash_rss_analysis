@@ -48,11 +48,11 @@ compute_univariate_sumstats_bigsnp <- function(geno_obj, Y, Z=NULL, chr=0, stand
       return( qnorm( (rank(x, na.last = "keep") - 0.5) / sum(!is.na(x))))
     }
     
-    res_mat_train <- matrix(as.numeric(NA), nrow=n, ncol=r)
+    res_mat_train <- matrix(as.numeric(NA), nrow=length(row_inds), ncol=r)
     colnames(res_mat_train) <- colnames(Y)
     
     for(s in 1:r){
-      fit_norm <- lm(Y[, s] ~ Z)
+      fit_norm <- lm(Y[, s] ~ as.matrix(Z))
       res <- resid(fit_norm) + coef(fit_norm)[1]
       res_mat_train[, s] <- inv_normalise(res)
     }
