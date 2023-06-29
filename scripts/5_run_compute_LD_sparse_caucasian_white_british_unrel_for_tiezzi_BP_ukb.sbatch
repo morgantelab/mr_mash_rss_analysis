@@ -3,7 +3,7 @@
 #SBATCH --job-name=run_compute_LD_sparse_caucasian_white_british_unrel_for_tiezzi_BP_ukb
 #SBATCH --cpus-per-task=8
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
-#SBATCH --time=24:00:00
+#SBATCH --time=48:00:00
 #SBATCH --mem=100G
 #SBATCH --output=run_compute_LD_sparse_caucasian_white_british_unrel_for_tiezzi_BP_ukb.%j.out
 #SBATCH --error=run_compute_LD_sparse_caucasian_white_british_unrel_for_tiezzi_BP_ukb.%j.err
