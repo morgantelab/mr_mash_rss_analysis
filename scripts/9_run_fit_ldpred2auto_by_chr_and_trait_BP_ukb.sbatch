@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
 #SBATCH --time=12:00:00
-#SBATCH --mem=150G
+#SBATCH --mem=370G
 #SBATCH --output=run_fit_ldpred2auto_by_chr_and_trait_BP_ukb.%j.out
 #SBATCH --error=run_fit_ldpred2auto_by_chr_and_trait_BP_ukb.%j.err
 
@@ -27,7 +27,7 @@ TRAIT=${2}
 echo "Start analyzing trait ${TRAIT} and chromosome ${CHR} ..."
 
 Rscript ../code/fit_ldpred2auto_ukb.R --sumstats ../output/summary_statistics/ukb_tiezzi_BP_chr"${CHR}"_sumstats_"${FOLD}".rds \
-                                      --LD_matrix ../data/LD_matrices/ukb_caucasian_white_british_unrel_for_tiezzi_BP_chr"${CHR}"_LD.ld.bin \
+                                      --LD_matrix ../data/LD_matrices/ukb_caucasian_white_british_unrel_for_tiezzi_BP_chr"${CHR}"_LD_sparse.ld.bin \
                                       --n 78809 \
                                       --h2_init "${H2_INIT}" \
                                       --burn_in 500 \

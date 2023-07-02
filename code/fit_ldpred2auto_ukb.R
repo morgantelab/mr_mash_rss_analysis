@@ -52,7 +52,7 @@ df_beta <- data.frame(beta=univ_sumstats$Bhat[, trait],
                       beta_se=univ_sumstats$Shat[, trait],
                       n_eff=rep(n, times=p))
 tmp <- tempfile(tmpdir=temp_dir)
-corr <- as_SFBM(as(LD, "CsparseMatrix"), tmp)
+corr <- as_SFBM(as(LD, "CsparseMatrix"), tmp, compact=TRUE)
 rm(LD)
 
 ###Fit mr.mash.rss
