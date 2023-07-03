@@ -64,7 +64,8 @@ corr <- as_SFBM(LD, tmp, compact=TRUE)
 if(h2_init<0){
   ld <- Matrix::colSums(LD^2)
   (ldsc <- with(df_beta, snp_ldsc(ld, length(ld), chi2 = (beta / beta_se)^2,
-                                  sample_size = n_eff, blocks = NULL)))
+                                  sample_size = n_eff, blocks = NULL, 
+                                  ncores=ncores)))
   h2_init <- ldsc[["h2"]]
 }
 
