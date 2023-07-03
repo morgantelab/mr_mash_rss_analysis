@@ -52,8 +52,19 @@ df_beta <- data.frame(beta=univ_sumstats$Bhat[, trait],
                       beta_se=univ_sumstats$Shat[, trait],
                       n_eff=rep(n, times=p))
 tmp <- tempfile(tmpdir=temp_dir)
-corr <- as_SFBM(as(LD, "CsparseMatrix"), tmp, compact=TRUE)
+LD <- as(LD, "CsparseMatrix")
+corr <- as_SFBM(LD, tmp, compact=TRUE)
+
+###If initial estimate of h2 is not provided, compute it using LDSC
+if(h2_init<0){
+  ld <- Matrix::colSums(LD^2)
+  (ldsc <- with(df_beta, snp_ldsc(ld, length(ld), chi2 = (beta / beta_se)^2,
+                                  sample_size = n_eff, blocks = NULL)))
+  h2_init <- ldsc[["h2"]]
+}
+
 rm(LD)
+
 
 ###Fit mr.mash.rss
 fit_ldpred2_auto <- snp_ldpred2_auto(corr=corr, df_beta=df_beta, h2_init=h2_init, vec_p_init=vec_p_init,
