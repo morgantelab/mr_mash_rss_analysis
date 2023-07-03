@@ -1,5 +1,7 @@
 ###Load libraries needed
 library(optparse)
+library(Matrix)
+library(Rfast)
 
 ###Functions needed
 is_strong <- function(x){
@@ -69,6 +71,10 @@ for(j in 1:nrow(Z_weak)){
 Vhat <- Vhat/nrow(Z_weak)
 
 Vhat <- makepd(mat=Vhat, tol=1e-6)$mat
+
+if(!is.symmetric(Vhat)){
+  Vhat <- as.matrix(forceSymmetric(Vhat))
+}
 
 ###Save file
 saveRDS(Vhat, file=output)
