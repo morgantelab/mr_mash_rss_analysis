@@ -45,14 +45,19 @@ set.seed(seed)
 ###Read in data
 univ_sumstats <- readRDS(sumstats)
 p <- nrow(univ_sumstats$Bhat)
-LD <- matrix(readBin(LD_matrix, what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
+
+if(tail(unlist(strsplit(a, ".", fixed = TRUE)), 1) == "bin"){
+  LD <- matrix(readBin(LD_matrix, what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
+  LD <- as(LD, "CsparseMatrix")
+} else if(tail(unlist(strsplit(a, ".", fixed = TRUE)), 1) == "rds"){
+  LD <- readRDS(LD_matrix)
+}
 
 ###Prepare the sumstats and LD matrix
 df_beta <- data.frame(beta=univ_sumstats$Bhat[, trait],
                       beta_se=univ_sumstats$Shat[, trait],
                       n_eff=rep(n, times=p))
 tmp <- tempfile(tmpdir=temp_dir)
-LD <- as(LD, "CsparseMatrix")
 corr <- as_SFBM(LD, tmp, compact=TRUE)
 
 ###If initial estimate of h2 is not provided, compute it using LDSC
@@ -64,7 +69,6 @@ if(h2_init<0){
 }
 
 rm(LD)
-
 
 ###Fit mr.mash.rss
 fit_ldpred2_auto <- snp_ldpred2_auto(corr=corr, df_beta=df_beta, h2_init=h2_init, vec_p_init=vec_p_init,
