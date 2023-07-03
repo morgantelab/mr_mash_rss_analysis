@@ -69,7 +69,7 @@ if(sparse){
                             dir=genetic_map, 
                             ncores=ncores)
   } else {
-    POS <- geno1$map$physical.pos
+    POS <- geno$map$physical.pos
   }
   
   LD <- snp_cor(Gna=X, ind.col=inds, size=win, infos.pos=POS[inds], thr_r2=thr_r2, ncores=ncores)
