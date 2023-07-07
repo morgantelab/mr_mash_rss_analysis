@@ -46,10 +46,10 @@ set.seed(seed)
 univ_sumstats <- readRDS(sumstats)
 p <- nrow(univ_sumstats$Bhat)
 
-if(tail(unlist(strsplit(a, ".", fixed = TRUE)), 1) == "bin"){
+if(tail(unlist(strsplit(LD_matrix, ".", fixed = TRUE)), 1) == "bin"){
   LD <- matrix(readBin(LD_matrix, what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
   LD <- as(LD, "CsparseMatrix")
-} else if(tail(unlist(strsplit(a, ".", fixed = TRUE)), 1) == "rds"){
+} else if(tail(unlist(strsplit(LD_matrix, ".", fixed = TRUE)), 1) == "rds"){
   LD <- readRDS(LD_matrix)
 }
 
