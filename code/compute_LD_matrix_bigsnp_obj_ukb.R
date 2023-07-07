@@ -14,7 +14,6 @@ parser <- add_option(parser, c("--thr_r2"), type="numeric", default=0)
 parser <- add_option(parser, c("--impute_missing"), type="logical", default=FALSE)
 parser <- add_option(parser, c("--sparse"), type="logical")
 parser <- add_option(parser, c("--output"), type="character")
-parser <- add_option(parser, c("--temp_dir"), type="character")
 outparse <- parse_args(parser)
 
 geno_dat <- outparse$geno
