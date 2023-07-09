@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
 #SBATCH --time=12:00:00
-#SBATCH --mem=370G
+#SBATCH --mem=350G
 #SBATCH --output=run_fit_ldpred2auto_by_chr_and_trait_BP_ukb.%j.out
 #SBATCH --error=run_fit_ldpred2auto_by_chr_and_trait_BP_ukb.%j.err
 
@@ -19,7 +19,7 @@ export MKL_NUM_THREADS=1
 CHR="${SLURM_ARRAY_TASK_ID}"
 
 ###Set some variables
-H2_INIT=0.009
+H2_INIT=-1
 FOLD=${1}
 TRAIT=${2}
 
