@@ -128,6 +128,10 @@ if(!is.null(traits)){
   if(!is.null(mu1_init)){
     mu1_init <- mu1_init[, traits]
   }
+  if(!is.null(Y_colmeans)){
+    Y_colmeans <- Y_colmeans[traits]
+  }
+  
 }
 
 ###Fit mr.mash.rss
