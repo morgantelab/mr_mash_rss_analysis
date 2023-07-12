@@ -28,6 +28,7 @@ parser <- add_option(parser, c("--mu1_init"), type="character", default=NULL)
 parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--output"), type="character")
 parser <- add_option(parser, c("--seed"), type="integer")
+parser <- add_option(parser, c("--traits"), type="character", default=NULL)
 outparse <- parse_args(parser)
 
 sumstats <- outparse$sumstats
@@ -53,6 +54,7 @@ Y_colmeans <- outparse$Y_colmeans
 mu1_init <- outparse$mu1_init
 ncores <- outparse$ncores
 output <- outparse$output
+traits <- eval(parse(text=outparse$traits))
 seed <- outparse$seed
 
 ###Set seed
@@ -116,6 +118,17 @@ S0 <- expand_covs(S0, grid, zeromat=TRUE)
 
 ###Compute initial estimates of prior weights (w0)
 w0 <- c((1-prop_nonzero), rep(prop_nonzero/(length(S0)-1), (length(S0)-1)))
+
+###Subsets traits
+if(!is.null(traits)){
+  univ_sumstats <- lapply(univ_sumstats, function(x, sel){x[, sel]}, traits)
+  S0 <- lapply(S0, function(x, sel){x[sel, sel]}, traits)
+  covY <- covY[traits, traits]
+  V <- V[traits, traits]
+  if(!is.null(mu1_init)){
+    mu1_init <- mu1_init[, traits]
+  }
+}
 
 ###Fit mr.mash.rss
 fit_mrmash_rss <- mr.mash.rss(Bhat=univ_sumstats$Bhat, Shat=univ_sumstats$Shat, covY=covY, R=LD, n=n, S0=S0, 
