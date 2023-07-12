@@ -19,7 +19,7 @@ CHR="${SLURM_ARRAY_TASK_ID}"
 FOLD=${1}
 
 ###Run R script
-echo "Start analyzing chromosome ${CHR} ..."
+echo "Start analyzing chromosome ${CHR} and fold ${FOLD} ..."
 
 Rscript ../code/compute_sumstats_BP_ukb.R --fold ${FOLD} \
                                           --chr ${CHR} \
@@ -28,7 +28,7 @@ Rscript ../code/compute_sumstats_BP_ukb.R --fold ${FOLD} \
                                           --normalize TRUE \
                                           --ncores 3
 
-echo "Finished analyzing chromosome ${CHR}."
+echo "Finished analyzing chromosome ${CHR} and fold ${FOLD}."
 
 ###Unload module
 module unload R/4.2.3

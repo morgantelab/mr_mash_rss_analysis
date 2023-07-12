@@ -25,7 +25,7 @@ FOLD=${1}
 ED=bovy
 
 ###Run R script
-echo "Start analyzing chromosome ${CHR} ..."
+echo "Start analyzing chromosome ${CHR} and fold ${FOLD} ..."
 
 Rscript ../code/fit_mrmashrss_ukb.R --sumstats ../output/summary_statistics/ukb_tiezzi_BP_chr"${CHR}"_sumstats_"${FOLD}".rds \
                                     --LD_matrix ../data/LD_matrices/ukb_caucasian_white_british_unrel_for_tiezzi_BP_chr"${CHR}"_LD.ld.bin \
@@ -42,7 +42,7 @@ Rscript ../code/fit_mrmashrss_ukb.R --sumstats ../output/summary_statistics/ukb_
                                     --seed ${FOLD} \
                                     --output ../output/mr_mash_rss_fit/ukb_tiezzi_BP_chr"${CHR}"_mr_mash_rss_fit_"${FOLD}".rds
 
-echo "Finished analyzing chromosome ${CHR}."
+echo "Finished analyzing chromosome ${CHR} and fold ${FOLD}."
 
 ###Unload module
 module unload R/4.2.3
