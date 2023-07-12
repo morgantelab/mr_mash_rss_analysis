@@ -161,7 +161,7 @@ for(i in chrs){
     inds <- which(geno$map$chromosome==ii)
   }
   
-  if(model=="mr_mash_rss"){
+  if(model %in% c("mr_mash_rss", "mr_mash_rss_init")){
     ##Read in model fit
     model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_", fold, ".rds"))
     
