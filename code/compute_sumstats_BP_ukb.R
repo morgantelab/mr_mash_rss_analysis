@@ -146,7 +146,7 @@ train_inds <- which(pheno_dat$fold != fold)
 geno <- snp_attach("/scratch1/fabiom/ukb_geno_imp_HM3_tiezzi.rds")
 
 ###Compute summary stats
-out <- compute_univariate_sumstats_bigsnp(geno_obj=geno, Y=pheno_dat[, 1:3], Z=pheno_dat[, 4:25],
+out <- compute_univariate_sumstats_bigsnp(geno_obj=geno, Y=pheno_dat[, 1:6], Z=pheno_dat[, 7:28],
                                           train_inds=train_inds, chr=chr, standardize=standardize,
                                           impute_missing=impute_missing, standardize.response=FALSE, 
                                           normalize=normalize, mc.cores=ncores)

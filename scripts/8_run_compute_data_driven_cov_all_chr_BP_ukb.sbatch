@@ -27,7 +27,7 @@ Rscript ../code/compute_data_driven_cov_all_chr_ukb.R --sumstats_prefix ../outpu
                                                       --chr 1:22 \
                                                       --residual_cov ../output/misc/ukb_tiezzi_BP_residual_cov_"${FOLD}".rds \
                                                       --strong_Z_thresh 3 \
-                                                      --n_PCs 2 \
+                                                      --n_PCs 3 \
                                                       --flash_remove_singleton TRUE \
                                                       --ED_algorithm ${ED} \
                                                       --output ../output/misc/ukb_tiezzi_BP_"${ED}"_data_driven_cov_"${FOLD}".rds \

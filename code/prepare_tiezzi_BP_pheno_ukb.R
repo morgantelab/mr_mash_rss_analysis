@@ -14,7 +14,7 @@ ids <- ids[-1, ]
 ###Select needed variables
 eigenvec <- eigenG[[2]][1:21] ##first 20 PCs
 rm(eigenG)
-dtt <- dtt[, c("ID", "BMI1", "DP0a", "SP0a", "AOP", "Sex_SI")]
+dtt <- dtt[, c("ID", "BMI1", "BMR", "BFP", "waist", "DP0a", "SP0a", "AOP", "Sex_SI")]
 dtt <- dtt[complete.cases(dtt), ]
 dat <- merge(dtt, eigenvec, by="ID", all.x=FALSE, all.y=FALSE, sort=FALSE)
 

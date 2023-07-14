@@ -39,6 +39,7 @@ Rscript ../code/fit_mrmashrss_ukb.R --sumstats ../output/summary_statistics/ukb_
                                     --standardize FALSE \
                                     --update_V_method full \
                                     --w0_threshold 1e-8 \
+                                    --traits 1:4 \
                                     --ncores 4 \
                                     --seed ${FOLD} \
                                     --output ../output/mr_mash_rss_fit/ukb_tiezzi_BP_chr"${CHR}"_mr_mash_rss_init_fit_"${FOLD}".rds

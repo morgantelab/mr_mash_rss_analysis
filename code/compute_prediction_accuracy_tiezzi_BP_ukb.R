@@ -208,7 +208,7 @@ for(i in chrs){
 
 ###Compute predictions and accuracy
 pheno_pred <- Reduce("+", pheno_pred)
-accuracy <- compute_accuracy(pheno_test, pheno_pred)
+accuracy <- compute_accuracy(pheno_test[, traits], pheno_pred)
 
 ###Save accuracy to file
 saveRDS(accuracy, file=output_pred_acc)
