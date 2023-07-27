@@ -25,7 +25,7 @@ Rscript ../code/compute_prediction_accuracy_tiezzi_BP_ukb.R --model ldpred2_auto
                                                   --geno_dir /data2/morgante_lab/data/ukbiobank/genotypes/imputed/ \
                                                   --sample_file /data2/morgante_lab/data/ukbiobank/genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample \
                                                   --chr 1:22 \
-                                                  --trait 1:4 \
+                                                  --trait 1:16 \
                                                   --temp_dir /scratch1/fabiom/tmp \
                                                   --impute_missing FALSE \
                                                   --output_eff ../output/estimated_effects/ukb_tiezzi_BP_ldpred2_auto_effects_"${FOLD}".rds \

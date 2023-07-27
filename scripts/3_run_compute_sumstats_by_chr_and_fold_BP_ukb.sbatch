@@ -3,8 +3,8 @@
 #SBATCH --job-name=run_compute_sumstats_BP_by_chr_and_fold
 #SBATCH --cpus-per-task=1
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
-#SBATCH --time=06:00:00
-#SBATCH --mem=10G
+#SBATCH --time=12:00:00
+#SBATCH --mem=20G
 #SBATCH --output=run_compute_sumstats_BP_by_chr_and_fold.%j.out
 #SBATCH --error=run_compute_sumstats_BP_by_chr_and_fold.%j.err
 

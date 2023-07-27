@@ -28,7 +28,7 @@ echo "Start analyzing trait ${TRAIT}, chromosome ${CHR} and fold ${FOLD} ..."
 
 Rscript ../code/fit_ldpred2auto_ukb.R --sumstats ../output/summary_statistics/ukb_tiezzi_BP_chr"${CHR}"_sumstats_"${FOLD}".rds \
                                       --LD_matrix ../data/LD_matrices/ukb_caucasian_white_british_unrel_for_tiezzi_BP_chr"${CHR}"_LD_sparse.ld.bin \
-                                      --n 78809 \
+                                      --n 75311 \
                                       --h2_init "${H2_INIT}" \
                                       --burn_in 500 \
                                       --num_iter 500 \

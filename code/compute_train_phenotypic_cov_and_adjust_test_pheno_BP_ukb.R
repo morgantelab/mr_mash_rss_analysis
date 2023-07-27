@@ -27,7 +27,10 @@ pheno_dat$ID <- NULL
 
 ###Set up 
 nfolds <- 5
-traits <- c("BMI1", "BMR", "BFP", "waist", "DP0a", "SP0a")
+traits <- c("Basophill_perc", "Eosinophill_perc", "Haemoglobin_conc", "HLR_perc", 
+            "Lymphocyte_perc", "MCV", "Monocyte_perc", "MSCV", "Neutrophill_perc", "Platelet_dw", 
+            "Platelet_count", "Platelet_crit", "RBC_count", "RBC_dw", "Reticulocyte_perc", 
+            "WBC_count")
 
 for(fold in 1:nfolds){
   ###Get training and test individuals indexes

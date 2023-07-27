@@ -3,8 +3,8 @@
 #SBATCH --job-name=run_fit_mrmashrss_by_chr_BP_ukb
 #SBATCH --cpus-per-task=4
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
-#SBATCH --time=36:00:00
-#SBATCH --mem=150G
+#SBATCH --time=72:00:00
+#SBATCH --mem=200G
 #SBATCH --output=run_fit_mrmashrss_by_chr_BP_ukb.%j.out
 #SBATCH --error=run_fit_mrmashrss_by_chr_BP_ukb.%j.err
 
@@ -33,7 +33,7 @@ Rscript ../code/fit_mrmashrss_ukb.R --sumstats ../output/summary_statistics/ukb_
                                     --residual_cov ../output/misc/ukb_tiezzi_BP_residual_cov_"${FOLD}".rds \
                                     --data_driven_cov ../output/misc/ukb_tiezzi_BP_"${ED}"_data_driven_cov_"${FOLD}".rds \
                                     --canonical_cov TRUE \
-                                    --n 78809 \
+                                    --n 75311 \
                                     --prop_nonzero 0.01 \
                                     --standardize FALSE \
                                     --update_V_method full \

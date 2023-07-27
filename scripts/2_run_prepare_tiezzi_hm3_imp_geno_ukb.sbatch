@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=run_prepare_tiezzi_hm3_imp_geno_ukb
 #SBATCH --cpus-per-task=22
-#SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
+#SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3,bigmem
 #SBATCH --time=12:00:00
 #SBATCH --mem=200G
 #SBATCH --output=run_prepare_tiezzi_hm3_imp_geno_ukb.%j.out

@@ -3,8 +3,8 @@
 #SBATCH --job-name=run_compute_train_phenotypic_cov_and_adjust_test_pheno_BP_ukb
 #SBATCH --cpus-per-task=1
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
-#SBATCH --time=00:30:00
-#SBATCH --mem=5G
+#SBATCH --time=02:00:00
+#SBATCH --mem=10G
 #SBATCH --output=run_compute_train_phenotypic_cov_and_adjust_test_pheno_BP_ukb.%j.out
 #SBATCH --error=run_compute_train_phenotypic_cov_and_adjust_test_pheno_BP_ukb.%j.err
 
