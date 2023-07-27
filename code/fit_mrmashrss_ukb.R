@@ -28,7 +28,7 @@ parser <- add_option(parser, c("--mu1_init"), type="character", default=NULL)
 parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--output"), type="character")
 parser <- add_option(parser, c("--seed"), type="integer")
-parser <- add_option(parser, c("--traits"), type="character", default=NULL)
+parser <- add_option(parser, c("--traits"), type="character", default="-1")
 outparse <- parse_args(parser)
 
 sumstats <- outparse$sumstats
@@ -120,7 +120,7 @@ S0 <- expand_covs(S0, grid, zeromat=TRUE)
 w0 <- c((1-prop_nonzero), rep(prop_nonzero/(length(S0)-1), (length(S0)-1)))
 
 ###Subsets traits
-if(!is.null(traits)){
+if(length(traits)==1 && traits<0){
   univ_sumstats <- lapply(univ_sumstats, function(x, sel){x[, sel]}, traits)
   S0 <- lapply(S0, function(x, sel){x[sel, sel]}, traits)
   covY <- covY[traits, traits]
