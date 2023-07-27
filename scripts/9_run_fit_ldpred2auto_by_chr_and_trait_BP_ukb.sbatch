@@ -19,7 +19,7 @@ export MKL_NUM_THREADS=1
 CHR="${SLURM_ARRAY_TASK_ID}"
 
 ###Set some variables
-H2_INIT=-1
+H2_INIT=0.01
 FOLD=${1}
 TRAIT=${2}
 
