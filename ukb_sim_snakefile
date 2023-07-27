@@ -3,9 +3,9 @@ rule all:
     expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mr_mash_rss_effects_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mr_mash_rss_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_ldpred2_auto_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]) #,
-    #expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_bayesR_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    #expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesR_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_bayesR_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesR_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]) #,
     #expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_ldpred2_auto_gwide_effects_{DATASET}.rds",DATASET=config["DATASET"]),
     #expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_gwide_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])
 
@@ -307,10 +307,11 @@ rule fit_mrmash_rss:
     stand=config["STANDARDIZE"],
     upd_v_met=config["MRMASH_UPDATE_V_METHOD"],
     w0_thresh=config["MRMASH_W0_THRESH"],
+    traits=config["TRAIT_RANGE"],
     script=config["SCRIPT"]+"fit_mrmashrss_ukb.R",
     chr="{CHR}",
     dataset="{DATASET}"
-  resources: cpus=4, mem_mb=100000, time_min=1440
+  resources: cpus=4, mem_mb=100000, time_min=4320
   shell:
         """
         module load gsl/2.7
@@ -333,6 +334,7 @@ rule fit_mrmash_rss:
                                     --X_colmeans {input.x_colm} \
                                     --Y_colmeans {input.y_colm} \
                                     --ncores 4 \
+                                    --traits {params.traits} \
                                     --seed {params.dataset} \
                                     --output {output}
         module unload R/4.2.3
