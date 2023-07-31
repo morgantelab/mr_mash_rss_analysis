@@ -75,7 +75,7 @@ This implies that the effects of the causal variants are equal across responses.
 
 ```{r equal effects, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto", "ldpred2_auto_gwide")
+methodz <- c("mr_mash_rss", "ldpred2_auto", "ldpred2_auto_gwide", "bayesR")
 
 i <- 0
 
@@ -113,7 +113,7 @@ p_methods_shared <- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0.3, 0.51) +
-  scale_fill_manual(values = c("pink", "red", "green")) +
+  scale_fill_manual(values = c("pink", "red", "green", "blue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
@@ -137,7 +137,7 @@ and covariance matrix that achieves effects (with variance 1) to be present only
 
 ```{r mostly null, fig.height=10, fig.width=13}
 scenarioz <- "trait_1_only_effects_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto")
+methodz <- c("mr_mash_rss", "ldpred2_auto", "bayesR")
 
 i <- 0
 
@@ -175,7 +175,7 @@ p_mostly_null <- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0.0, 0.51) +
-  scale_fill_manual(values = c("pink", "green")) +
+  scale_fill_manual(values = c("pink", "green", "blue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
@@ -199,7 +199,7 @@ traits 4-5.
 
 ```{r shared in subgroups, fig.height=10, fig.width=13}
 scenarioz <- "blocks_shared_effects_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto")
+methodz <- c("mr_mash_rss", "ldpred2_auto", "bayesR")
 
 i <- 0
 
@@ -237,7 +237,7 @@ p_blocks_shared <- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0.1, 0.51) +
-  scale_fill_manual(values = c("pink", "green")) +
+  scale_fill_manual(values = c("pink", "green", "blue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   geom_hline(yintercept=0.3, linetype="dashed", linewidth=1, color = "black") +
