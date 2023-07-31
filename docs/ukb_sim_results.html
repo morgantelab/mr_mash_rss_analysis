@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree36c46c03184df1392bada04efd2a8dc7b35460e0targetblank36c46c0a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree31759a78fe83783a25e83a6d75fb2da3b73be5fdtargetblank31759a7a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/36c46c03184df1392bada04efd2a8dc7b35460e0" target="_blank">36c46c0</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/31759a78fe83783a25e83a6d75fb2da3b73be5fd" target="_blank">31759a7</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree36c46c03184df1392bada04efd2a8dc7b35460e0targetblank36c46c0a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree31759a78fe83783a25e83a6d75fb2da3b73be5fdtargetblank31759a7a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/36c46c03184df1392bada04efd2a8dc7b35460e0" target="_blank">36c46c0</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/31759a78fe83783a25e83a6d75fb2da3b73be5fd" target="_blank">31759a7</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -630,6 +630,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/31759a78fe83783a25e83a6d75fb2da3b73be5fd/analysis/ukb_sim_results.Rmd" target="_blank">31759a7</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-07-31
+</td>
+<td>
+Add low PVE and 10 traits scenarios
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/7b4d53c067a894386104c29153226c4a1bfa8d61/docs/ukb_sim_results.html" target="_blank">7b4d53c</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-07-31
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1163,7 +1197,8 @@ rest of the analyses.</p>
 randomly sampling 5,000 variants (out of the total of 595,071) to be
 causal, with different effect sharing structures across traits (see
 below). The genetic effects explain 50% of the total per-trait variance
-– in genetics terminology this is called genomic heritability (<span
+(except for two scenario as explained below) – in genetics terminology
+this is called genomic heritability (<span
 class="math inline">\(h_g^2\)</span>). The residuals are uncorrelated
 across traits.</p>
 <p>We randomly sampled 5,000 (out of the 105,000) individuals to be the
@@ -1173,7 +1208,7 @@ individuals.</p>
 <p>Summary statistics (i.e., effect size and its standard error) were
 obtained by univariate simple linear regression of each trait on each
 variant, one at a time. Traits and variants were not standardized.</p>
-<p>Three different methods were fitted:</p>
+<p>Four different methods were fitted:</p>
 <ul>
 <li><a
 href="https://academic.oup.com/bioinformatics/article/36/22-23/5424/6039173">LDpred2</a>
@@ -1198,6 +1233,12 @@ on the null component and 10% of the weight split equally across the
 remaining components. The phenotypic covariance was computed as the
 sample covariance using the individual-level data. NB this is a
 multivariate method.</li>
+<li><a
+href="https://www.nature.com/articles/s41467-019-12653-0">BayesR</a>
+per-chromosome, with 1000 iterations (after 500 burn-in iterations),
+<span class="math inline">\(h^2\)</span> initialized as 0.5/22 and other
+default parameters. NB this is a univariate method. We used the
+implementation in the <em>qgg</em> R package.</li>
 </ul>
 <p>Prediction accuracy was evaluated as the <span
 class="math inline">\(R^2\)</span> of the regression of true phenotypes
@@ -1250,15 +1291,13 @@ p_methods_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
   stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
-  ylim(0.3, 0.51) +
+  ylim(0, 0.51) +
   scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;green&quot;, &quot;blue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
 
 print(p_methods_shared)</code></pre>
-<pre><code>Warning: Removed 100 rows containing non-finite values (`stat_boxplot()`).</code></pre>
-<pre><code>Warning: Removed 100 rows containing non-finite values (`stat_summary()`).</code></pre>
 <p><img src="figure/ukb_sim_results.Rmd/equal%20effects-1.png" width="1248" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-equal-effects-1">
@@ -1328,7 +1367,9 @@ than both flavors of <em>LDpred2 auto</em>. However, in this simulation
 there does not seem to be much of a difference between <em>LDpred2
 auto</em> per-chromosome and genome-wide. Therefore, we will drop
 <em>LDpred2 auto</em> genome-wide from further analyses since it is more
-computationally intensive.</p>
+computationally intensive. <em>BayesR</em> gives unreasonably low
+prediction accuracy, which hints at issues with the default parameters
+and/or this particular implementation.</p>
 </div>
 <div id="mostly-null-scenario" class="section level2">
 <h2>Mostly null scenario</h2>
@@ -1375,7 +1416,7 @@ p_mostly_null &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
   ylim(0.0, 0.51) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;green&quot;, &quot;blue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;blue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
@@ -1404,6 +1445,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/7b4d53c067a894386104c29153226c4a1bfa8d61/docs/figure/ukb_sim_results.Rmd/mostly null-1.png" target="_blank">7b4d53c</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-07-31
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/6469c43904dac9825c9332290560f61b010c6108/docs/figure/ukb_sim_results.Rmd/mostly null-1.png" target="_blank">6469c43</a>
@@ -1435,7 +1487,10 @@ methods. In fact, there is potential for multivariate methods to do
 worse than univariate methods because of the large amount of noise
 modeled jointly with the signal. However, the results show that
 <em>mr.mash.rss</em> can learn this structure from the data and,
-reassuringly, performs similarly to <em>LDpred2 auto</em>.</p>
+reassuringly, performs similarly to <em>LDpred2 auto</em>. Again,
+**BayesR* gives unreasonably low prediction accuracy, which hints at
+issues with the default parameters and/or this particular
+implementation.</p>
 </div>
 <div id="shared-in-subgroups-scenario" class="section level2">
 <h2>Shared in subgroups scenario</h2>
@@ -1489,7 +1544,7 @@ p_blocks_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
   stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
-  ylim(0.1, 0.51) +
+  ylim(0, 0.51) +
   scale_fill_manual(values = c(&quot;pink&quot;, &quot;green&quot;, &quot;blue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
@@ -1497,8 +1552,6 @@ p_blocks_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
   theme_cowplot(font_size = 18)
 
 print(p_blocks_shared)</code></pre>
-<pre><code>Warning: Removed 81 rows containing non-finite values (`stat_boxplot()`).</code></pre>
-<pre><code>Warning: Removed 81 rows containing non-finite values (`stat_summary()`).</code></pre>
 <p><img src="figure/ukb_sim_results.Rmd/shared%20in%20subgroups-1.png" width="1248" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-shared-in-subgroups-1">
@@ -1522,6 +1575,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/7b4d53c067a894386104c29153226c4a1bfa8d61/docs/figure/ukb_sim_results.Rmd/shared in subgroups-1.png" target="_blank">7b4d53c</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-07-31
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/9d82631a04663040f60e621129225a7d3bde7422/docs/figure/ukb_sim_results.Rmd/shared in subgroups-1.png" target="_blank">9d82631</a>
@@ -1566,7 +1630,142 @@ does better than <em>LDpred2 auto</em> across all the traits. However,
 the improvement is more evident in traits 1-3, due to the higher effect
 correlation across traits, the larger number of traits with shared
 effects, and the smaller <span class="math inline">\(h^2_g\)</span>
-(harder scenario for univariate methods).</p>
+(harder scenario for univariate methods). Again, <em>BayesR</em> gives
+unreasonably low prediction accuracy, which hints at issues with the
+default parameters and/or this particular implementation.</p>
+</div>
+<div id="equal-effects-scenario-low-pve" class="section level2">
+<h2>Equal effects scenario – low PVE</h2>
+<p>In this scenario, the effects were drawn from a Multivariate Normal
+distribution with mean vector 0 and covariance matrix that achieves a
+per-trait variance of 1 and a correlation across traits of 1. This
+implies that the effects of the causal variants are equal across
+responses. In addition, the per-trait genomic heritability was set to
+0.2.</p>
+<pre class="r"><code>scenarioz &lt;- &quot;equal_effects_low_pve_indep_resid&quot;
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
+
+i &lt;- 0
+
+n_col &lt;- 6
+n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
+      
+      for(trait in traitz){
+        i &lt;- i + 1
+        
+        res[i, 1] &lt;- repp
+        res[i, 2] &lt;- sce
+        res[i, 3] &lt;- met
+        res[i, 4] &lt;- trait
+        res[i, 5] &lt;- metric
+        res[i, 6] &lt;- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res &lt;- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_methods_shared_lowpve &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = &quot;single&quot;)) +
+  ylim(0, 0.2) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;green&quot;, &quot;blue&quot;)) +
+  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
+  geom_hline(yintercept=0.2, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
+  theme_cowplot(font_size = 18)
+
+print(p_methods_shared_lowpve)</code></pre>
+<p><img src="figure/ukb_sim_results.Rmd/equal%20effects%20low%20pve-1.png" width="1248" style="display: block; margin: auto;" /></p>
+<p>In this scenario, we expect the relative improvement of multivariate
+methods compared to univariate methods to be larger than with <span
+class="math inline">\(h^2_g = 0.5\)</span>. This is because with smaller
+signal-to-noise ratio, it is harder for univariate methods to estimate
+effects accurately. Multivariate methods can borrow information across
+traits (if effects are shared) and improve accuracy. The results show
+that <em>mr.mash.rss</em> clearly does better than <em>LDpred2
+auto</em>. Again, <em>BayesR</em> gives unreasonably low prediction
+accuracy, which hints at issues with the default parameters and/or this
+particular implementation.</p>
+</div>
+<div id="equal-effects-scenario-10-traits" class="section level2">
+<h2>Equal effects scenario – 10 traits</h2>
+<p>In this scenario, the effects were drawn from a Multivariate Normal
+distribution with mean vector 0 and covariance matrix that achieves a
+per-trait variance of 1 and a correlation across traits of 1. This
+implies that the effects of the causal variants are equal across
+responses. In addition, the number of traits was increased to 10.</p>
+<pre class="r"><code>scenarioz &lt;- &quot;equal_effects_10traits_indep_resid&quot;
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
+
+i &lt;- 0
+
+traitz &lt;- 1:10
+repz &lt;- c(1:10, 12:20)
+
+n_col &lt;- 6
+n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
+      
+      for(trait in traitz){
+        i &lt;- i + 1
+        
+        res[i, 1] &lt;- repp
+        res[i, 2] &lt;- sce
+        res[i, 3] &lt;- met
+        res[i, 4] &lt;- trait
+        res[i, 5] &lt;- metric
+        res[i, 6] &lt;- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res &lt;- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_methods_shared_10traits &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = &quot;single&quot;)) +
+  ylim(0, 0.51) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;green&quot;, &quot;blue&quot;)) +
+  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
+  geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
+  theme_cowplot(font_size = 18)
+
+print(p_methods_shared_10traits)</code></pre>
+<p><img src="figure/ukb_sim_results.Rmd/equal%20effects%2010%20traits-1.png" width="1248" style="display: block; margin: auto;" /></p>
+<p>In this scenario, we expect the relative improvement of multivariate
+methods compared to univariate methods to be a little larger than with 5
+traits. This is because multivariate methods can borrow information
+across a larger number of traits (if effects are shared) and improve
+accuracy. The results show that <em>mr.mash.rss</em> clearly does better
+than <em>LDpred2 auto</em>, but the improvement compared to the scenario
+with 5 traits is small (<span
+class="math inline">\(mean(\frac{mr.mash.rss R^2}{LDpred2 auto R^2}) =
+1.1157\)</span> vs $mean() = 1.1057). Again, <em>BayesR</em> gives
+unreasonably low prediction accuracy, which hints at issues with the
+default parameters and/or this particular implementation.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
