@@ -134,6 +134,54 @@ genome-wide from further analyses since it is more computationally intensive. *B
 unreasonably low prediction accuracy, which hints at issues with the default parameters and/or
 this particular implementation.
 
+```{r equal effects filt, fig.height=10, fig.width=13}
+scenarioz <- "equal_effects_indep_resid"
+methodz <- c("mr_mash_rss", "ldpred2_auto")
+
+i <- 0
+
+n_col <- 6
+n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score")
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds"))
+      
+      for(trait in traitz){
+        i <- i + 1
+        
+        res[i, 1] <- repp
+        res[i, 2] <- sce
+        res[i, 3] <- met
+        res[i, 4] <- trait
+        res[i, 5] <- metric
+        res[i, 6] <- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res <- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_methods_shared_filt <- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = "black", outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom="point", shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = "single")) +
+  ylim(0, 0.51) +
+  scale_fill_manual(values = c("red", "blue")) +
+  labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
+  geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
+  theme_cowplot(font_size = 18)
+
+print(p_methods_shared_filt)
+```
+
 ## Mostly null scenario
 
 In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0
@@ -195,6 +243,54 @@ from the data and, reassuringly, performs similarly to *LDpred2 auto*. Again, **
 unreasonably low prediction accuracy, which hints at issues with the default parameters and/or
 this particular implementation.
 
+```{r mostly null filt, fig.height=10, fig.width=13}
+scenarioz <- "trait_1_only_effects_indep_resid"
+methodz <- c("mr_mash_rss", "ldpred2_auto")
+
+i <- 0
+
+n_col <- 6
+n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score")
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds"))
+      
+      for(trait in traitz){
+        i <- i + 1
+        
+        res[i, 1] <- repp
+        res[i, 2] <- sce
+        res[i, 3] <- met
+        res[i, 4] <- trait
+        res[i, 5] <- metric
+        res[i, 6] <- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res <- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_mostly_null_filt <- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = "black", outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom="point", shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = "single")) +
+  ylim(0.0, 0.51) +
+  scale_fill_manual(values = c("red", "blue")) +
+  labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
+  geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
+  theme_cowplot(font_size = 18)
+
+print(p_mostly_null_filt)
+```
+
 ## Shared in subgroups scenario
 
 In this scenario, the effects were drawn from a mixture of two Multivariate Normal distributions, i.e., 
@@ -244,7 +340,7 @@ p_blocks_shared <- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.51) +
-  scale_fill_manual(values = c("pink", "green", "blue")) +
+  scale_fill_manual(values = c("pink", "red", "blue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   geom_hline(yintercept=0.3, linetype="dashed", linewidth=1, color = "black") +
@@ -260,6 +356,56 @@ due to the higher effect correlation across traits, the larger number of traits 
 the smaller $h^2_g$ (harder scenario for univariate methods). Again, *BayesR* gives
 unreasonably low prediction accuracy, which hints at issues with the default parameters and/or
 this particular implementation.
+
+```{r shared in subgroups filt, fig.height=10, fig.width=13}
+scenarioz <- "blocks_shared_effects_indep_resid"
+methodz <- c("mr_mash_rss", "ldpred2_auto")
+
+i <- 0
+
+n_col <- 6
+n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score")
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds"))
+      
+      for(trait in traitz){
+        i <- i + 1
+        
+        res[i, 1] <- repp
+        res[i, 2] <- sce
+        res[i, 3] <- met
+        res[i, 4] <- trait
+        res[i, 5] <- metric
+        res[i, 6] <- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res <- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_blocks_shared_filt <- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = "black", outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom="point", shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = "single")) +
+  ylim(0, 0.51) +
+  scale_fill_manual(values = c("red", "blue")) +
+  labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
+  geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
+  geom_hline(yintercept=0.3, linetype="dashed", linewidth=1, color = "black") +
+  theme_cowplot(font_size = 18)
+
+print(p_blocks_shared_filt)
+```
+
 
 ## Equal effects scenario -- low PVE
 
@@ -308,7 +454,7 @@ p_methods_shared_lowpve <- ggplot(res, aes(x = trait, y = score, fill = method))
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.2) +
-  scale_fill_manual(values = c("pink", "green", "blue")) +
+  scale_fill_manual(values = c("pink", "red", "blue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.2, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
@@ -323,6 +469,55 @@ information across traits (if effects are shared) and improve accuracy. The resu
 *mr.mash.rss* clearly does better than *LDpred2 auto*. Again, *BayesR* gives unreasonably low 
 prediction accuracy, which hints at issues with the default parameters and/or this particular 
 implementation.
+
+```{r equal effects low pve filt, fig.height=10, fig.width=13}
+scenarioz <- "equal_effects_low_pve_indep_resid"
+methodz <- c("mr_mash_rss", "ldpred2_auto")
+
+i <- 0
+
+n_col <- 6
+n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score")
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds"))
+      
+      for(trait in traitz){
+        i <- i + 1
+        
+        res[i, 1] <- repp
+        res[i, 2] <- sce
+        res[i, 3] <- met
+        res[i, 4] <- trait
+        res[i, 5] <- metric
+        res[i, 6] <- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res <- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_methods_shared_lowpve_filt <- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = "black", outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom="point", shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = "single")) +
+  ylim(0, 0.2) +
+  scale_fill_manual(values = c("red", "blue")) +
+  labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
+  geom_hline(yintercept=0.2, linetype="dotted", linewidth=1, color = "black") +
+  theme_cowplot(font_size = 18)
+
+print(p_methods_shared_lowpve_filt)
+```
+
 
 ## Equal effects scenario -- 10 traits
 
@@ -374,7 +569,7 @@ p_methods_shared_10traits <- ggplot(res, aes(x = trait, y = score, fill = method
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.51) +
-  scale_fill_manual(values = c("pink", "green", "blue")) +
+  scale_fill_manual(values = c("pink", "red", "blue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
@@ -390,3 +585,54 @@ scenario with 5 traits is small ($mean(\frac{mr.mash.rss R^2}{LDpred2 auto R^2})
 $mean(\frac{mr.mash.rss R^2}{LDpred2 auto R^2}) = 1.1057$). Again, *BayesR* gives unreasonably low 
 prediction accuracy, which hints at issues with the default parameters and/or this particular 
 implementation.
+
+```{r equal effects 10 traits filt, fig.height=10, fig.width=13}
+scenarioz <- "equal_effects_10traits_indep_resid"
+methodz <- c("mr_mash_rss", "ldpred2_auto")
+
+i <- 0
+
+traitz <- 1:10
+repz <- c(1:10, 12:20)
+
+n_col <- 6
+n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score")
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds"))
+      
+      for(trait in traitz){
+        i <- i + 1
+        
+        res[i, 1] <- repp
+        res[i, 2] <- sce
+        res[i, 3] <- met
+        res[i, 4] <- trait
+        res[i, 5] <- metric
+        res[i, 6] <- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res <- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_methods_shared_10traits_filt <- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = "black", outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom="point", shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = "single")) +
+  ylim(0, 0.51) +
+  scale_fill_manual(values = c("red", "blue")) +
+  labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
+  geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
+  theme_cowplot(font_size = 18)
+
+print(p_methods_shared_10traits_filt)
+```
