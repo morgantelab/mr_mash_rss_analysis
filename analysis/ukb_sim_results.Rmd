@@ -387,6 +387,6 @@ methods to be a little larger than with 5 traits. This is because multivariate m
 information across a larger number of traits (if effects are shared) and improve accuracy. The results 
 show that *mr.mash.rss* clearly does better than *LDpred2 auto*, but the improvement compared to the
 scenario with 5 traits is small ($mean(\frac{mr.mash.rss R^2}{LDpred2 auto R^2}) = 1.1157$ vs 
-$mean(\frac{mr.mash.rss R^2}{LDpred2 auto R^2}) = 1.1057). Again, *BayesR* gives unreasonably low 
+$mean(\frac{mr.mash.rss R^2}{LDpred2 auto R^2}) = 1.1057$). Again, *BayesR* gives unreasonably low 
 prediction accuracy, which hints at issues with the default parameters and/or this particular 
 implementation.
