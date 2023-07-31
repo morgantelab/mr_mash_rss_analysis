@@ -120,7 +120,7 @@ S0 <- expand_covs(S0, grid, zeromat=TRUE)
 w0 <- c((1-prop_nonzero), rep(prop_nonzero/(length(S0)-1), (length(S0)-1)))
 
 ###Subsets traits
-if(length(traits)==1 && traits<0){
+if(length(traits)>1){
   univ_sumstats <- lapply(univ_sumstats, function(x, sel){x[, sel]}, traits)
   S0 <- lapply(S0, function(x, sel){x[sel, sel]}, traits)
   covY <- covY[traits, traits]
