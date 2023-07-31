@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree7c91a7cda5080eff5c57c63ea7718c0ba1110ec0targetblank7c91a7ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreef0e1213305b6536320eab60c094e32ca5c9f943etargetblankf0e1213a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/7c91a7cda5080eff5c57c63ea7718c0ba1110ec0" target="_blank">7c91a7c</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/f0e1213305b6536320eab60c094e32ca5c9f943e" target="_blank">f0e1213</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree7c91a7cda5080eff5c57c63ea7718c0ba1110ec0targetblank7c91a7ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreef0e1213305b6536320eab60c094e32ca5c9f943etargetblankf0e1213a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/7c91a7cda5080eff5c57c63ea7718c0ba1110ec0" target="_blank">7c91a7c</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/f0e1213305b6536320eab60c094e32ca5c9f943e" target="_blank">f0e1213</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -579,10 +579,9 @@ Untracked files:
     Untracked:  code/split_effects_by_chr_imp_ukb.R
     Untracked:  scripts/9_run_fit_ldpred2auto_by_chr_and_trait_BP_florian_LD_ukb.sbatch
     Untracked:  slurm/real_config.yaml
+    Untracked:  ukb_sim_equal_effects_50000causal_indep_resid.yaml
 
 Unstaged changes:
-    Modified:   code/fit_mrmashrss_ukb.R
-    Modified:   slurm/config.yaml
     Modified:   ukb_sim_snakefile
     Modified:   ukb_sim_snakemake_submitter.sh
 
@@ -630,6 +629,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/f0e1213305b6536320eab60c094e32ca5c9f943e/analysis/ukb_sim_results.Rmd" target="_blank">f0e1213</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-07-31
+</td>
+<td>
+Add filtered plots
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/aa87dd0b27712421b64666521f6790bfc3ede37d/docs/ukb_sim_results.html" target="_blank">aa87dd0</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-07-31
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1415,6 +1448,52 @@ auto</em> per-chromosome and genome-wide. Therefore, we will drop
 computationally intensive. <em>BayesR</em> gives unreasonably low
 prediction accuracy, which hints at issues with the default parameters
 and/or this particular implementation.</p>
+<pre class="r"><code>scenarioz &lt;- &quot;equal_effects_indep_resid&quot;
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)
+
+i &lt;- 0
+
+n_col &lt;- 6
+n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
+      
+      for(trait in traitz){
+        i &lt;- i + 1
+        
+        res[i, 1] &lt;- repp
+        res[i, 2] &lt;- sce
+        res[i, 3] &lt;- met
+        res[i, 4] &lt;- trait
+        res[i, 5] &lt;- metric
+        res[i, 6] &lt;- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res &lt;- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_methods_shared_filt &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = &quot;single&quot;)) +
+  ylim(0, 0.51) +
+  scale_fill_manual(values = c(&quot;red&quot;, &quot;blue&quot;)) +
+  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
+  geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
+  theme_cowplot(font_size = 18)
+
+print(p_methods_shared_filt)</code></pre>
+<p><img src="figure/ukb_sim_results.Rmd/equal%20effects%20filt-1.png" width="1248" style="display: block; margin: auto;" /></p>
 </div>
 <div id="mostly-null-scenario" class="section level2">
 <h2>Mostly null scenario</h2>
@@ -1547,6 +1626,52 @@ reassuringly, performs similarly to <em>LDpred2 auto</em>. Again,
 **BayesR* gives unreasonably low prediction accuracy, which hints at
 issues with the default parameters and/or this particular
 implementation.</p>
+<pre class="r"><code>scenarioz &lt;- &quot;trait_1_only_effects_indep_resid&quot;
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)
+
+i &lt;- 0
+
+n_col &lt;- 6
+n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
+      
+      for(trait in traitz){
+        i &lt;- i + 1
+        
+        res[i, 1] &lt;- repp
+        res[i, 2] &lt;- sce
+        res[i, 3] &lt;- met
+        res[i, 4] &lt;- trait
+        res[i, 5] &lt;- metric
+        res[i, 6] &lt;- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res &lt;- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_mostly_null_filt &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = &quot;single&quot;)) +
+  ylim(0.0, 0.51) +
+  scale_fill_manual(values = c(&quot;red&quot;, &quot;blue&quot;)) +
+  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
+  geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
+  theme_cowplot(font_size = 18)
+
+print(p_mostly_null_filt)</code></pre>
+<p><img src="figure/ukb_sim_results.Rmd/mostly%20null%20filt-1.png" width="1248" style="display: block; margin: auto;" /></p>
 </div>
 <div id="shared-in-subgroups-scenario" class="section level2">
 <h2>Shared in subgroups scenario</h2>
@@ -1601,7 +1726,7 @@ p_blocks_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
   ylim(0, 0.51) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;green&quot;, &quot;blue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;blue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   geom_hline(yintercept=0.3, linetype=&quot;dashed&quot;, linewidth=1, color = &quot;black&quot;) +
@@ -1700,6 +1825,53 @@ effects, and the smaller <span class="math inline">\(h^2_g\)</span>
 (harder scenario for univariate methods). Again, <em>BayesR</em> gives
 unreasonably low prediction accuracy, which hints at issues with the
 default parameters and/or this particular implementation.</p>
+<pre class="r"><code>scenarioz &lt;- &quot;blocks_shared_effects_indep_resid&quot;
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)
+
+i &lt;- 0
+
+n_col &lt;- 6
+n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
+      
+      for(trait in traitz){
+        i &lt;- i + 1
+        
+        res[i, 1] &lt;- repp
+        res[i, 2] &lt;- sce
+        res[i, 3] &lt;- met
+        res[i, 4] &lt;- trait
+        res[i, 5] &lt;- metric
+        res[i, 6] &lt;- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res &lt;- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_blocks_shared_filt &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = &quot;single&quot;)) +
+  ylim(0, 0.51) +
+  scale_fill_manual(values = c(&quot;red&quot;, &quot;blue&quot;)) +
+  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
+  geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
+  geom_hline(yintercept=0.3, linetype=&quot;dashed&quot;, linewidth=1, color = &quot;black&quot;) +
+  theme_cowplot(font_size = 18)
+
+print(p_blocks_shared_filt)</code></pre>
+<p><img src="figure/ukb_sim_results.Rmd/shared%20in%20subgroups%20filt-1.png" width="1248" style="display: block; margin: auto;" /></p>
 </div>
 <div id="equal-effects-scenario-low-pve" class="section level2">
 <h2>Equal effects scenario – low PVE</h2>
@@ -1748,7 +1920,7 @@ p_methods_shared_lowpve &lt;- ggplot(res, aes(x = trait, y = score, fill = metho
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
   ylim(0, 0.2) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;green&quot;, &quot;blue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;blue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.2, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
@@ -1802,6 +1974,52 @@ that <em>mr.mash.rss</em> clearly does better than <em>LDpred2
 auto</em>. Again, <em>BayesR</em> gives unreasonably low prediction
 accuracy, which hints at issues with the default parameters and/or this
 particular implementation.</p>
+<pre class="r"><code>scenarioz &lt;- &quot;equal_effects_low_pve_indep_resid&quot;
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)
+
+i &lt;- 0
+
+n_col &lt;- 6
+n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
+      
+      for(trait in traitz){
+        i &lt;- i + 1
+        
+        res[i, 1] &lt;- repp
+        res[i, 2] &lt;- sce
+        res[i, 3] &lt;- met
+        res[i, 4] &lt;- trait
+        res[i, 5] &lt;- metric
+        res[i, 6] &lt;- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res &lt;- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_methods_shared_lowpve_filt &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = &quot;single&quot;)) +
+  ylim(0, 0.2) +
+  scale_fill_manual(values = c(&quot;red&quot;, &quot;blue&quot;)) +
+  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
+  geom_hline(yintercept=0.2, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
+  theme_cowplot(font_size = 18)
+
+print(p_methods_shared_lowpve_filt)</code></pre>
+<p><img src="figure/ukb_sim_results.Rmd/equal%20effects%20low%20pve%20filt-1.png" width="1248" style="display: block; margin: auto;" /></p>
 </div>
 <div id="equal-effects-scenario-10-traits" class="section level2">
 <h2>Equal effects scenario – 10 traits</h2>
@@ -1852,7 +2070,7 @@ p_methods_shared_10traits &lt;- ggplot(res, aes(x = trait, y = score, fill = met
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
   ylim(0, 0.51) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;green&quot;, &quot;blue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;blue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
@@ -1908,6 +2126,55 @@ class="math inline">\(mean(\frac{mr.mash.rss R^2}{LDpred2 auto R^2}) =
 R^2}{LDpred2 auto R^2}) = 1.1057\)</span>). Again, <em>BayesR</em> gives
 unreasonably low prediction accuracy, which hints at issues with the
 default parameters and/or this particular implementation.</p>
+<pre class="r"><code>scenarioz &lt;- &quot;equal_effects_10traits_indep_resid&quot;
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)
+
+i &lt;- 0
+
+traitz &lt;- 1:10
+repz &lt;- c(1:10, 12:20)
+
+n_col &lt;- 6
+n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
+      
+      for(trait in traitz){
+        i &lt;- i + 1
+        
+        res[i, 1] &lt;- repp
+        res[i, 2] &lt;- sce
+        res[i, 3] &lt;- met
+        res[i, 4] &lt;- trait
+        res[i, 5] &lt;- metric
+        res[i, 6] &lt;- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res &lt;- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_methods_shared_10traits_filt &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = &quot;single&quot;)) +
+  ylim(0, 0.51) +
+  scale_fill_manual(values = c(&quot;red&quot;, &quot;blue&quot;)) +
+  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
+  geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
+  theme_cowplot(font_size = 18)
+
+print(p_methods_shared_10traits_filt)</code></pre>
+<p><img src="figure/ukb_sim_results.Rmd/equal%20effects%2010%20traits%20filt-1.png" width="1248" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
