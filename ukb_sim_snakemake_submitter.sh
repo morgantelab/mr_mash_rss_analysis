@@ -5,8 +5,8 @@
 #SBATCH --partition=compute
 #SBATCH --time=336:00:00
 #SBATCH --mem=2gb
-#SBATCH --output=run/log/ukb_caucasian_white_british_unrel_100000_trait_1_only_effects_indep_resid.%j.out
-#SBATCH --error=run/log/ukb_caucasian_white_british_unrel_100000_trait_1_only_effects_indep_resid.%j.err
+#SBATCH --output=run/log/ukb_caucasian_white_british_unrel_100000_equal_effects_50000causal_indep_resid.%j.out
+#SBATCH --error=run/log/ukb_caucasian_white_british_unrel_100000_equal_effects_50000causal_indep_resid.%j.err
 #SBATCH --mail-type=fail
 #SBATCH --mail-user=fabiom@clemson.edu
 
@@ -19,7 +19,8 @@ conda activate mr_mash_rss_proj
 ## test dag generation
 #snakemake -p -n -s ukb_sim_snakefile \
 #          --rerun-triggers mtime \
-#          --configfile ukb_sim_trait_1_only_effects_indep_resid.yaml
+#          --configfile ukb_sim_equal_effects_50000causal_indep_resid.yaml 
+           #--configfile ukb_sim_trait_1_only_effects_indep_resid.yaml
            #--configfile ukb_sim_blocks_shared_effects_indep_resid.yaml
            #--configfile ukb_sim_equal_effects_indep_resid.yaml
            #--configfile ukb_sim_equal_effects_10traits_indep_resid.yaml
@@ -31,7 +32,8 @@ snakemake \
   --latency-wait 120 \
   -k \
   --rerun-triggers mtime \
-  --configfile ukb_sim_trait_1_only_effects_indep_resid.yaml
+  --configfile ukb_sim_equal_effects_50000causal_indep_resid.yaml
+  #--configfile ukb_sim_trait_1_only_effects_indep_resid.yaml
   #--configfile ukb_sim_blocks_shared_effects_indep_resid.yaml
   #--configfile ukb_sim_equal_effects_indep_resid.yaml
   #--configfile ukb_sim_equal_effects_10traits_indep_resid.yaml
