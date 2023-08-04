@@ -573,10 +573,10 @@ p_methods_shared_lowpve <- ggplot(res, aes(x = trait, y = score, fill = method))
 print(p_methods_shared_lowpve)
 ```
 
-In this scenario, we expect the accuracy to be lower because of the much larger number of causal, each 
-explaining a much lower proportion of the total $h^2_g=0.5$. Multivariate methods can borrow
-information across traits (if effects are shared) and improve accuracy. The results show that 
-*mr.mash.rss* clearly does better than *LDpred2 auto* in this scenario too.
+In this scenario, we expect the accuracy to be lower because of the much larger number of causal
+variants, each explaining a much lower proportion of the total $h^2_g=0.5$. Multivariate methods
+can borrow information across traits (if effects are shared) and improve accuracy. The results 
+show that *mr.mash.rss* clearly does better than *LDpred2 auto* in this scenario too.
 
 ## Equal effects scenario -- 10 traits
 
