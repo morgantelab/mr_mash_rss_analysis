@@ -567,20 +567,16 @@ p_methods_shared_lowpve <- ggplot(res, aes(x = trait, y = score, fill = method))
   ylim(0, 0.5) +
   scale_fill_manual(values = c("red", "blue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
-  geom_hline(yintercept=0.2, linetype="dotted", linewidth=1, color = "black") +
+  geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
 
 print(p_methods_shared_lowpve)
 ```
 
-In this scenario, we expect the relative improvement of multivariate methods compared to univariate
-methods to be larger than with $h^2_g = 0.5$. This is because with smaller signal-to-noise ratio,
-it is harder for univariate methods to estimate effects accurately. Multivariate methods can borrow
+In this scenario, we expect the accuracy to be lower because of the much larger number of causal, each 
+explaining a much lower proportion of the total $h^2_g=0.5$. Multivariate methods can borrow
 information across traits (if effects are shared) and improve accuracy. The results show that 
-*mr.mash.rss* clearly does better than *LDpred2 auto*. Again, *BayesR* gives unreasonably low 
-prediction accuracy, which hints at issues with the default parameters and/or this particular 
-implementation.
-
+*mr.mash.rss* clearly does better than *LDpred2 auto* in this scenario too.
 
 ## Equal effects scenario -- 10 traits
 
