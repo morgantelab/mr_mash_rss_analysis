@@ -33,7 +33,7 @@ Rscript ../code/compute_LD_matrix_bigsnp_obj_ukb.R --geno /scratch1/fabiom/ukb_b
                                                    --impute_missing FALSE \
                                                    --seed 1 \
                                                    --output ../data/LD_matrices/ukb_bc_chr"${CHR}"_LD_sparse_"${FOLD}".ld.bin \
-                                                   --ncores 8
+                                                   --ncores 16
 
 echo "Finished analyzing chromosome ${CHR} and fold ${FOLD}."
 
