@@ -53,7 +53,8 @@ compute_univariate_sumstats_bigsnp <- function(geno_obj, Y, Z=NULL, chr=0, stand
     colnames(res_mat_train) <- colnames(Y)
     
     for(s in 1:r){
-      fit_norm <- lm(Y[, s] ~ as.matrix(Z))
+      dat <- data.frame(y=Y[, s], Z)
+      fit_norm <- lm(y ~ ., dat)
       res <- resid(fit_norm) + coef(fit_norm)[1]
       res_mat_train[, s] <- inv_normalise(res)
     }
@@ -72,7 +73,7 @@ compute_univariate_sumstats_bigsnp <- function(geno_obj, Y, Z=NULL, chr=0, stand
     return(list(bhat=bhat, shat=shat))
   }
   
-  if(!is.null(Z)){
+  if(!is.null(Z) && !is.matrix(Z)){
     Z <- as.matrix(Z)
   }
   
@@ -161,7 +162,9 @@ covar$sex <- as.factor(covar$sex)
 covar$assessment_centre <- as.factor(covar$assessment_centre)
 covar$genotype_measurement_batch <- as.factor(covar$genotype_measurement_batch)
 
-covar <- covar_from_df(covar)
+if(!normalize){
+  covar <- covar_from_df(covar)
+}
 
 #Fit linear model
 out <- compute_univariate_sumstats_bigsnp(geno_obj=geno, Y=pheno, Z=covar,

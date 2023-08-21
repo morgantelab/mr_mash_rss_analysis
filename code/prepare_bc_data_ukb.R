@@ -118,14 +118,22 @@ pheno_names = c("WBC_count", "RBC_count", "Haemoglobin", "MCV", "RDW", "Platelet
                 "Plateletcrit", "PDW", "Lymphocyte_perc", "Monocyte_perc",
                 "Neutrophill_perc", "Eosinophill_perc", "Basophill_perc",
                 "Reticulocyte_perc", "MSCV", "HLR_perc")
+pheno_names_rint = paste(pheno_names, "rint", sep="_")
+
 ## RINT
+dat1 = matrix(as.numeric(NA), nrow=nrow(dat), ncol=length(pheno_names_rint))
+colnames(dat1) = pheno_names_rint
+dat = cbind(dat, dat1)
+  
 for(name in pheno_names){
+  id_rint = which(colnames(dat) == paste(name, "rint", sep="_"))
   id = which(colnames(dat) == name)
-  dat[,id] = qnorm((rank(dat[,id],na.last="keep")-0.5)/sum(!is.na(dat[,id])))
+  dat[, id_rint] = qnorm((rank(dat[,id],na.last="keep")-0.5)/sum(!is.na(dat[,id])))
 }
+
 ## compute empirical covariance matrix
-covy = dat %>% select(pheno_names) %>% cov
-D2 = stats::mahalanobis(dat %>% select(pheno_names), center=0, cov=covy) ## mahalanobis distance
+covy = dat %>% select(all_of(pheno_names_rint)) %>% cov
+D2 = stats::mahalanobis(dat %>% select(all_of(pheno_names_rint)), center=0, cov=covy) ## mahalanobis distance
 dat = dat[D2 < qchisq(0.01, df=16, lower.tail = F),]
 cat(sprintf(paste("After removing individuals with abnormal measurements,",
                   "%d rows remain.\n"),nrow(dat)))
@@ -134,7 +142,8 @@ cat(sprintf(paste("After removing individuals with abnormal measurements,",
 # analyses.
 cols.to.remove <- c("sex_genetic","ethnic_genetic",
                     "missingness",
-                    "kinship_genetic","outliers","pregnancy",paste0("ICD10.", 0:379))
+                    "kinship_genetic","outliers","pregnancy",paste0("ICD10.", 0:379), 
+                    pheno_names_rint)
 cols <- which(!is.element(names(dat),cols.to.remove))
 dat  <- dat[,cols]
 
