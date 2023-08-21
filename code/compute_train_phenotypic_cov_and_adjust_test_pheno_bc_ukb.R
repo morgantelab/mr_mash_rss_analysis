@@ -69,8 +69,8 @@ for(fold in 1:nfolds){
     }
   }
   
-  saveRDS(cov(res_mat_train), file=paste0("../output/misc/ukb_tiezzi_BP_phenotypic_cov_", fold, ".rds"))
-  saveRDS(res_mat_test, file=paste0("../data/phenotypes/ukb_tiezzi_cleaned_BP_adjusted_pheno_test_", fold, ".rds"))
+  saveRDS(cov(res_mat_train), file=paste0("../output/misc/ukb_bc_phenotypic_cov_", fold, ".rds"))
+  saveRDS(res_mat_test, file=paste0("../data/phenotypes/ukb_cleaned_bc_adjusted_pheno_test_", fold, ".rds"))
 }
 
 

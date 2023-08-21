@@ -13,12 +13,14 @@ parser <- add_option(parser, c("--sumstats_prefix"), type="character")
 parser <- add_option(parser, c("--sumstats_suffix"), type="character")
 parser <- add_option(parser, c("--chr"), type="character")
 parser <- add_option(parser, c("--output"), type="character")
+parser <- add_option(parser, c("--cor"), type="logical", default = FALSE)
 parser <- add_option(parser, c("--seed"), type="integer")
 outparse <- parse_args(parser)
 
 sumstats_prefix <- outparse$sumstats_prefix
 sumstats_suffix <- outparse$sumstats_suffix
 chr <- outparse$chr
+corr <- outparse$cor
 output <- outparse$output
 seed <- outparse$seed
 
@@ -33,12 +35,14 @@ if(length(chrscar)==1){
 }
 
 ###Extract weak effects
+it <- 0
 for(i in chrs){
+  it <- it+1
   dat <- readRDS(paste0(sumstats_prefix, i, sumstats_suffix))
   Z <- dat$Bhat/dat$Shat
   strong <- which(apply(Z, 1, is_strong))
   
-  if(i==1){
+  if(it==1){
     Z_weak <- Z[-strong, ]
   } else {
     Z_weak <- rbind(Z_weak, Z[-strong, ])
@@ -54,6 +58,10 @@ for(j in 1:nrow(Z_weak)){
 }
 
 Vhat <- Vhat/nrow(Z_weak)
+
+if(corr){
+  Vhat <- cov2cor(Vhat)
+}
 
 ###Save file
 saveRDS(Vhat, file=output)
