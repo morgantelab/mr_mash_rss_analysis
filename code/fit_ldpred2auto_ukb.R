@@ -67,6 +67,9 @@ if(h2_init<0){
                                   sample_size = n_eff, blocks = NULL, 
                                   ncores=ncores)))
   h2_init <- ldsc[["h2"]]
+  if(h2_init <= 0){
+    h2_init <- 1e-4
+  }
 }
 
 rm(LD)
