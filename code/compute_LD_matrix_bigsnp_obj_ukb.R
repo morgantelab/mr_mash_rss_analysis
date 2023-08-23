@@ -7,7 +7,7 @@ parser <- OptionParser()
 parser <- add_option(parser, c("--geno"), type="character")
 parser <- add_option(parser, c("--genetic_map"), type="character", default=NULL)
 parser <- add_option(parser, c("--samples_to_remove"), type="character", default=NULL)
-parser <- add_option(parser, c("--chr"), type="integer")
+parser <- add_option(parser, c("--chr"), type="character")
 parser <- add_option(parser, c("--seed"), type="integer")
 parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--window_size"), type="integer", default=0)
@@ -68,7 +68,7 @@ if(window_size==0){
 }
 
 ###Set chromosome
-if(chr==0){
+if(chr=="0"){
   col_inds <- seq_len(p)
 } else {
   col_inds <- which(geno$map$chromosome==chr)
