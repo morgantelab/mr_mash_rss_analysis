@@ -22,6 +22,8 @@ export MKL_NUM_THREADS=10
 export OMP_NUM_THREADS=10
 
 ###Run R script
+echo "Start analyzing fold ${FOLD} ..."
+
 Rscript ../code/compute_prior_all_regions_bc_ukb.R --sumstats ../output/summary_statistics/ukb_bc_chrAll_prior_sumstats_"${FOLD}".rds \
                                                    --regions_dir ../data/blood_cell_finemapping_regions \
                                                    --residual_cov full \
@@ -33,6 +35,8 @@ Rscript ../code/compute_prior_all_regions_bc_ukb.R --sumstats ../output/summary_
                                                    --ED_algorithm ${ED} \
                                                    --output ../output/misc/ukb_bc_"${ED}"_prior_"${FOLD}".rds \
                                                    --seed ${FOLD}
+
+echo "Finished analyzing fold ${FOLD}."
 
 ###Unload module
 module unload R/4.2.3
