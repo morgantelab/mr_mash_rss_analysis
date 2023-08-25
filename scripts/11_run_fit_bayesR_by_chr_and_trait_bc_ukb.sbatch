@@ -28,7 +28,7 @@ TRAIT=${2}
 echo "Start analyzing trait ${TRAIT}, chromosome ${CHR} and fold ${FOLD} ..."
 
 Rscript ../code/fit_qgg_sbayes_ukb.R --sumstats ../output/summary_statistics/ukb_bc_chr"${CHR}"_sumstats_"${FOLD}".rds \
-                                      --LD_matrix ../data/LD_matrices/ukb_bc_chr"${CHR}"_LD_"${FOLD}".ld.bin \ \
+                                      --LD_matrix ../data/LD_matrices/ukb_bc_chr"${CHR}"_LD_"${FOLD}".ld.bin \
                                       --n 195239 \
                                       --method bayesR \
                                       --h2 "${H2_INIT}" \
