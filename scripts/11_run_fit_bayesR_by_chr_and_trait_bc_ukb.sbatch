@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=run_fit_bayesR_by_chr_and_trait_bc_ukb
 #SBATCH --cpus-per-task=1
-#SBATCH --partition=bigmem
+#SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
 #SBATCH --time=24:00:00
 #SBATCH --mem=150G
 #SBATCH --output=run_fit_bayesR_by_chr_and_trait_bc_ukb.%j.out
