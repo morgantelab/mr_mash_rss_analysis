@@ -27,11 +27,11 @@ TRAIT=${2}
 echo "Start analyzing trait ${TRAIT}, chromosome ${CHR} and fold ${FOLD} ..."
 
 Rscript ../code/fit_ldpred2auto_ukb.R --sumstats ../output/summary_statistics/ukb_bc_chr"${CHR}"_sumstats_"${FOLD}".rds \
-                                      --LD_matrix ../data/LD_matrices/ukb_bc_chr"${CHR}"_LD_sparse.ld.bin \
+                                      --LD_matrix ../data/LD_matrices/ukb_bc_chr"${CHR}"_LD_sparse_"${FOLD}".ld.bin \
                                       --n 195239 \
                                       --h2_init "${H2_INIT}" \
                                       --burn_in 500 \
-                                      --num_iter 800 \
+                                      --num_iter 1000 \
                                       --trait ${TRAIT} \
                                       --ncores 4 \
                                       --seed ${FOLD} \
