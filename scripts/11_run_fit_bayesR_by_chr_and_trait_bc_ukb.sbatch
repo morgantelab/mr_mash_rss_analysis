@@ -3,8 +3,8 @@
 #SBATCH --job-name=run_fit_bayesR_by_chr_and_trait_bc_ukb
 #SBATCH --cpus-per-task=1
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
-#SBATCH --time=24:00:00
-#SBATCH --mem=150G
+#SBATCH --time=96:00:00
+#SBATCH --mem=310G
 #SBATCH --output=run_fit_bayesR_by_chr_and_trait_bc_ukb.%j.out
 #SBATCH --error=run_fit_bayesR_by_chr_and_trait_bc_ukb.%j.err
 
@@ -32,8 +32,8 @@ Rscript ../code/fit_qgg_sbayes_ukb.R --sumstats ../output/summary_statistics/ukb
                                       --n 195239 \
                                       --method bayesR \
                                       --h2 "${H2_INIT}" \
-                                      --nburn 5000 \
-                                      --nit 10000 \
+                                      --nburn 15000 \
+                                      --nit 25000 \
                                       --nub 4 \
                                       --nue 4 \
                                       --updateB TRUE \
@@ -43,7 +43,7 @@ Rscript ../code/fit_qgg_sbayes_ukb.R --sumstats ../output/summary_statistics/ukb
                                       --adjustE TRUE \
                                       --trait ${TRAIT} \
                                       --seed ${FOLD} \
-                                      --output ../output/bayesR_fit/ukb_bc_chr"${CHR}"_bayesR_fit_trait"${TRAIT}"_"${FOLD}".rds
+                                      --output ../output/bayesR_fit/ukb_bc_chr"${CHR}"_bayesR_fit_trait"${TRAIT}"_"${FOLD}"_long.rds
 
 echo "Finished analyzing trait ${TRAIT}, chromosome ${CHR} and fold ${FOLD}."
 
