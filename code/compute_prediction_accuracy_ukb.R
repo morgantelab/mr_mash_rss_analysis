@@ -143,7 +143,11 @@ for(i in chrs){
     model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_", data_id, ".rds"))
     
     ##Compute predictions
-    pheno_pred[[it]] <- t(t(big_prodMat(X, model_fit$mu1[, traits], ind.col=inds)) + model_fit$intercept[traits])
+    if(!is.null(pheno_means)){
+      pheno_pred[[it]] <- t(t(big_prodMat(X, model_fit$mu1[, traits], ind.col=inds)) + model_fit$intercept[traits])
+    } else {
+      pheno_pred[[it]] <- big_prodMat(X, model_fit$mu1[, traits], ind.col=inds)
+    }
 
     ##Store effects
     Bhat_all[[it]] <- model_fit$mu1[, traits]
@@ -190,7 +194,7 @@ for(i in chrs){
 pheno_pred <- Reduce("+", pheno_pred)
 
 ##Remove mean of Y_training which was over counted in the per chromosome estimate of the intercept
-if(model=="mr_mash_rss"){
+if(!is.null(pheno_means)){
   pheno_pred <- t(t(pheno_pred) - (pheno_means[traits]*(length(chrs)-1)))
 }
 
