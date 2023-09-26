@@ -43,7 +43,7 @@ Rscript ../code/fit_qgg_sbayes_ukb.R --sumstats ../output/summary_statistics/ukb
                                       --adjustE TRUE \
                                       --trait ${TRAIT} \
                                       --seed ${FOLD} \
-                                      --output ../output/bayesR_fit/ukb_bc_chr"${CHR}"_bayesR_fit_trait"${TRAIT}"_"${FOLD}"_long.rds
+                                      --output ../output/bayesR_fit/ukb_bc_chr"${CHR}"_bayesR_fit_trait"${TRAIT}"_"${FOLD}".rds
 
 echo "Finished analyzing trait ${TRAIT}, chromosome ${CHR} and fold ${FOLD}."
 
