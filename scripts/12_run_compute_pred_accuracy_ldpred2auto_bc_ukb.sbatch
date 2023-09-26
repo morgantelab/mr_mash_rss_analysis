@@ -24,6 +24,7 @@ Rscript ../code/compute_prediction_accuracy_bc_ukb.R --model ldpred2_auto \
                                                      --pheno ../data/phenotypes/ukb_cleaned_bc_adjusted_pheno_test_"${FOLD}".rds \
                                                      --geno /scratch1/fabiom/ukb_bc_geno_imp_HM3.rds \
                                                      --sample_file /data2/morgante_lab/data/ukbiobank/genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample \
+                                                     --samples_to_keep ../data/misc/ukb_cleaned_bc_ind_ids.txt \
                                                      --chr 1:22 \
                                                      --trait 1:16 \
                                                      --impute_missing FALSE \

@@ -1,10 +1,7 @@
 ###Load libraries needed
 library(optparse)
 library(bigreadr)
-library(dplyr)
-library(vctrs)
-library(glue)
-library(parallel)
+library(data.table)
 library(bigsnpr)
 
 ###Function to compute accuracy
@@ -38,6 +35,7 @@ parser <- add_option(parser, c("--trait"), type="character")
 parser <- add_option(parser, c("--pheno"), type="character")
 parser <- add_option(parser, c("--geno"), type="character")
 parser <- add_option(parser, c("--sample_file"), type="character")
+parser <- add_option(parser, c("--samples_to_keep"), type="character")
 parser <- add_option(parser, c("--model_fit_dir"), type="character")
 parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--impute_missing"), type="logical", default=TRUE)
@@ -53,6 +51,7 @@ trait <- outparse$trait
 pheno_dat <- outparse$pheno
 geno_dat <- outparse$geno
 sample_file <- outparse$sample_file
+samples_to_keep <- outparse$samples_to_keep
 model_fit_dir <- outparse$model_fit_dir
 ncores <- outparse$ncores
 impute_missing <- outparse$impute_missing
@@ -80,6 +79,10 @@ p <- geno$genotypes$ncol
 ids <- bigreadr::fread2(sample_file)
 ids <- ids[-1, ]
 
+###Read in list of individuals selected for the analysis
+ids1 <- data.table::fread(samples_to_keep, data.table=FALSE, 
+                          colClasses = "character", header=FALSE)
+
 ###Read in phenotype
 pheno_test <- readRDS(pheno_dat)
 
@@ -92,9 +95,12 @@ if(length(chrscar)==1){
   chrs <- as.integer(chrscar[1]):as.integer(chrscar[2])
 }
 
+###Get only bc selected individuals
+ids_sel <- as.character(ids[as.character(ids$ID_2) %in% ids1[,2], 2])
+
 ###Get only test individuals indeces and ids
-test_inds_geno <- which(as.character(ids[,2]) %in% as.character(rownames(pheno_test))) ##Get only test individuals
-test_ids_geno <- ids[which(as.character(ids[,2]) %in% as.character(rownames(pheno_test))), 2]
+test_inds_geno <- which(ids_sel %in% as.character(rownames(pheno_test))) ##Get only test individuals
+test_ids_geno <- ids_sel[test_inds_geno]
 
 ###Order pheno data according to geno data
 pheno_test <-  pheno_test[as.character(test_ids_geno), ]
