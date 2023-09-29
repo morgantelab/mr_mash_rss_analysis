@@ -22,7 +22,7 @@ echo "Start analyzing chromosome ${CHR} and fold ${FOLD} ..."
                                            --sample /data2/morgante_lab/data/ukbiobank/genotypes/imputed/ukb22828_c"${CHR}"_b0_v3_s487271.sample \
                                            --keep ../data/misc/ukb_cleaned_bc_ind_ids.txt \
                                            --extract ../data/genotypes/ukb_hm3_variant_rsids.txt \
-                                           --export bgen-1.1 \
+                                           --export bgen-1.1 ref-first \
                                            --out /scratch1/fabiom/tmp/temp_data_"${CHR}"_"${FOLD}" \
                                            --threads 16
 
