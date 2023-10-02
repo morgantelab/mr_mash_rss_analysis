@@ -3,7 +3,7 @@
 #SBATCH --job-name=filter_bgen_by_chr_bc_ukb
 #SBATCH --cpus-per-task=1
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
-#SBATCH --time=15:00:00
+#SBATCH --time=24:00:00
 #SBATCH --mem=2G
 #SBATCH --output=filter_bgen_by_chr_bc_ukb.%j.out
 #SBATCH --error=filter_bgen_by_chr_bc_ukb.%j.err
