@@ -140,14 +140,14 @@ for(i in chrs){
     inds <- which(geno$map$chromosome==ii)
   }
   
-  if(model %in% c("mr_mash_rss", "mr_mash_rss_init")){
+  if(model %in% c("mr_mash_rss", "mr_mash_rss_init", "mr_mash_rss_sparse_LD")){
     ##Read in model fit
     model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_", fold, ".rds"))
     
     ##Store effects
     Bhat <- model_fit$mu1[, traits]
     
-  } else if(model %in% c("ldpred2_auto","bayesN","bayesA","bayesL","bayesC","bayesR")){
+  } else if(model %in% c("ldpred2_auto","bayesN","bayesA","bayesL","bayesC","bayesR", "bayesR_sparse_LD"){
     
     it2 <- 0
     
