@@ -14,7 +14,7 @@ input <- outparse$input
 output <- outparse$output
 
 ###Load LD matrix
-LD <- fread(input, data.table = FALSE, nThread=ncores)
+LD <- as.matrix(fread(input, data.table=FALSE, nThread=ncores, showProgress=FALSE))
 
 ###Save LD matrix as binary file
 conn <- file(output, "wb")
