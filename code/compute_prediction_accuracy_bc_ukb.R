@@ -147,7 +147,7 @@ for(i in chrs){
     ##Store effects
     Bhat <- model_fit$mu1[, traits]
     
-  } else if(model %in% c("ldpred2_auto","bayesN","bayesA","bayesL","bayesC","bayesR", "bayesR_sparse_LD"){
+  } else if(model %in% c("ldpred2_auto","bayesN","bayesA","bayesL","bayesC","bayesR", "bayesR_sparse_LD")){
     
     it2 <- 0
     
