@@ -23,6 +23,8 @@ rule split_train_test:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
         Rscript {params.script} \
                                   --input {input} \
                                   --n_train {params.n} \
@@ -31,35 +33,35 @@ rule split_train_test:
         module unload R/4.2.3
         """
 
-rule compute_genotype_means:
-  input:
-    geno=config["BED"],
-    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
-  output:
-    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_chr{CHR}_geno_means_{DATASET}.rds"
-  params:
-    script=config["SCRIPT"]+"compute_genotype_means_ukb.R",
-    dataset="{DATASET}",
-    imp_flag=config["IMPUTE_FLAG"],
-    tmp=config["TMP"],
-    chr="{CHR}"
-  resources: cpus=13, mem_mb=100000, time_min=1440
-  shell:
-        """
-        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
-        module load R/4.2.3
-        export MKL_NUM_THREADS=1
-        Rscript {params.script} \
-                                  --geno {input.geno} \
-                                  --test_ids {input.tids} \
-                                  --output {output} \
-                                  --seed {params.dataset} \
-                                  --chr {params.chr} \
-                                  --impute_missing {params.imp_flag} \
-                                  --temp_dir {params.tmp} \
-                                  --ncores 8
-        module unload R/4.2.3
-        """
+#rule compute_genotype_means:
+#  input:
+#    geno=config["BED"],
+#    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
+#  output:
+#    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_chr{CHR}_geno_means_{DATASET}.rds"
+#  params:
+#    script=config["SCRIPT"]+"compute_genotype_means_ukb.R",
+#    dataset="{DATASET}",
+#    imp_flag=config["IMPUTE_FLAG"],
+#    tmp=config["TMP"],
+#    chr="{CHR}"
+#  resources: cpus=13, mem_mb=100000, time_min=1440
+#  shell:
+#        """
+#        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+#        module load R/4.2.3
+#        export MKL_NUM_THREADS=1
+#        Rscript {params.script} \
+#                                  --geno {input.geno} \
+#                                  --test_ids {input.tids} \
+#                                  --output {output} \
+#                                  --seed {params.dataset} \
+#                                  --chr {params.chr} \
+#                                  --impute_missing {params.imp_flag} \
+#                                  --temp_dir {params.tmp} \
+#                                  --ncores 8
+#        module unload R/4.2.3
+#        """
 
 rule simulate_phenotype:
   input:
@@ -84,6 +86,8 @@ rule simulate_phenotype:
         module load gsl/2.7
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=16
         Rscript {params.script} \
                                     --geno {input} \
                                     --p_causal {params.p_causal} \
@@ -96,7 +100,8 @@ rule simulate_phenotype:
                                     --w "{params.w}" \
                                     --seed {params.dataset} \
                                     --temp_dir {params.tmp} \
-                                    --output {output}
+                                    --output {output} \
+                                    --ncores 16
         module unload R/4.2.3
         module unload gsl/2.7
         """
@@ -115,7 +120,7 @@ rule compute_summary_stats:
     imp_flag=config["IMPUTE_FLAG"],
     tmp=config["TMP"],
     script=config["SCRIPT"]+"compute_sumstats_ukb.R"
-  resources: cpus=13, mem_mb=200000, time_min=1440
+  resources: cpus=5, mem_mb=200000, time_min=1440
   shell:
         """
         module load gsl/2.7
@@ -138,27 +143,27 @@ rule compute_summary_stats:
         module unload gsl/2.7
         """
 
-rule compute_phenotype_means:
-  input:
-    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
-    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
-  output:
-    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds"
-  params:
-    dataset="{DATASET}",
-    script=config["SCRIPT"]+"compute_phenotype_means_ukb.R"
-  resources: cpus=1, mem_mb=2000, time_min=30
-  shell:
-        """
-        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
-        module load R/4.2.3
-        Rscript {params.script} \
-                                    --pheno {input.pheno} \
-                                    --test_ids {input.tids} \
-                                    --output {output} \
-                                    --seed {params.dataset}
-        module unload R/4.2.3
-        """
+#rule compute_phenotype_means:
+#  input:
+#    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
+#    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
+#  output:
+#    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds"
+#  params:
+#    dataset="{DATASET}",
+#    script=config["SCRIPT"]+"compute_phenotype_means_ukb.R"
+#  resources: cpus=1, mem_mb=2000, time_min=30
+#  shell:
+#        """
+#        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+#        module load R/4.2.3
+#        Rscript {params.script} \
+#                                    --pheno {input.pheno} \
+#                                    --test_ids {input.tids} \
+#                                    --output {output} \
+#                                    --seed {params.dataset}
+#        module unload R/4.2.3
+#        """
 
 rule compute_phenotype_covariance:
   input:
@@ -175,6 +180,8 @@ rule compute_phenotype_covariance:
         module load gsl/2.7
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
+        export MKL_NUM_THREADS=8
+        export OMP_NUM_THREADS=8
         Rscript {params.script} \
                                     --pheno {input.pheno} \
                                     --test_ids {input.tids} \
@@ -204,6 +211,8 @@ rule compute_residual_covariance_all_chr:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
         Rscript {params.script} \
                                     --sumstats_prefix {params.prefix} \
                                     --sumstats_suffix {params.suffix} \
@@ -223,6 +232,7 @@ rule compute_data_driven_covariance_all_chr:
     prefix="output/summary_statistics/"+config["DATA_PREFIX"]+"_chr",
     suffix="_sumstats_{DATASET}.rds",
     chr_r=config["CHR_RANGE"],
+    ed_can_cov=config["DD_ED_CAN_COV"],
     str_z_thr=config["DD_STRONG_Z_THR"],
     n_pcs=config["DD_N_PCS"],
     frs=config["DD_FLASH_REMOVE_SINGLE"],
@@ -236,6 +246,8 @@ rule compute_data_driven_covariance_all_chr:
         module load gsl/2.7
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
+        export MKL_NUM_THREADS=8
+        export OMP_NUM_THREADS=8
         Rscript {params.script} \
                                     --sumstats_prefix {params.prefix} \
                                     --sumstats_suffix {params.suffix} \
@@ -246,6 +258,7 @@ rule compute_data_driven_covariance_all_chr:
                                     --flash_remove_singleton {params.frs} \
                                     --ED_algorithm {params.ed} \
                                     --ted_zero_thresh {params.ted_zero} \
+                                    --canonical_cov {params.ed_can_cov} \
                                     --output {output} \
                                     --seed {params.dataset}
         module unload R/4.2.3
@@ -274,6 +287,7 @@ rule fit_ldpred2auto_by_chr_trait:
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
         export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
         Rscript {params.script} \
                                     --sumstats {input.sumstats} \
                                     --LD_matrix {input.ldmat} \
@@ -296,8 +310,8 @@ rule fit_mrmash_rss:
     pheno_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_phenotypic_cov_{DATASET}.rds",
     res_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_residual_cov_{DATASET}.rds",
     dd_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_"+config["DD_ED"]+"_data_driven_cov_{DATASET}.rds",
-    x_colm=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_chr{CHR}_geno_means_{DATASET}.rds",
-    y_colm=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds"
+    # x_colm=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_chr{CHR}_geno_means_{DATASET}.rds" #,
+    # y_colm=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds"
   output:
     config["DEST"]+"output/mr_mash_rss_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mr_mash_rss_fit_{DATASET}.rds"
   params:
@@ -331,14 +345,15 @@ rule fit_mrmash_rss:
                                     --standardize {params.stand} \
                                     --update_V_method {params.upd_v_met} \
                                     --w0_threshold {params.w0_thresh} \
-                                    --X_colmeans {input.x_colm} \
-                                    --Y_colmeans {input.y_colm} \
                                     --ncores 4 \
                                     --traits {params.traits} \
                                     --seed {params.dataset} \
                                     --output {output}
         module unload R/4.2.3
         module unload gsl/2.7
+        
+        # --X_colmeans {input.x_colm} \
+        # --Y_colmeans {input.y_colm} \
         """
 
 rule fit_ldpred2auto_gwide_by_trait:
@@ -367,6 +382,7 @@ rule fit_ldpred2auto_gwide_by_trait:
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
         export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
         Rscript {params.script} \
                                     --sumstats_prefix {params.ss_prefix} \
                                     --sumstats_suffix {params.ss_suffix} \
@@ -408,11 +424,13 @@ rule fit_bayesR_by_chr_trait:
     dataset="{DATASET}",
     chr="{CHR}",
     script=config["SCRIPT"]+"fit_qgg_sbayes_ukb.R"
-  resources: cpus=4, mem_mb=100000, time_min=2880
+  resources: cpus=1, mem_mb=100000, time_min=2880
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
         Rscript {params.script} \
                                     --sumstats {input.sumstats} \
                                     --LD_matrix {input.ldmat} \
@@ -465,6 +483,7 @@ rule compute_prediction_accuracy_ldpred:
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
         export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
         Rscript {params.script} \
                                     --model {params.model} \
                                     --model_fit_dir {params.model_fit_dir} \
@@ -513,6 +532,7 @@ rule compute_prediction_accuracy_mrmashrss:
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
         export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
         Rscript {params.script} \
                                     --model {params.model} \
                                     --model_fit_dir {params.model_fit_dir} \
@@ -561,6 +581,7 @@ rule compute_prediction_accuracy_ldpred_gwide:
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
         export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
         Rscript {params.script} \
                                     --model {params.model} \
                                     --model_fit_dir {params.model_fit_dir} \
@@ -608,6 +629,7 @@ rule compute_prediction_accuracy_bayesR:
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
         export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
         Rscript {params.script} \
                                     --model {params.model} \
                                     --model_fit_dir {params.model_fit_dir} \
