@@ -6,7 +6,7 @@ library(optparse)
 
 ###Simulate data from given big X
 simulate_mr_mash_data_from_given_big_X <- function(X, p_causal, r, r_causal, intercepts,
-                                               pve, B_cor, B_scale, w, V_cor, seed){
+                                               pve, B_cor, B_scale, w, V_cor, seed, ncores=ncores){
   ##Check that the inputs are correct
   if(!inherits(X, 'FBM')){
     stop("X must be an object of class FBM")
@@ -55,10 +55,10 @@ simulate_mr_mash_data_from_given_big_X <- function(X, p_causal, r, r_causal, int
   B[causal_variables, ] <- B_causal
   
   ##Center X
-  X_colmeans <- bigstatsr::big_colstats(X)$sum/nrow(X)
+  X_colmeans <- bigstatsr::big_colstats(X, ncores=ncores)$sum/nrow(X)
   
   ##Compute G and its variance
-  G <- bigstatsr::big_prodMat(X, B, center=X_colmeans)
+  G <- bigstatsr::big_prodMat(X, B, center=X_colmeans, ncores=ncores)
   B <- as(B, "CsparseMatrix")
   Var_G <- matrixStats::colVars(G)
   
@@ -110,6 +110,7 @@ parser <- add_option(parser, c("--V_cor"), type="numeric")
 parser <- add_option(parser, c("--w"), type="character")
 parser <- add_option(parser, c("--seed"), type="integer")
 parser <- add_option(parser, c("--temp_dir"), type="character")
+parser <- add_option(parser, c("--ncores"), type="integer")
 outparse <- parse_args(parser)
 
 geno <- outparse$geno
@@ -124,17 +125,18 @@ w <- eval(parse(text=outparse$w))
 V_cor <- outparse$V_cor
 seed <- outparse$seed
 temp_dir <- outparse$temp_dir
+ncores <- outparse$ncores
 
 ###Set seed
 set.seed(seed)
 
 ###Read in genotype data
 tmp <- tempfile(tmpdir=temp_dir)
-rds <- snp_readBed2(geno, backingfile=tmp, ncores=1)
+rds <- snp_readBed2(geno, backingfile=tmp, ncores=ncores)
 dat <- snp_attach(rds)
 
 ###Impute missing values
-X <- snp_fastImputeSimple(dat$genotypes, method="mean2")
+X <- snp_fastImputeSimple(dat$genotypes, method="mean2", ncores=ncores)
 
 ###Convert from FBM to matrix
 FID <- dat$fam$family.ID
@@ -142,7 +144,8 @@ IID <- dat$fam$sample.ID
 
 ###Simulate phenotype
 out_sim <- simulate_mr_mash_data_from_given_big_X(X=X, p_causal=p_causal, r=r, r_causal=r_causal, intercepts=rep(1, r),
-                                                  pve=pve, B_cor=B_cor, B_scale=B_scale, w=w, V_cor=V_cor, seed=seed)
+                                                  pve=pve, B_cor=B_cor, B_scale=B_scale, w=w, V_cor=V_cor, seed=seed,
+                                                  ncores=ncores)
 colnames(out_sim$Y) <- paste0("y", 1:r)
 rownames(out_sim$Y) <- IID
 
