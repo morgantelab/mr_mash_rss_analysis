@@ -309,8 +309,8 @@ rule fit_mrmash_rss:
     ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.ld.bin",
     pheno_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_phenotypic_cov_{DATASET}.rds",
     res_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_residual_cov_{DATASET}.rds",
-    dd_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_"+config["DD_ED"]+"_data_driven_cov_{DATASET}.rds",
-    # x_colm=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_chr{CHR}_geno_means_{DATASET}.rds" #,
+    dd_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_"+config["DD_ED"]+"_data_driven_cov_{DATASET}.rds" #,
+    # x_colm=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_chr{CHR}_geno_means_{DATASET}.rds",
     # y_colm=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds"
   output:
     config["DEST"]+"output/mr_mash_rss_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mr_mash_rss_fit_{DATASET}.rds"
