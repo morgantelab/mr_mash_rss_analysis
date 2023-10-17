@@ -75,9 +75,13 @@ if(h2_init<0){
 rm(LD)
 
 ###Fit mr.mash.rss
+tic <- proc.time()[[3]]
 fit_ldpred2_auto <- snp_ldpred2_auto(corr=corr, df_beta=df_beta, h2_init=h2_init, vec_p_init=vec_p_init,
                                      burn_in=burn_in, num_iter=num_iter, sparse=sparse, verbose=verbose,
                                      allow_jump_sign=allow_jump_sign, shrink_corr=shrink_corr, ncores=ncores)
+toc <- proc.time()[[3]]
+
+fit_ldpred2_auto$elapsed_time <- toc-tic
 
 saveRDS(fit_ldpred2_auto, file=output)
 

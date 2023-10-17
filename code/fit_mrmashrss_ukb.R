@@ -135,12 +135,17 @@ if(length(traits)>1){
 }
 
 ###Fit mr.mash.rss
+tic <- proc.time()[[3]]
 fit_mrmash_rss <- mr.mash.rss(Bhat=univ_sumstats$Bhat, Shat=univ_sumstats$Shat, covY=covY, R=LD, n=n, S0=S0, 
                               w0=w0, update_w0=update_w0, tol=tol, V=V, check_R=check_R, max_iter=max_iter,
                               convergence_criterion="ELBO", compute_ELBO=TRUE, standardize=standardize,
                               verbose=verbose, update_V=update_V, update_V_method=update_V_method,
                               w0_threshold=w0_threshold, ca_update_order=ca_update_order, mu1_init=mu1_init,
                               X_colmeans=X_colmeans, Y_colmeans=Y_colmeans, nthreads=ncores)
+toc <- proc.time()[[3]]
+
+fit_mrmash_rss$elapsed_time <- toc-tic
+
 
 saveRDS(fit_mrmash_rss, file=output)
 

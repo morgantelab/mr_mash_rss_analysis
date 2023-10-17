@@ -71,10 +71,14 @@ stat <- data.frame(b=univ_sumstats$Bhat[, trait], seb=univ_sumstats$Shat[, trait
                    n=n)
 
 ###Fit sBayesX
+tic <- proc.time()[[3]]
 fit_sbayes <- qgg:::sbayes(stat=stat, LD=LD, method=method, lambda=lambda, vg=vg, vb=vb, ve=ve,  
                           h2=h2, pi=Pi, ssb_prior=ssb_prior, sse_prior=sse_prior, nub=nub, nue=nue,
                           updateB=updateB, updateE=updateE, updatePi=updatePi, updateG=updateG, 
                           adjustE=adjustE, nit=nit, nburn=nburn, algorithm=algorithm) 
+toc <- proc.time()[[3]]
+
+fit_sbayes$elapsed_time <- toc-tic
 
 saveRDS(fit_sbayes, file=output)
 
