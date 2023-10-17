@@ -268,7 +268,7 @@ rule compute_data_driven_covariance_all_chr:
 rule fit_ldpred2auto_by_chr_trait:
   input:
     sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
-    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD.ld.bin"
+    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.ld.bin"
   output:
     config["DEST"]+"output/ldpred2_auto_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds"
   params:
@@ -281,7 +281,7 @@ rule fit_ldpred2auto_by_chr_trait:
     chr="{CHR}",
     tmp=config["TMP"],
     script=config["SCRIPT"]+"fit_ldpred2auto_ukb.R"
-  resources: cpus=4, mem_mb=100000, time_min=720
+  resources: cpus=4, mem_mb=150000, time_min=720
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -306,7 +306,7 @@ rule fit_ldpred2auto_by_chr_trait:
 rule fit_mrmash_rss:
   input:
     sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
-    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD.ld.bin",
+    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.ld.bin",
     pheno_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_phenotypic_cov_{DATASET}.rds",
     res_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_residual_cov_{DATASET}.rds",
     dd_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_"+config["DD_ED"]+"_data_driven_cov_{DATASET}.rds",
@@ -404,7 +404,7 @@ rule fit_ldpred2auto_gwide_by_trait:
 rule fit_bayesR_by_chr_trait:
   input:
     sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
-    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD.ld.bin"
+    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.ld.bin"
   output:
     config["DEST"]+"output/bayesR_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_bayesR_fit_trait{TRAIT}_{DATASET}.rds"
   params:
