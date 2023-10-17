@@ -61,13 +61,13 @@ for(i in chrs){
   }
 }
 
-if(nrow(Bhat_strong) < 20){
+if(nrow(Z_strong) < 20){
   stop("Too few strong effects with current strong_Z_thresh value.")
 }
 
 ###Estimate data-driven prior
 if(residual_cov=="diagonal"){
-  V <- diag(ncol(Bhat_strong))
+  V <- diag(ncol(Z_strong))
 } else {
   V <- readRDS(residual_cov)
 }
