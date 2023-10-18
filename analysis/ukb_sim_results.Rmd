@@ -78,7 +78,7 @@ This implies that the effects of the causal variants are equal across responses.
 
 ```{r equal effects, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto", "ldpred2_auto_gwide", "bayesR")
+methodz <- c("mr_mash_rss", "ldpred2_auto")#, "ldpred2_auto_gwide", "bayesR")
 
 i <- 0
 
@@ -142,7 +142,7 @@ and covariance matrix that achieves effects (with variance 1) to be present only
 
 ```{r mostly null, fig.height=10, fig.width=13}
 scenarioz <- "trait_1_only_effects_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "ldpred2_auto")#, "bayesR")
 
 i <- 0
 
@@ -206,7 +206,7 @@ traits 4-5.
 
 ```{r shared in subgroups, fig.height=10, fig.width=13}
 scenarioz <- "blocks_shared_effects_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "ldpred2_auto")#, "bayesR")
 
 i <- 0
 
@@ -270,7 +270,7 @@ per-trait genomic heritability was set to 0.2.
 
 ```{r equal effects low pve, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_low_pve_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "ldpred2_auto")#, "bayesR")
 
 i <- 0
 
@@ -393,7 +393,7 @@ number of traits was increased to 10.
 
 ```{r equal effects 10 traits, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_10traits_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "ldpred2_auto")#, "bayesR")
 
 i <- 0
 
