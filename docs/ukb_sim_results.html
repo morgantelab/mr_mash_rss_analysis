@@ -11,7 +11,7 @@
 
 <meta name="author" content="Fabio Morgante &amp; Deborah Kunkel" />
 
-<meta name="date" content="2023-08-04" />
+<meta name="date" content="2023-10-18" />
 
 <title>Simulations with UK Biobank genotypes and different effect structure across traits</title>
 
@@ -374,7 +374,7 @@ div.tocify {
 <h1 class="title toc-ignore">Simulations with UK Biobank genotypes and
 different effect structure across traits</h1>
 <h4 class="author">Fabio Morgante &amp; Deborah Kunkel</h4>
-<h4 class="date">August 04, 2023</h4>
+<h4 class="date">October 18, 2023</h4>
 
 </div>
 
@@ -403,7 +403,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-08-04
+<strong>Last updated:</strong> 2023-10-18
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree324f45d3584fb59aded7202d522a8a6be17566a6targetblank324f45da">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree2e7c7bd10b5f3a9fae2735c0f82b0ac1b35ea7c3targetblank2e7c7bda">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/324f45d3584fb59aded7202d522a8a6be17566a6" target="_blank">324f45d</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/2e7c7bd10b5f3a9fae2735c0f82b0ac1b35ea7c3" target="_blank">2e7c7bd</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree324f45d3584fb59aded7202d522a8a6be17566a6targetblank324f45da"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree2e7c7bd10b5f3a9fae2735c0f82b0ac1b35ea7c3targetblank2e7c7bda"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/324f45d3584fb59aded7202d522a8a6be17566a6" target="_blank">324f45d</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/2e7c7bd10b5f3a9fae2735c0f82b0ac1b35ea7c3" target="_blank">2e7c7bd</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -575,9 +575,25 @@ Ignored files:
 
 Untracked files:
     Untracked:  Snakefile_old
+    Untracked:  analysis/ukb_bc_results.Rmd
+    Untracked:  code/adjust_LD_test.R
+    Untracked:  code/compute_sumstats_test_bc_ukb.R
+    Untracked:  code/fit_kriging_rss_ukb.R
+    Untracked:  code/fit_mrmashrss_test_ukb.R
     Untracked:  code/merge_sumstats_all_chr_ukb.R
     Untracked:  code/split_effects_by_chr_imp_ukb.R
-    Untracked:  scripts/9_run_fit_ldpred2auto_by_chr_and_trait_BP_florian_LD_ukb.sbatch
+    Untracked:  scripts/11_run_fit_mrmashrss_by_chr_V_all_chr_bc_ukb.sbatch
+    Untracked:  scripts/11_run_fit_mrmashrss_sparse_LD_V_all_chr_by_chr_bc_ukb.sbatch
+    Untracked:  scripts/11_run_fit_mrmashrss_sparse_LD_mvsusie_paper_prior_by_chr_bc_ukb.sbatch
+    Untracked:  scripts/11_run_fit_mrmashrss_test_by_chr_V_all_chr_bc_ukb.sbatch
+    Untracked:  scripts/12_run_compute_pred_accuracy_mrmashrss_sparse_LD_mvsusie_paper_prior_bc_ukb.sbatch
+    Untracked:  scripts/3_run_compute_sumstats_by_chr_and_fold_test_bc_ukb.sbatch
+    Untracked:  scripts/run_adjust_LD_test.sbatch
+    Untracked:  scripts/run_fit_kriging_rss_by_chr_and_trait_bc_ukb.sbatch
+
+Unstaged changes:
+    Modified:   code/compute_prediction_accuracy_bc_ukb.R
+    Modified:   ukb_sim_snakefile
 
 </code></pre>
 <p>
@@ -623,6 +639,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/2e7c7bd10b5f3a9fae2735c0f82b0ac1b35ea7c3/analysis/ukb_sim_results.Rmd" target="_blank">2e7c7bd</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-18
+</td>
+<td>
+Update equal effects results
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/68bbbfcccac7c74735b32fe1f1884a9447af7ffe/analysis/ukb_sim_results.Rmd" target="_blank">68bbbfc</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-02
+</td>
+<td>
+Minor changes
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/b5ea1886ec414db345f606624fa9c2e346eff46b/docs/ukb_sim_results.html" target="_blank">b5ea188</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-08-04
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1417,7 +1484,7 @@ per-trait variance of 1 and a correlation across traits of 1. This
 implies that the effects of the causal variants are equal across
 responses.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;equal_effects_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;, &quot;ldpred2_auto_gwide&quot;, &quot;bayesR&quot;)
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)#, &quot;ldpred2_auto_gwide&quot;, &quot;bayesR&quot;)
 
 i &lt;- 0
 
@@ -1544,89 +1611,6 @@ auto</em> per-chromosome and genome-wide. Therefore, we will drop
 computationally intensive. <em>BayesR</em> gives unreasonably low
 prediction accuracy, which hints at issues with the default parameters
 and/or this particular implementation.</p>
-<pre class="r"><code>scenarioz &lt;- &quot;equal_effects_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)
-
-i &lt;- 0
-
-n_col &lt;- 6
-n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
-res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
-colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
-
-for(sce in scenarioz){
-  for(met in methodz){
-    for(repp in repz){
-      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
-      
-      for(trait in traitz){
-        i &lt;- i + 1
-        
-        res[i, 1] &lt;- repp
-        res[i, 2] &lt;- sce
-        res[i, 3] &lt;- met
-        res[i, 4] &lt;- trait
-        res[i, 5] &lt;- metric
-        res[i, 6] &lt;- dat$r2[trait]
-      }
-    }
-  }
-}
-
-res &lt;- transform(res, scenario=as.factor(scenario),
-                      method=as.factor(method),
-                      trait=as.factor(trait))
-
-p_methods_shared_filt &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
-  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
-  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
-               position = position_dodge2(width = 0.87,   
-                                          preserve = &quot;single&quot;)) +
-  ylim(0, 0.51) +
-  scale_fill_manual(values = c(&quot;red&quot;, &quot;blue&quot;)) +
-  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
-  geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
-  theme_cowplot(font_size = 18)
-
-print(p_methods_shared_filt)</code></pre>
-<p><img src="figure/ukb_sim_results.Rmd/equal%20effects%20filt-1.png" width="1248" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-equal-effects-filt-1">
-Past versions of "equal effects filt-1.png"
-</button>
-</p>
-<div id="fig-no-spaces-equal-effects-filt-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/a826a15b939449ca1f97e07481ddfb0a7e939f34/docs/figure/ukb_sim_results.Rmd/equal effects filt-1.png" target="_blank">a826a15</a>
-</td>
-<td>
-fmorgante
-</td>
-<td>
-2023-07-31
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 <div id="mostly-null-scenario" class="section level2">
 <h2>Mostly null scenario</h2>
@@ -1635,7 +1619,7 @@ distribution with mean vector 0 and covariance matrix that achieves
 effects (with variance 1) to be present only trait 1. The other 4 traits
 are only random noise.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;trait_1_only_effects_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)#, &quot;bayesR&quot;)
 
 i &lt;- 0
 
@@ -1759,89 +1743,6 @@ reassuringly, performs similarly to <em>LDpred2 auto</em>. Again,
 **BayesR* gives unreasonably low prediction accuracy, which hints at
 issues with the default parameters and/or this particular
 implementation.</p>
-<pre class="r"><code>scenarioz &lt;- &quot;trait_1_only_effects_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)
-
-i &lt;- 0
-
-n_col &lt;- 6
-n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
-res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
-colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
-
-for(sce in scenarioz){
-  for(met in methodz){
-    for(repp in repz){
-      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
-      
-      for(trait in traitz){
-        i &lt;- i + 1
-        
-        res[i, 1] &lt;- repp
-        res[i, 2] &lt;- sce
-        res[i, 3] &lt;- met
-        res[i, 4] &lt;- trait
-        res[i, 5] &lt;- metric
-        res[i, 6] &lt;- dat$r2[trait]
-      }
-    }
-  }
-}
-
-res &lt;- transform(res, scenario=as.factor(scenario),
-                      method=as.factor(method),
-                      trait=as.factor(trait))
-
-p_mostly_null_filt &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
-  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
-  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
-               position = position_dodge2(width = 0.87,   
-                                          preserve = &quot;single&quot;)) +
-  ylim(0.0, 0.51) +
-  scale_fill_manual(values = c(&quot;red&quot;, &quot;blue&quot;)) +
-  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
-  geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
-  theme_cowplot(font_size = 18)
-
-print(p_mostly_null_filt)</code></pre>
-<p><img src="figure/ukb_sim_results.Rmd/mostly%20null%20filt-1.png" width="1248" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-mostly-null-filt-1">
-Past versions of "mostly null filt-1.png"
-</button>
-</p>
-<div id="fig-no-spaces-mostly-null-filt-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/a826a15b939449ca1f97e07481ddfb0a7e939f34/docs/figure/ukb_sim_results.Rmd/mostly null filt-1.png" target="_blank">a826a15</a>
-</td>
-<td>
-fmorgante
-</td>
-<td>
-2023-07-31
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 <div id="shared-in-subgroups-scenario" class="section level2">
 <h2>Shared in subgroups scenario</h2>
@@ -1858,7 +1759,7 @@ of the mixture applies to traits 1-3 while the second component applies
 to traits 4-5. The per-trait <span class="math inline">\(h^2_g\)</span>
 is 0.3 for traits 1-3 and 0.5 for the traits 4-5.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;blocks_shared_effects_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)#, &quot;bayesR&quot;)
 
 i &lt;- 0
 
@@ -2006,90 +1907,6 @@ effects, and the smaller <span class="math inline">\(h^2_g\)</span>
 (harder scenario for univariate methods). Again, <em>BayesR</em> gives
 unreasonably low prediction accuracy, which hints at issues with the
 default parameters and/or this particular implementation.</p>
-<pre class="r"><code>scenarioz &lt;- &quot;blocks_shared_effects_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)
-
-i &lt;- 0
-
-n_col &lt;- 6
-n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
-res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
-colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
-
-for(sce in scenarioz){
-  for(met in methodz){
-    for(repp in repz){
-      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
-      
-      for(trait in traitz){
-        i &lt;- i + 1
-        
-        res[i, 1] &lt;- repp
-        res[i, 2] &lt;- sce
-        res[i, 3] &lt;- met
-        res[i, 4] &lt;- trait
-        res[i, 5] &lt;- metric
-        res[i, 6] &lt;- dat$r2[trait]
-      }
-    }
-  }
-}
-
-res &lt;- transform(res, scenario=as.factor(scenario),
-                      method=as.factor(method),
-                      trait=as.factor(trait))
-
-p_blocks_shared_filt &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
-  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
-  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
-               position = position_dodge2(width = 0.87,   
-                                          preserve = &quot;single&quot;)) +
-  ylim(0, 0.51) +
-  scale_fill_manual(values = c(&quot;red&quot;, &quot;blue&quot;)) +
-  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
-  geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
-  geom_hline(yintercept=0.3, linetype=&quot;dashed&quot;, linewidth=1, color = &quot;black&quot;) +
-  theme_cowplot(font_size = 18)
-
-print(p_blocks_shared_filt)</code></pre>
-<p><img src="figure/ukb_sim_results.Rmd/shared%20in%20subgroups%20filt-1.png" width="1248" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-shared-in-subgroups-filt-1">
-Past versions of "shared in subgroups filt-1.png"
-</button>
-</p>
-<div id="fig-no-spaces-shared-in-subgroups-filt-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/a826a15b939449ca1f97e07481ddfb0a7e939f34/docs/figure/ukb_sim_results.Rmd/shared in subgroups filt-1.png" target="_blank">a826a15</a>
-</td>
-<td>
-fmorgante
-</td>
-<td>
-2023-07-31
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 <div id="equal-effects-scenario-low-pve" class="section level2">
 <h2>Equal effects scenario – low PVE</h2>
@@ -2100,7 +1917,7 @@ implies that the effects of the causal variants are equal across
 responses. In addition, the per-trait genomic heritability was set to
 0.2.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;equal_effects_low_pve_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)#, &quot;bayesR&quot;)
 
 i &lt;- 0
 
@@ -2203,89 +2020,6 @@ that <em>mr.mash.rss</em> clearly does better than <em>LDpred2
 auto</em>. Again, <em>BayesR</em> gives unreasonably low prediction
 accuracy, which hints at issues with the default parameters and/or this
 particular implementation.</p>
-<pre class="r"><code>scenarioz &lt;- &quot;equal_effects_low_pve_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)
-
-i &lt;- 0
-
-n_col &lt;- 6
-n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
-res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
-colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
-
-for(sce in scenarioz){
-  for(met in methodz){
-    for(repp in repz){
-      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
-      
-      for(trait in traitz){
-        i &lt;- i + 1
-        
-        res[i, 1] &lt;- repp
-        res[i, 2] &lt;- sce
-        res[i, 3] &lt;- met
-        res[i, 4] &lt;- trait
-        res[i, 5] &lt;- metric
-        res[i, 6] &lt;- dat$r2[trait]
-      }
-    }
-  }
-}
-
-res &lt;- transform(res, scenario=as.factor(scenario),
-                      method=as.factor(method),
-                      trait=as.factor(trait))
-
-p_methods_shared_lowpve_filt &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
-  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
-  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
-               position = position_dodge2(width = 0.87,   
-                                          preserve = &quot;single&quot;)) +
-  ylim(0, 0.2) +
-  scale_fill_manual(values = c(&quot;red&quot;, &quot;blue&quot;)) +
-  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
-  geom_hline(yintercept=0.2, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
-  theme_cowplot(font_size = 18)
-
-print(p_methods_shared_lowpve_filt)</code></pre>
-<p><img src="figure/ukb_sim_results.Rmd/equal%20effects%20low%20pve%20filt-1.png" width="1248" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-equal-effects-low-pve-filt-1">
-Past versions of "equal effects low pve filt-1.png"
-</button>
-</p>
-<div id="fig-no-spaces-equal-effects-low-pve-filt-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/a826a15b939449ca1f97e07481ddfb0a7e939f34/docs/figure/ukb_sim_results.Rmd/equal effects low pve filt-1.png" target="_blank">a826a15</a>
-</td>
-<td>
-fmorgante
-</td>
-<td>
-2023-07-31
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 <div id="equal-effects-scenario-more-polygenic" class="section level2">
 <h2>Equal effects scenario – more polygenic</h2>
@@ -2405,7 +2139,7 @@ per-trait variance of 1 and a correlation across traits of 1. This
 implies that the effects of the causal variants are equal across
 responses. In addition, the number of traits was increased to 10.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;equal_effects_10traits_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)#, &quot;bayesR&quot;)
 
 i &lt;- 0
 
@@ -2513,92 +2247,6 @@ class="math inline">\(mean(\frac{mr.mash.rss R^2}{LDpred2 auto R^2}) =
 R^2}{LDpred2 auto R^2}) = 1.1057\)</span>). Again, <em>BayesR</em> gives
 unreasonably low prediction accuracy, which hints at issues with the
 default parameters and/or this particular implementation.</p>
-<pre class="r"><code>scenarioz &lt;- &quot;equal_effects_10traits_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)
-
-i &lt;- 0
-
-traitz &lt;- 1:10
-repz &lt;- c(1:10, 12:20)
-
-n_col &lt;- 6
-n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
-res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
-colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
-
-for(sce in scenarioz){
-  for(met in methodz){
-    for(repp in repz){
-      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
-      
-      for(trait in traitz){
-        i &lt;- i + 1
-        
-        res[i, 1] &lt;- repp
-        res[i, 2] &lt;- sce
-        res[i, 3] &lt;- met
-        res[i, 4] &lt;- trait
-        res[i, 5] &lt;- metric
-        res[i, 6] &lt;- dat$r2[trait]
-      }
-    }
-  }
-}
-
-res &lt;- transform(res, scenario=as.factor(scenario),
-                      method=as.factor(method),
-                      trait=as.factor(trait))
-
-p_methods_shared_10traits_filt &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
-  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
-  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
-               position = position_dodge2(width = 0.87,   
-                                          preserve = &quot;single&quot;)) +
-  ylim(0, 0.51) +
-  scale_fill_manual(values = c(&quot;red&quot;, &quot;blue&quot;)) +
-  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
-  geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
-  theme_cowplot(font_size = 18)
-
-print(p_methods_shared_10traits_filt)</code></pre>
-<p><img src="figure/ukb_sim_results.Rmd/equal%20effects%2010%20traits%20filt-1.png" width="1248" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-equal-effects-10-traits-filt-1">
-Past versions of "equal effects 10 traits filt-1.png"
-</button>
-</p>
-<div id="fig-no-spaces-equal-effects-10-traits-filt-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/a826a15b939449ca1f97e07481ddfb0a7e939f34/docs/figure/ukb_sim_results.Rmd/equal effects 10 traits filt-1.png" target="_blank">a826a15</a>
-</td>
-<td>
-fmorgante
-</td>
-<td>
-2023-07-31
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -2627,7 +2275,7 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] cowplot_1.1.1 ggplot2_3.4.1
+[1] cowplot_1.1.1 ggplot2_3.4.3
 
 loaded via a namespace (and not attached):
  [1] Rcpp_1.0.11       highr_0.10        pillar_1.9.0      compiler_4.1.2   
@@ -2636,12 +2284,12 @@ loaded via a namespace (and not attached):
 [13] jsonlite_1.8.7    evaluate_0.21     lifecycle_1.0.3   tibble_3.2.1     
 [17] pkgconfig_2.0.3   rlang_1.1.1       cli_3.6.1         rstudioapi_0.15.0
 [21] yaml_2.3.7        xfun_0.39         fastmap_1.1.1     withr_2.5.0      
-[25] dplyr_1.1.1       stringr_1.5.0     knitr_1.43        generics_0.1.3   
-[29] fs_1.6.3          vctrs_0.6.1       sass_0.4.7        tidyselect_1.2.0 
+[25] dplyr_1.1.2       stringr_1.5.0     knitr_1.43        generics_0.1.3   
+[29] fs_1.6.3          vctrs_0.6.3       sass_0.4.7        tidyselect_1.2.0 
 [33] rprojroot_2.0.3   grid_4.1.2        glue_1.6.2        R6_2.5.1         
 [37] fansi_1.0.4       rmarkdown_2.23    farver_2.1.1      magrittr_2.0.3   
 [41] whisker_0.4.1     scales_1.2.1      promises_1.2.0.1  htmltools_0.5.5  
-[45] colorspace_2.1-0  httpuv_1.6.9      labeling_0.4.2    utf8_1.2.3       
+[45] colorspace_2.1-0  httpuv_1.6.11     labeling_0.4.2    utf8_1.2.3       
 [49] stringi_1.7.12    munsell_0.5.0     cachem_1.0.8     </code></pre>
 </div>
 </div>
