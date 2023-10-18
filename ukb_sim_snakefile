@@ -77,6 +77,7 @@ rule simulate_phenotype:
     B_cor=config["B_COR"],
     V_cor=config["V_COR"],
     w=config["W"],
+    norm_pheno=config["NORMALIZE_PHENO"],
     dataset="{DATASET}",
     tmp=config["TMP"],
     script=config["SCRIPT"]+"sim_pheno_ukb.R"
@@ -98,6 +99,7 @@ rule simulate_phenotype:
                                     --B_cor "{params.B_cor}" \
                                     --V_cor {params.V_cor} \
                                     --w "{params.w}" \
+                                    --normalize {params.norm_pheno} \
                                     --seed {params.dataset} \
                                     --temp_dir {params.tmp} \
                                     --output {output} \
@@ -351,9 +353,6 @@ rule fit_mrmash_rss:
                                     --output {output}
         module unload R/4.2.3
         module unload gsl/2.7
-        
-        # --X_colmeans {input.x_colm} \
-        # --Y_colmeans {input.y_colm} \
         """
 
 rule fit_ldpred2auto_gwide_by_trait:
@@ -510,7 +509,7 @@ rule compute_prediction_accuracy_mrmashrss:
   input:
     pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
     geno=config["BED"],
-    pheno_means=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds",
+    #pheno_means=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds",
     tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
     list=lambda wildcards: get_mrmashrss_input_files(wildcards)
   output:
@@ -538,7 +537,6 @@ rule compute_prediction_accuracy_mrmashrss:
                                     --model_fit_dir {params.model_fit_dir} \
                                     --pheno {input.pheno} \
                                     --geno {input.geno} \
-                                    --pheno_means {input.pheno_means} \
                                     --test_ids {input.tids} \
                                     --data_id {params.dataset} \
                                     --chr {params.chr_r} \
