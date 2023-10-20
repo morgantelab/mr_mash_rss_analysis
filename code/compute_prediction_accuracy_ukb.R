@@ -169,7 +169,12 @@ for(i in chrs){
         
         ##Quality control over chains
         range_corr <- sapply(model_fit, function(auto) diff(range(auto$corr_est)))
-        to_keep <- (range_corr > (0.95 * quantile(range_corr, 0.95)))
+        to_keep <- (range_corr > (0.95 * quantile(range_corr, 0.95, na.rm = TRUE)))
+        if(any(is.na(to_keep))){
+          to_keep[which(is.na(to_keep))] <- FALSE
+          warning("Some chains dropped beacuse of divergence.")
+        }
+        
         ##Compute posterior mean after QC
         if(it2==1){
           Bhat <- rowMeans(sapply(model_fit[to_keep], function(auto) auto$beta_est))
