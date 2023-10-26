@@ -45,12 +45,12 @@ phenotypes. This metric as the attractive property that its upper bound is $h_g^
 
 ## Results
 
-```{results_accuracy, fig.height=10, fig.width=13}
+```{r results_accuracy, fig.height=10, fig.width=13}
 dat_ldsc <- matrix(as.numeric(NA), 5, 16)
 
 for(i in 1:5){
   for(s in 1:16){
-    dat_ldsc[i, s] <- readRDS(paste0("Desktop/ukb_bc_chrAll_ldsc_fit_trait", s, "_", i, ".rds"))["h2"]
+    dat_ldsc[i, s] <- readRDS(paste0("output/ldsc_fit/ukb_bc_chrAll_ldsc_fit_trait", s, "_", i, ".rds"))["h2"]
   }
   
   if(i>1){
@@ -99,5 +99,4 @@ p_methods_shared <- ggplot(res, aes(x = trait, y = r2, fill = method)) +
   theme_cowplot(font_size = 18)
 
 print(p_methods_shared)
-
 ```
