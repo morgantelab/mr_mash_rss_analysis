@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree4b1fbf324d67c13e02932a8406230fa62d470eb5targetblank4b1fbf3a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreefebf669ca5f7d522297abf9c8dec9f75f7ee300atargetblankfebf669a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/4b1fbf324d67c13e02932a8406230fa62d470eb5" target="_blank">4b1fbf3</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/febf669ca5f7d522297abf9c8dec9f75f7ee300a" target="_blank">febf669</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree4b1fbf324d67c13e02932a8406230fa62d470eb5targetblank4b1fbf3a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreefebf669ca5f7d522297abf9c8dec9f75f7ee300atargetblankfebf669a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/4b1fbf324d67c13e02932a8406230fa62d470eb5" target="_blank">4b1fbf3</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/febf669ca5f7d522297abf9c8dec9f75f7ee300a" target="_blank">febf669</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -643,6 +643,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/febf669ca5f7d522297abf9c8dec9f75f7ee300a/analysis/ukb_bc_results.Rmd" target="_blank">febf669</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-26
+</td>
+<td>
+Fix another bug
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/7cd0ded97c2d6b525cb49fbf68f79009168e4290/docs/ukb_bc_results.html" target="_blank">7cd0ded</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-26
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/4b1fbf324d67c13e02932a8406230fa62d470eb5/analysis/ukb_bc_results.Rmd" target="_blank">4b1fbf3</a>
 </td>
 <td>
@@ -706,11 +740,11 @@ its upper bound is <span class="math inline">\(h_g^2\)</span>.</p>
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
-<pre class="results_accuracy"><code>dat_ldsc &lt;- matrix(as.numeric(NA), 5, 16)
+<pre class="r"><code>dat_ldsc &lt;- matrix(as.numeric(NA), 5, 16)
 
 for(i in 1:5){
   for(s in 1:16){
-    dat_ldsc[i, s] &lt;- readRDS(paste0(&quot;Desktop/ukb_bc_chrAll_ldsc_fit_trait&quot;, s, &quot;_&quot;, i, &quot;.rds&quot;))[&quot;h2&quot;]
+    dat_ldsc[i, s] &lt;- readRDS(paste0(&quot;output/ldsc_fit/ukb_bc_chrAll_ldsc_fit_trait&quot;, s, &quot;_&quot;, i, &quot;.rds&quot;))[&quot;h2&quot;]
   }
   
   if(i&gt;1){
@@ -758,8 +792,10 @@ p_methods_shared &lt;- ggplot(res, aes(x = trait, y = r2, fill = method)) +
   geom_hline(aes(yintercept = h2), linez) +
   theme_cowplot(font_size = 18)
 
-print(p_methods_shared)
-</code></pre>
+print(p_methods_shared)</code></pre>
+<pre><code>Warning: Removed 80 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+<pre><code>Warning: Removed 80 rows containing non-finite values (`stat_summary()`).</code></pre>
+<p><img src="figure/ukb_bc_results.Rmd/results_accuracy-1.png" width="1248" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -791,18 +827,19 @@ other attached packages:
 [1] cowplot_1.1.1 ggplot2_3.4.3
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.11       pillar_1.9.0      compiler_4.1.2    bslib_0.5.0      
- [5] later_1.3.1       jquerylib_0.1.4   git2r_0.32.0      workflowr_1.7.0  
- [9] tools_4.1.2       digest_0.6.33     gtable_0.3.3      jsonlite_1.8.7   
-[13] evaluate_0.21     lifecycle_1.0.3   tibble_3.2.1      pkgconfig_2.0.3  
-[17] rlang_1.1.1       cli_3.6.1         rstudioapi_0.15.0 yaml_2.3.7       
-[21] xfun_0.39         fastmap_1.1.1     withr_2.5.0       dplyr_1.1.2      
-[25] stringr_1.5.0     knitr_1.43        generics_0.1.3    fs_1.6.3         
-[29] vctrs_0.6.3       sass_0.4.7        tidyselect_1.2.0  rprojroot_2.0.3  
-[33] grid_4.1.2        glue_1.6.2        R6_2.5.1          fansi_1.0.4      
-[37] rmarkdown_2.23    magrittr_2.0.3    whisker_0.4.1     scales_1.2.1     
-[41] promises_1.2.0.1  htmltools_0.5.5   colorspace_2.1-0  httpuv_1.6.11    
-[45] utf8_1.2.3        stringi_1.7.12    munsell_0.5.0     cachem_1.0.8     </code></pre>
+ [1] Rcpp_1.0.11       highr_0.10        pillar_1.9.0      compiler_4.1.2   
+ [5] bslib_0.5.0       later_1.3.1       jquerylib_0.1.4   git2r_0.32.0     
+ [9] workflowr_1.7.0   tools_4.1.2       digest_0.6.33     gtable_0.3.3     
+[13] jsonlite_1.8.7    evaluate_0.21     lifecycle_1.0.3   tibble_3.2.1     
+[17] pkgconfig_2.0.3   rlang_1.1.1       cli_3.6.1         rstudioapi_0.15.0
+[21] yaml_2.3.7        xfun_0.39         fastmap_1.1.1     withr_2.5.0      
+[25] dplyr_1.1.2       stringr_1.5.0     knitr_1.43        generics_0.1.3   
+[29] fs_1.6.3          vctrs_0.6.3       sass_0.4.7        tidyselect_1.2.0 
+[33] rprojroot_2.0.3   grid_4.1.2        glue_1.6.2        R6_2.5.1         
+[37] fansi_1.0.4       rmarkdown_2.23    farver_2.1.1      magrittr_2.0.3   
+[41] whisker_0.4.1     scales_1.2.1      promises_1.2.0.1  htmltools_0.5.5  
+[45] colorspace_2.1-0  httpuv_1.6.11     labeling_0.4.2    utf8_1.2.3       
+[49] stringi_1.7.12    munsell_0.5.0     cachem_1.0.8     </code></pre>
 </div>
 </div>
 
