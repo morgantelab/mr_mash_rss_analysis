@@ -11,7 +11,7 @@
 
 <meta name="author" content="Fabio Morgante &amp; Deborah Kunkel" />
 
-<meta name="date" content="2023-10-21" />
+<meta name="date" content="2023-10-26" />
 
 <title>Simulations with UK Biobank genotypes and different effect structure across traits</title>
 
@@ -374,7 +374,7 @@ div.tocify {
 <h1 class="title toc-ignore">Simulations with UK Biobank genotypes and
 different effect structure across traits</h1>
 <h4 class="author">Fabio Morgante &amp; Deborah Kunkel</h4>
-<h4 class="date">October 21, 2023</h4>
+<h4 class="date">October 26, 2023</h4>
 
 </div>
 
@@ -403,7 +403,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-10-21
+<strong>Last updated:</strong> 2023-10-26
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreee0b7f14c1dba635136ac5c40304c624e87f57a11targetblanke0b7f14a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree63600cd48918ef6a226d680b9194b8fa32bfe463targetblank63600cda">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/e0b7f14c1dba635136ac5c40304c624e87f57a11" target="_blank">e0b7f14</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/63600cd48918ef6a226d680b9194b8fa32bfe463" target="_blank">63600cd</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreee0b7f14c1dba635136ac5c40304c624e87f57a11targetblanke0b7f14a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree63600cd48918ef6a226d680b9194b8fa32bfe463targetblank63600cda"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/e0b7f14c1dba635136ac5c40304c624e87f57a11" target="_blank">e0b7f14</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/63600cd48918ef6a226d680b9194b8fa32bfe463" target="_blank">63600cd</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -593,7 +593,6 @@ Untracked files:
     Untracked:  scripts/run_fit_kriging_rss_by_chr_and_trait_bc_ukb.sbatch
 
 Unstaged changes:
-    Modified:   code/compute_prediction_accuracy_bc_ukb.R
     Modified:   ukb_sim_snakemake_submitter.sh
 
 </code></pre>
@@ -640,6 +639,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/63600cd48918ef6a226d680b9194b8fa32bfe463/analysis/ukb_sim_results.Rmd" target="_blank">63600cd</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-26
+</td>
+<td>
+Update general description and low PVE results
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/c77ab8f96831d751273d44f0e2d00883f6185106/docs/ukb_sim_results.html" target="_blank">c77ab8f</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1482,7 +1515,8 @@ below). The genetic effects explain 50% of the total per-trait variance
 (except for two scenario as explained below) – in genetics terminology
 this is called genomic heritability (<span
 class="math inline">\(h_g^2\)</span>). The residuals are uncorrelated
-across traits.</p>
+across traits. Each trait was quantile normalized before all the
+analyses were performed.</p>
 <p>We randomly sampled 5,000 (out of the 105,000) individuals to be the
 test set. The test set was only used to evaluate prediction accuracy.
 All the other steps were carried out on the training set of 100,000
@@ -1494,18 +1528,17 @@ variant, one at a time. Traits and variants were not standardized.</p>
 <ul>
 <li><a
 href="https://academic.oup.com/bioinformatics/article/36/22-23/5424/6039173">LDpred2</a>
-per-chromosome with the auto option, 500 iterations (after 500 burn-in
-iterations), <span class="math inline">\(h^2\)</span> initialized as
-0.5/22 and <span class="math inline">\(p\)</span> initialized using the
-same grid as in the original paper. NB this is a univariate method.</li>
-<li><em>LDpred2</em> genome-wide with the auto option, 500 iterations
-(after 500 burn-in iterations), <span class="math inline">\(h^2\)</span>
-initialized as 0.5/22 (WRONG) and <span class="math inline">\(p\)</span>
-initialized using the same grid as in the original paper. NB this is a
-univariate method.</li>
+per-chromosome with the auto option, 1000 iterations (after 500 burn-in
+iterations), <span class="math inline">\(h^2\)</span> initialized using
+an estimate from LD Score regression (LDSC) and <span
+class="math inline">\(p\)</span> initialized using the same grid as in
+the original paper. NB this is a univariate method.
+<!-- * _LDpred2_ genome-wide with the auto option, 500 iterations (after 500 burn-in iterations), $h^2$  -->
+<!-- initialized as 0.5/22 (WRONG) and $p$ initialized using the same grid as in the original paper. -->
+<!-- NB this is a univariate method. --></li>
 <li><em>mr.mash.rss</em> per-chromosome, with both canonical and
 data-driven covariance matrices computed as described in the <a
-href="https://www.biorxiv.org/content/10.1101/2022.11.22.517471v4.abstract">mr.mash
+href="https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1">mvSuSiE
 paper</a>, updating the (full rank) residual covariance and the mixture
 weights, without standardizing the variables. The residual covariance
 was initialized as in the <a
@@ -1514,13 +1547,10 @@ paper</a> and the mixture weights were initialized as 90% of the weight
 on the null component and 10% of the weight split equally across the
 remaining components. The phenotypic covariance was computed as the
 sample covariance using the individual-level data. NB this is a
-multivariate method.</li>
-<li><a
-href="https://www.nature.com/articles/s41467-019-12653-0">BayesR</a>
-per-chromosome, with 1000 iterations (after 500 burn-in iterations),
-<span class="math inline">\(h^2\)</span> initialized as 0.5/22 and other
-default parameters. NB this is a univariate method. We used the
-implementation in the <em>qgg</em> R package.</li>
+multivariate method.
+<!-- * [BayesR](https://www.nature.com/articles/s41467-019-12653-0) per-chromosome, with 1000 iterations  -->
+<!-- (after 500 burn-in iterations), $h^2$ initialized as 0.5/22 and other default parameters. NB this is  -->
+<!-- a univariate method. We used the implementation in the *qgg* R package. --></li>
 </ul>
 <p>Prediction accuracy was evaluated as the <span
 class="math inline">\(R^2\)</span> of the regression of true phenotypes
@@ -1678,13 +1708,7 @@ methods. In fact, given that the effects are equal across traits and the
 residuals are uncorrelated, a multivariate analysis is roughly
 equivalent to having 5 times as many samples as in an univariate
 analysis. The results show that <em>mr.mash.rss</em> clearly does better
-than both flavors of <em>LDpred2 auto</em>. However, in this simulation
-there does not seem to be much of a difference between <em>LDpred2
-auto</em> per-chromosome and genome-wide. Therefore, we will drop
-<em>LDpred2 auto</em> genome-wide from further analyses since it is more
-computationally intensive. <em>BayesR</em> gives unreasonably low
-prediction accuracy, which hints at issues with the default parameters
-and/or this particular implementation.</p>
+than <em>LDpred2 auto</em>.</p>
 </div>
 <div id="mostly-null-scenario" class="section level2">
 <h2>Mostly null scenario</h2>
@@ -1762,6 +1786,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/c77ab8f96831d751273d44f0e2d00883f6185106/docs/figure/ukb_sim_results.Rmd/mostly null-1.png" target="_blank">c77ab8f</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-21
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/e8a2096ed6bf57d125d0f9a54830833f55a4da4d/docs/figure/ukb_sim_results.Rmd/mostly null-1.png" target="_blank">e8a2096</a>
 </td>
 <td>
@@ -1822,12 +1857,9 @@ fmorgante
 <p>In this scenario, there is no advantage to using multivariate
 methods. In fact, there is potential for multivariate methods to do
 worse than univariate methods because of the large amount of noise
-modeled jointly with the signal. However, the results show that
-<em>mr.mash.rss</em> can learn this structure from the data and,
-reassuringly, performs similarly to <em>LDpred2 auto</em>. Again,
-**BayesR* gives unreasonably low prediction accuracy, which hints at
-issues with the default parameters and/or this particular
-implementation.</p>
+modeled jointly with the signal. The results show that
+<em>mr.mash.rss</em> can learn this structure from the data and performs
+similar to <em>LDpred2 auto</em>, although a little worse.</p>
 </div>
 <div id="shared-in-subgroups-scenario" class="section level2">
 <h2>Shared in subgroups scenario</h2>
@@ -2011,9 +2043,7 @@ does better than <em>LDpred2 auto</em> across all the traits. However,
 the improvement is more evident in traits 1-3, due to the higher effect
 correlation across traits, the larger number of traits with shared
 effects, and the smaller <span class="math inline">\(h^2_g\)</span>
-(harder scenario for univariate methods). Again, <em>BayesR</em> gives
-unreasonably low prediction accuracy, which hints at issues with the
-default parameters and/or this particular implementation.</p>
+(harder scenario for univariate methods).</p>
 </div>
 <div id="equal-effects-scenario-low-pve" class="section level2">
 <h2>Equal effects scenario – low PVE</h2>
@@ -2135,9 +2165,7 @@ signal-to-noise ratio, it is harder for univariate methods to estimate
 effects accurately. Multivariate methods can borrow information across
 traits (if effects are shared) and improve accuracy. The results show
 that <em>mr.mash.rss</em> clearly does better than <em>LDpred2
-auto</em>. Again, <em>BayesR</em> gives unreasonably low prediction
-accuracy, which hints at issues with the default parameters and/or this
-particular implementation.</p>
+auto</em>.</p>
 </div>
 <div id="equal-effects-scenario-more-polygenic" class="section level2">
 <h2>Equal effects scenario – more polygenic</h2>
@@ -2370,12 +2398,7 @@ traits. This is because multivariate methods can borrow information
 across a larger number of traits (if effects are shared) and improve
 accuracy. The results show that <em>mr.mash.rss</em> clearly does better
 than <em>LDpred2 auto</em>, but the improvement compared to the scenario
-with 5 traits is small (<span
-class="math inline">\(mean(\frac{mr.mash.rss R^2}{LDpred2 auto R^2}) =
-1.1157\)</span> vs <span class="math inline">\(mean(\frac{mr.mash.rss
-R^2}{LDpred2 auto R^2}) = 1.1057\)</span>). Again, <em>BayesR</em> gives
-unreasonably low prediction accuracy, which hints at issues with the
-default parameters and/or this particular implementation.</p>
+with 5 traits is small.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
