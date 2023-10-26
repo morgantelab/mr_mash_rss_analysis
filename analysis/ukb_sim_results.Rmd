@@ -38,7 +38,8 @@ and white British fields), that did not overlap with the 105,000 individuals use
 For each replicate, we simulated 5 traits (i.e., our responses) by randomly sampling 5,000 variants 
 (out of the total of 595,071) to be causal, with different effect sharing structures across traits (see below). 
 The genetic effects explain 50\% of the total per-trait variance (except for two scenario as explained below)
--- in genetics terminology this is called genomic heritability ($h_g^2$). The residuals are uncorrelated across traits.
+-- in genetics terminology this is called genomic heritability ($h_g^2$). The residuals are uncorrelated across traits. 
+Each trait was quantile normalized before all the analyses were performed.
 
 We randomly sampled 5,000 (out of the 105,000) individuals to be the test set. The test set was only used to 
 evaluate prediction accuracy. All the other steps were carried out on the training set of 100,000 individuals.
@@ -49,21 +50,22 @@ regression of each trait on each variant, one at a time. Traits and variants wer
 Four different methods were fitted:
 
 * [LDpred2](https://academic.oup.com/bioinformatics/article/36/22-23/5424/6039173) per-chromosome with 
-the auto option, 500 iterations (after 500 burn-in iterations), $h^2$ initialized as 0.5/22 and $p$ 
-initialized using the same grid as in the original paper. NB this is a univariate method.
-* _LDpred2_ genome-wide with the auto option, 500 iterations (after 500 burn-in iterations), $h^2$ 
-initialized as 0.5/22 (WRONG) and $p$ initialized using the same grid as in the original paper.
+the auto option, 1000 iterations (after 500 burn-in iterations), $h^2$ initialized using an estimate from 
+LD Score regression (LDSC) and $p$ initialized using the same grid as in the original paper. 
 NB this is a univariate method.
+<!-- * _LDpred2_ genome-wide with the auto option, 500 iterations (after 500 burn-in iterations), $h^2$  -->
+<!-- initialized as 0.5/22 (WRONG) and $p$ initialized using the same grid as in the original paper. -->
+<!-- NB this is a univariate method. -->
 * _mr.mash.rss_ per-chromosome, with both canonical and data-driven covariance matrices computed 
-as described in the [mr.mash paper](https://www.biorxiv.org/content/10.1101/2022.11.22.517471v4.abstract),
+as described in the [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1),
 updating the (full rank) residual covariance and the mixture weights, without standardizing the variables. 
 The residual covariance was initialized as in the [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1)
 and the mixture weights were initialized as 90\% of the weight on the null component and 10\% of the
 weight split equally across the remaining components. The phenotypic covariance was computed
 as the sample covariance using the individual-level data. NB this is a multivariate method.
-* [BayesR](https://www.nature.com/articles/s41467-019-12653-0) per-chromosome, with 1000 iterations 
-(after 500 burn-in iterations), $h^2$ initialized as 0.5/22 and other default parameters. NB this is 
-a univariate method. We used the implementation in the *qgg* R package.
+<!-- * [BayesR](https://www.nature.com/articles/s41467-019-12653-0) per-chromosome, with 1000 iterations  -->
+<!-- (after 500 burn-in iterations), $h^2$ initialized as 0.5/22 and other default parameters. NB this is  -->
+<!-- a univariate method. We used the implementation in the *qgg* R package. -->
 
 Prediction accuracy was evaluated as the $R^2$ of the regression of true phenotypes on the predicted 
 phenotypes. This metric as the attractive property that its upper bound is $h_g^2$.
@@ -127,12 +129,7 @@ print(p_methods_shared)
 In this scenario, there is a clear advantage to using multivariate methods. In fact, given
 that the effects are equal across traits and the residuals are uncorrelated, a multivariate
 analysis is roughly equivalent to having 5 times as many samples as in an univariate
-analysis. The results show that *mr.mash.rss* clearly does better than both flavors of 
-*LDpred2 auto*. However, in this simulation there does not seem to be much of a difference 
-between *LDpred2 auto* per-chromosome and genome-wide. Therefore, we will drop *LDpred2 auto* 
-genome-wide from further analyses since it is more computationally intensive. *BayesR* gives
-unreasonably low prediction accuracy, which hints at issues with the default parameters and/or
-this particular implementation.
+analysis. The results show that *mr.mash.rss* clearly does better than *LDpred2 auto*.
 
 ## Mostly null scenario
 
@@ -190,10 +187,8 @@ print(p_mostly_null)
 
 In this scenario, there is no advantage to using multivariate methods. In fact, there is potential
 for multivariate methods to do worse than univariate methods because of the large amount of noise
-modeled jointly with the signal. However, the results show that *mr.mash.rss* can learn this structure
-from the data and, reassuringly, performs similarly to *LDpred2 auto*. Again, **BayesR* gives
-unreasonably low prediction accuracy, which hints at issues with the default parameters and/or
-this particular implementation.
+modeled jointly with the signal. The results show that *mr.mash.rss* can learn this structure
+from the data and performs similar to *LDpred2 auto*, although a little worse.
 
 ## Shared in subgroups scenario
 
@@ -257,9 +252,7 @@ In this scenario, multivariate methods can have some advantage over univariate m
 the former can adapt to the complex structure of the effects. The results show that *mr.mash.rss* does
 better than *LDpred2 auto* across all the traits. However, the improvement is more evident in traits 1-3,
 due to the higher effect correlation across traits, the larger number of traits with shared effects, and
-the smaller $h^2_g$ (harder scenario for univariate methods). Again, *BayesR* gives
-unreasonably low prediction accuracy, which hints at issues with the default parameters and/or
-this particular implementation.
+the smaller $h^2_g$ (harder scenario for univariate methods).
 
 ## Equal effects scenario -- low PVE
 
@@ -320,9 +313,7 @@ In this scenario, we expect the relative improvement of multivariate methods com
 methods to be larger than with $h^2_g = 0.5$. This is because with smaller signal-to-noise ratio,
 it is harder for univariate methods to estimate effects accurately. Multivariate methods can borrow
 information across traits (if effects are shared) and improve accuracy. The results show that 
-*mr.mash.rss* clearly does better than *LDpred2 auto*. Again, *BayesR* gives unreasonably low 
-prediction accuracy, which hints at issues with the default parameters and/or this particular 
-implementation.
+*mr.mash.rss* clearly does better than *LDpred2 auto*. 
 
 ## Equal effects scenario -- more polygenic
 
@@ -446,7 +437,4 @@ In this scenario, we expect the relative improvement of multivariate methods com
 methods to be a little larger than with 5 traits. This is because multivariate methods can borrow
 information across a larger number of traits (if effects are shared) and improve accuracy. The results 
 show that *mr.mash.rss* clearly does better than *LDpred2 auto*, but the improvement compared to the
-scenario with 5 traits is small ($mean(\frac{mr.mash.rss R^2}{LDpred2 auto R^2}) = 1.1157$ vs 
-$mean(\frac{mr.mash.rss R^2}{LDpred2 auto R^2}) = 1.1057$). Again, *BayesR* gives unreasonably low 
-prediction accuracy, which hints at issues with the default parameters and/or this particular 
-implementation.
+scenario with 5 traits is small. 
