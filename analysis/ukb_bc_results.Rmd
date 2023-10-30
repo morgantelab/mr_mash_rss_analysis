@@ -109,8 +109,8 @@ p_methods_shared <- ggplot(res, aes(x = trait, y = r2, fill = method)) +
                                           preserve = "single")) +
   scale_fill_manual(values = c("pink", "red", "green", "blue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") + 
-  facet_grid(~trait, scales="free_x") +
-  geom_hline(aes(yintercept = h2), linez) +
+  # facet_grid(~trait, scales="free_x") +
+  # geom_hline(aes(yintercept = h2), linez) +
   theme_cowplot(font_size = 18)
 
 print(p_methods_shared)
