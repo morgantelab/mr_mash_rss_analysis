@@ -77,7 +77,6 @@ rule simulate_phenotype:
     B_cor=config["B_COR"],
     V_cor=config["V_COR"],
     w=config["W"],
-    norm_pheno=config["NORMALIZE_PHENO"],
     dataset="{DATASET}",
     tmp=config["TMP"],
     script=config["SCRIPT"]+"sim_pheno_ukb.R"
@@ -99,7 +98,6 @@ rule simulate_phenotype:
                                     --B_cor "{params.B_cor}" \
                                     --V_cor {params.V_cor} \
                                     --w "{params.w}" \
-                                    --normalize {params.norm_pheno} \
                                     --seed {params.dataset} \
                                     --temp_dir {params.tmp} \
                                     --output {output} \
@@ -121,6 +119,7 @@ rule compute_summary_stats:
     stand=config["STANDARDIZE"],
     imp_flag=config["IMPUTE_FLAG"],
     tmp=config["TMP"],
+    norm_pheno=config["NORMALIZE_PHENO"],
     script=config["SCRIPT"]+"compute_sumstats_ukb.R"
   resources: cpus=5, mem_mb=200000, time_min=1440
   shell:
@@ -139,6 +138,7 @@ rule compute_summary_stats:
                                     --chr {params.chr} \
                                     --standardize {params.stand} \
                                     --impute_missing {params.imp_flag} \
+                                    --normalize {params.norm_pheno} \
                                     --temp_dir {params.tmp} \
                                     --ncores 5
         module unload R/4.2.3
@@ -175,6 +175,7 @@ rule compute_phenotype_covariance:
     config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_phenotypic_cov_{DATASET}.rds"
   params:
     dataset="{DATASET}",
+    norm_pheno=config["NORMALIZE_PHENO"],
     script=config["SCRIPT"]+"compute_phenotypic_cov_ukb_sim.R"
   resources: cpus=8, mem_mb=6000, time_min=120
   shell:
@@ -188,6 +189,7 @@ rule compute_phenotype_covariance:
                                     --pheno {input.pheno} \
                                     --test_ids {input.tids} \
                                     --seed {params.dataset} \
+                                    --normalize {params.norm_pheno} \
                                     --output {output}
         module unload R/4.2.3
         module unload gsl/2.7
@@ -475,6 +477,7 @@ rule compute_prediction_accuracy_ldpred:
     imp_flag=config["IMPUTE_FLAG"],
     script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R",
     tmp=config["TMP"],
+    norm_pheno=config["NORMALIZE_PHENO"],
     prefix=config["DATA_PREFIX"]
   resources: cpus=4, mem_mb=100000, time_min=120
   shell:
@@ -496,6 +499,7 @@ rule compute_prediction_accuracy_ldpred:
                                     --output_eff {output.eff} \
                                     --output_pred_acc {output.pred_acc} \
                                     --temp_dir {params.tmp} \
+                                    --normalize {params.norm_pheno} \
                                     --ncores 4 \
                                     --prefix {params.prefix}
         module unload R/4.2.3
@@ -523,6 +527,7 @@ rule compute_prediction_accuracy_mrmashrss:
     trait_r=config["TRAIT_RANGE"],
     imp_flag=config["IMPUTE_FLAG"],
     prefix=config["DATA_PREFIX"],
+    norm_pheno=config["NORMALIZE_PHENO"],
     tmp=config["TMP"],
     script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R"
   resources: cpus=4, mem_mb=100000, time_min=120
@@ -545,6 +550,7 @@ rule compute_prediction_accuracy_mrmashrss:
                                     --output_eff {output.eff} \
                                     --output_pred_acc {output.pred_acc} \
                                     --prefix {params.prefix} \
+                                    --normalize {params.norm_pheno} \
                                     --temp_dir {params.tmp} \
                                     --ncores 4
         module unload R/4.2.3
@@ -572,6 +578,7 @@ rule compute_prediction_accuracy_ldpred_gwide:
     imp_flag=config["IMPUTE_FLAG"],
     script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R",
     tmp=config["TMP"],
+    norm_pheno=config["NORMALIZE_PHENO"],
     prefix=config["DATA_PREFIX"]
   resources: cpus=4, mem_mb=100000, time_min=120
   shell:
@@ -593,6 +600,7 @@ rule compute_prediction_accuracy_ldpred_gwide:
                                     --output_eff {output.eff} \
                                     --output_pred_acc {output.pred_acc} \
                                     --temp_dir {params.tmp} \
+                                    --normalize {params.norm_pheno} \
                                     --ncores 4 \
                                     --prefix {params.prefix}
         module unload R/4.2.3
@@ -620,6 +628,7 @@ rule compute_prediction_accuracy_bayesR:
     imp_flag=config["IMPUTE_FLAG"],
     script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R",
     tmp=config["TMP"],
+    norm_pheno=config["NORMALIZE_PHENO"],
     prefix=config["DATA_PREFIX"]
   resources: cpus=4, mem_mb=100000, time_min=120
   shell:
@@ -641,6 +650,7 @@ rule compute_prediction_accuracy_bayesR:
                                     --output_eff {output.eff} \
                                     --output_pred_acc {output.pred_acc} \
                                     --temp_dir {params.tmp} \
+                                    --normalize {params.norm_pheno} \
                                     --ncores 4 \
                                     --prefix {params.prefix}
         module unload R/4.2.3

@@ -6,7 +6,7 @@ library(bigsnpr)
 ###Function to compute summary stats
 compute_univariate_sumstats_bigsnp <- function(geno_obj, Y, chr=0, standardize=FALSE, 
                                                impute_missing=TRUE,
-                                               standardize.response=FALSE, mc.cores=1){
+                                               normalize=FALSE, mc.cores=1){
   
   if(impute_missing){
     X <- bigsnpr::snp_fastImputeSimple(geno_obj$genotypes, method = "mean2", ncores = mc.cores)
@@ -20,10 +20,14 @@ compute_univariate_sumstats_bigsnp <- function(geno_obj, Y, chr=0, standardize=F
   variable_names <- geno_obj$map$marker.ID
   response_names <- colnames(Y)
   
-  if(standardize.response){
-    Y <- mr.mash.alpa::scale_fast2(Y, scale=TRUE)$M
+  if(normalize){
+    ###Function for quantile normalization
+    inv_normalise <- function(x) { #this would also tolerate NAs
+      return( qnorm( (rank(x, na.last = "keep") - 0.5) / sum(!is.na(x))))
+    }
+
+    Y <- apply(Y, 2, inv_normalise)
   }
-  
   
   if(chr==0){
     inds <- seq_len(p)
@@ -76,6 +80,7 @@ parser <- add_option(parser, c("--seed"), type="integer")
 parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--impute_missing"), type="logical")
 parser <- add_option(parser, c("--temp_dir"), type="character")
+parser <- add_option(parser, c("--normalize"), type="logical")
 outparse <- parse_args(parser)
 
 pheno_dat <- outparse$pheno
@@ -88,6 +93,7 @@ standardize <- outparse$standardize
 ncores <- outparse$ncores
 impute_missing <- outparse$impute_missing
 temp_dir <- outparse$temp_dir
+normalize <- outparse$normalize
 
 ###Set seed
 set.seed(seed)
@@ -111,7 +117,7 @@ rm(list=c("geno_fam", "test_ids", "training_inds_geno", "training_inds_pheno"))
 ###Compute summary stats
 out <- compute_univariate_sumstats_bigsnp(geno_obj=geno, Y=pheno, chr=chr, standardize=standardize,
                                           impute_missing=impute_missing,
-                                          standardize.response=FALSE, mc.cores=ncores)
+                                          normalize=normalize, mc.cores=ncores)
 
 if(chr==0){
   chr <- "All"

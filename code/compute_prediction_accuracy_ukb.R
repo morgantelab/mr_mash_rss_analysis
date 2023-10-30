@@ -43,6 +43,7 @@ parser <- add_option(parser, c("--output_eff"), type="character")
 parser <- add_option(parser, c("--output_pred_acc"), type="character")
 parser <- add_option(parser, c("--temp_dir"), type="character")
 parser <- add_option(parser, c("--prefix"), type="character")
+parser <- add_option(parser, c("--normalize"), type="logical")
 outparse <- parse_args(parser)
 
 model <- outparse$model
@@ -60,6 +61,7 @@ output_eff <- outparse$output_eff
 output_pred_acc <- outparse$output_pred_acc
 temp_dir <- outparse$temp_dir
 prefix <- outparse$prefix
+normalize <- outparse$normalize
 
 ###Set seed
 set.seed(data_id)
@@ -71,6 +73,15 @@ test_ids <- fread(test_ids, showProgress=FALSE, header=FALSE)
 pheno <- readRDS(pheno_dat)$Y
 test_inds_pheno <- which(rownames(pheno) %in% test_ids[,2]) ##Get only test individuals
 pheno_test <- pheno[test_inds_pheno, ]
+
+if(normalize){
+  ###Function for quantile normalization
+  inv_normalise <- function(x) { #this would also tolerate NAs
+    return( qnorm( (rank(x, na.last = "keep") - 0.5) / sum(!is.na(x))))
+  }
+  
+  pheno_test <- apply(pheno_test, 2, inv_normalise)
+}
 
 geno_fam <- fread(paste0(unlist(strsplit(geno_dat, ".", fixed=TRUE))[1], ".fam"), showProgress=FALSE, header=FALSE)
 test_inds_geno <- which(geno_fam[,2] %in% test_ids[,2]) ##Get only test individuals

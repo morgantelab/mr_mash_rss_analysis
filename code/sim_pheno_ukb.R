@@ -6,7 +6,7 @@ library(optparse)
 
 ###Simulate data from given big X
 simulate_mr_mash_data_from_given_big_X <- function(X, p_causal, r, r_causal, intercepts,
-                                               pve, B_cor, B_scale, w, V_cor, seed, normalize,
+                                               pve, B_cor, B_scale, w, V_cor, seed,
                                                ncores){
   ##Check that the inputs are correct
   if(!inherits(X, 'FBM')){
@@ -74,26 +74,11 @@ simulate_mr_mash_data_from_given_big_X <- function(X, p_causal, r, r_causal, int
   ##Simulate Y from MN(XB, I_n, V) where I_n is an nxn identity matrix and V is the residual covariance  
   Y <- mr.mash.alpha:::matrix_normal_indep_rows(G + matrix(intercepts, n, r, byrow=TRUE), V, seed)
   
-  if(normalize){
-    ###Function for quantile normalization
-    inv_normalise <- function(x) { #this would also tolerate NAs
-      return( qnorm( (rank(x, na.last = "keep") - 0.5) / sum(!is.na(x))))
-    }
-    
-    Y_orig <- Y
-    rm(Y)
-    Y <- apply(Y_orig, 2, inv_normalise)
-  }
-  
   ##Compile output
   causal_responses <- r_causal
   names(causal_responses) <- paste0("Component", 1:K)
   names(Sigma) <- paste0("Component", 1:K)
   out <- list(Y=Y, B=B, V=V, Sigma=Sigma, intercepts=intercepts, causal_responses=causal_responses)
-  
-  if(normalize){
-    out$Y_orig <- Y_orig
-  }
   
   if(K>1){
     if(p_causal>1){
@@ -127,7 +112,6 @@ parser <- add_option(parser, c("--V_cor"), type="numeric")
 parser <- add_option(parser, c("--w"), type="character")
 parser <- add_option(parser, c("--seed"), type="integer")
 parser <- add_option(parser, c("--temp_dir"), type="character")
-parser <- add_option(parser, c("--normalize"), type="logical")
 parser <- add_option(parser, c("--ncores"), type="integer")
 outparse <- parse_args(parser)
 
@@ -143,7 +127,6 @@ w <- eval(parse(text=outparse$w))
 V_cor <- outparse$V_cor
 seed <- outparse$seed
 temp_dir <- outparse$temp_dir
-normalize <- outparse$normalize
 ncores <- outparse$ncores
 
 ###Set seed
@@ -164,14 +147,9 @@ IID <- dat$fam$sample.ID
 ###Simulate phenotype
 out_sim <- simulate_mr_mash_data_from_given_big_X(X=X, p_causal=p_causal, r=r, r_causal=r_causal, intercepts=rep(1, r),
                                                   pve=pve, B_cor=B_cor, B_scale=B_scale, w=w, V_cor=V_cor, seed=seed,
-                                                  normalize=normalize, ncores=ncores)
+                                                  ncores=ncores)
 colnames(out_sim$Y) <- paste0("y", 1:r)
 rownames(out_sim$Y) <- IID
-
-if(normalize){
-  colnames(out_sim$Y_orig) <- paste0("y", 1:r)
-  rownames(out_sim$Y_orig) <- IID
-}
 
 ###Write out phenotypes
 saveRDS(out_sim, file=output)
