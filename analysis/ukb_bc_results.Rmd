@@ -79,18 +79,14 @@ for(i in 1:5){
   }
 }
 
-linez <- data.frame(trait=factor(c("1", "2", "3", "4", "5", "6", "7", "8",
-                            "9", "10", "11", "12", "13", "14", "15", "16"),
-                            levels = c("1", "2", "3", "4", "5", "6", "7", "8",
-                                       "9", "10", "11", "12", "13", "14", "15", "16")),
+pheno <- readRDS("data/phenotypes/ukb_cleaned_bc_adjusted_pheno_test_1.rds")
+
+linez <- data.frame(trait=colnames(pheno),
                     h2=colMeans(dat_ldsc))
 
 r2 <- c(as.vector(dat_mrmash), as.vector(dat_ldpred2))
 method <- rep(c("mr_mash_rss", "ldpred2_auto"), each=80)
-trait <- rep(c("1", "2", "3", "4", "5", "6", "7", "8",
-               "9", "10", "11", "12", "13", "14", "15", "16",
-               "1", "2", "3", "4", "5", "6", "7", "8",
-               "9", "10", "11", "12", "13", "14", "15", "16"), each=5)
+trait <- rep(colnames(pheno), each=5)
 
 res <- data.frame(method, trait, r2)
 
@@ -98,9 +94,8 @@ res <- res[which(res$method %in% c("ldpred2_auto", "mr_mash_rss")), ]
 
 res <- transform(res,
                  method=factor(method, levels=c("ldpred2_auto", "mr_mash_rss"),
-                               labels=c("LDpred2", "mr_mash_rss")),
-                 trait=factor(trait, levels=c("1", "2", "3", "4", "5", "6", "7", "8",
-                                              "9", "10", "11", "12", "13", "14", "15", "16")))
+                               labels=c("LDpred2", "mr.mash.rss")),
+                 trait=factor(trait))
 
 p_methods_shared <- ggplot(res, aes(x = trait, y = r2, fill = method)) +
   geom_boxplot(color = "black", outlier.size = 1, width = 0.85) +
