@@ -21,11 +21,27 @@ prefix <- "output/prediction_accuracy/ukb_bc"
 
 The goal of this analysis is to benchmark the newly developed *mr.mash.rss* (aka *mr.mash* with summary 
 data) against already existing methods in the task of predicting phenotypes from genotypes using 
-only summary data. Here we describe the analysis of 16 blood cell traits in UK Biobank. 
+only summary data. After performing several simulations, we analyzed analysis 16 blood cell traits in UK Biobank. 
 
 ## Description of the analysis
 
-Two different methods were fitted:
+Following the [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1), we selected 16 blood 
+cell traits from the total available in the UK Biobank haematology data collection and after the filtering 
+steps, we were left with 244,049 samples.
+
+A 5-fold cross validation scheme was employed, whereby the samples were randomly divided in 5 disjoint sets. 
+At each iteration, 4 sets were used as training set and 1 set was used as test set.
+
+Summary statistics were computed in the training set by first regressing out the effect of sex, age at recruitment,
+age $\times$ age, assessment centre, and genotype measurement batch, and the top 10 genotype PCs using a linear
+model. Then, we ran a GWAS using a simple linear regression on the quantile normalized residuals from the previous
+step.
+
+For the majority of the analyses, we used a use a set of 1,054,330 HapMap3 variants. Only for the computation
+of the data-driven covariance matrices for *mr.mash.rss* we used a larger sets of variants as described in the 
+[mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1).
+
+Two different methods were fitted to the summary statistics:
 
 * [LDpred2](https://academic.oup.com/bioinformatics/article/36/22-23/5424/6039173) per-chromosome with 
 the auto option, 1000 iterations (after 500 burn-in iterations), $h^2$ initialized using an estimate from 
@@ -40,8 +56,9 @@ and the mixture weights were initialized as 90\% of the weight on the null compo
 weight split equally across the remaining components. The phenotypic covariance was computed
 as the sample covariance using the individual-level data. NB this is a multivariate method.
 
-Prediction accuracy was evaluated as the $R^2$ of the regression of true phenotypes on the predicted 
-phenotypes. This metric as the attractive property that its upper bound is $h_g^2$.
+Prediction accuracy was evaluated as the $R^2$ of the regression of (quantile normalized) true phenotypes 
+on the predicted phenotypes in the test set. This metric as the attractive property that its upper bound 
+is $h_g^2$. Here we report the results for each fold.
 
 ## Results
 
@@ -54,12 +71,10 @@ for(i in 1:5){
   }
   
   if(i>1){
-    dat_mrmash <- rbind(dat_mrmash, rep(as.numeric(NA), 16))
-    #dat_mrmash <- rbind(dat_mrmash, readRDS(paste0(prefix, "_mr_mash_rss_sparse_LD_pred_acc_", i, ".rds"))$r2)
+    dat_mrmash <- rbind(dat_mrmash, readRDS(paste0(prefix, "_mr_mash_rss_sparse_LD_V_all_chr_pred_acc_", i, ".rds"))$r2)
     dat_ldpred2 <- rbind(dat_ldpred2, readRDS(paste0(prefix, "_ldpred2_auto_pred_acc_", i, ".rds"))$r2)
   } else {
-    dat_mrmash <- rep(as.numeric(NA), 16)
-    #dat_mrmash <- readRDS(paste0(prefix, "_mr_mash_rss_sparse_LD_pred_acc_", i, ".rds"))$r2
+    dat_mrmash <- readRDS(paste0(prefix, "_mr_mash_rss_sparse_LD_V_all_chr_pred_acc_", i, ".rds"))$r2
     dat_ldpred2 <- readRDS(paste0(prefix, "_ldpred2_auto_pred_acc_", i, ".rds"))$r2
   }
 }
