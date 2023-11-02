@@ -11,7 +11,7 @@
 
 <meta name="author" content="Fabio Morgante &amp; Deborah Kunkel" />
 
-<meta name="date" content="2023-10-30" />
+<meta name="date" content="2023-11-02" />
 
 <title>Simulations with UK Biobank genotypes and different effect structure across traits</title>
 
@@ -374,7 +374,7 @@ div.tocify {
 <h1 class="title toc-ignore">Simulations with UK Biobank genotypes and
 different effect structure across traits</h1>
 <h4 class="author">Fabio Morgante &amp; Deborah Kunkel</h4>
-<h4 class="date">October 30, 2023</h4>
+<h4 class="date">November 02, 2023</h4>
 
 </div>
 
@@ -403,7 +403,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-10-30
+<strong>Last updated:</strong> 2023-11-02
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree359ac999fcd3a8c55a277b0ad0c7e4474fb81e78targetblank359ac99a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree61b27b107ed8cf53e91dcadd435f31d4926c826ctargetblank61b27b1a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/359ac999fcd3a8c55a277b0ad0c7e4474fb81e78" target="_blank">359ac99</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/61b27b107ed8cf53e91dcadd435f31d4926c826c" target="_blank">61b27b1</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree359ac999fcd3a8c55a277b0ad0c7e4474fb81e78targetblank359ac99a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree61b27b107ed8cf53e91dcadd435f31d4926c826ctargetblank61b27b1a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/359ac999fcd3a8c55a277b0ad0c7e4474fb81e78" target="_blank">359ac99</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/61b27b107ed8cf53e91dcadd435f31d4926c826c" target="_blank">61b27b1</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -585,16 +585,14 @@ Untracked files:
     Untracked:  scripts/11_run_fit_mrmashrss_sparse_LD_mvsusie_paper_prior_by_chr_bc_ukb.sbatch
     Untracked:  scripts/11_run_fit_mrmashrss_test_by_chr_V_all_chr_bc_ukb.sbatch
     Untracked:  scripts/12_run_compute_pred_accuracy_mrmashrss_sparse_LD_mvsusie_paper_prior_bc_ukb.sbatch
+    Untracked:  scripts/12_run_fit_mrmashrss_sparse_LD_V_all_chr_init_by_chr_bc_ukb.sbatch
     Untracked:  scripts/3_run_compute_sumstats_by_chr_and_fold_test_bc_ukb.sbatch
     Untracked:  scripts/run_adjust_LD_test.sbatch
     Untracked:  scripts/run_fit_kriging_rss_by_chr_and_trait_bc_ukb.sbatch
 
 Unstaged changes:
-    Modified:   code/compute_phenotypic_cov_ukb_sim.R
-    Modified:   code/compute_prediction_accuracy_ukb.R
-    Modified:   code/compute_sumstats_ukb.R
-    Modified:   code/sim_pheno_ukb.R
-    Modified:   ukb_sim_snakefile
+    Modified:   analysis/ukb_bc_results.Rmd
+    Modified:   code/compute_prediction_accuracy_bc_ukb.R
     Modified:   ukb_sim_snakemake_submitter.sh
 
 </code></pre>
@@ -641,6 +639,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/61b27b107ed8cf53e91dcadd435f31d4926c826c/analysis/ukb_sim_results.Rmd" target="_blank">61b27b1</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-11-02
+</td>
+<td>
+Update results
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/d850539d7dd55aa0b81c7e271d5b1842e50f2f2c/docs/ukb_sim_results.html" target="_blank">d850539</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1688,6 +1720,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/d850539d7dd55aa0b81c7e271d5b1842e50f2f2c/docs/figure/ukb_sim_results.Rmd/equal effects-1.png" target="_blank">d850539</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-30
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/eb09d7b6a343348e9037e0e65262f3b1c8320cbb/docs/figure/ukb_sim_results.Rmd/equal effects-1.png" target="_blank">eb09d7b</a>
 </td>
 <td>
@@ -1837,6 +1880,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/d850539d7dd55aa0b81c7e271d5b1842e50f2f2c/docs/figure/ukb_sim_results.Rmd/mostly null-1.png" target="_blank">d850539</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/c77ab8f96831d751273d44f0e2d00883f6185106/docs/figure/ukb_sim_results.Rmd/mostly null-1.png" target="_blank">c77ab8f</a>
@@ -1997,6 +2051,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/d850539d7dd55aa0b81c7e271d5b1842e50f2f2c/docs/figure/ukb_sim_results.Rmd/shared in subgroups-1.png" target="_blank">d850539</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/e0b7f14c1dba635136ac5c40304c624e87f57a11/docs/figure/ukb_sim_results.Rmd/shared in subgroups-1.png" target="_blank">e0b7f14</a>
@@ -2278,7 +2343,7 @@ p_methods_shared_lowpve &lt;- ggplot(res, aes(x = trait, y = score, fill = metho
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
   ylim(0, 0.5) +
-  scale_fill_manual(values = c(&quot;red&quot;, &quot;blue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;blue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
@@ -2419,6 +2484,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/d850539d7dd55aa0b81c7e271d5b1842e50f2f2c/docs/figure/ukb_sim_results.Rmd/equal effects 10 traits-1.png" target="_blank">d850539</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/7cd0ded97c2d6b525cb49fbf68f79009168e4290/docs/figure/ukb_sim_results.Rmd/equal effects 10 traits-1.png" target="_blank">7cd0ded</a>
