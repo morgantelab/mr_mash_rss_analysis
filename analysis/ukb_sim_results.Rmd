@@ -362,7 +362,7 @@ p_methods_shared_lowpve <- ggplot(res, aes(x = trait, y = score, fill = method))
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.5) +
-  scale_fill_manual(values = c("red", "blue")) +
+  scale_fill_manual(values = c("pink", "red", "blue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
