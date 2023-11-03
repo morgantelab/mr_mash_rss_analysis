@@ -140,7 +140,7 @@ for(i in chrs){
     inds <- which(geno$map$chromosome==ii)
   }
   
-  if(model %in% c("mr_mash_rss", "mr_mash_rss_init", "mr_mash_rss_sparse_LD", "mr_mash_rss_sparse_LD_mvsusie_paper_prior", "mr_mash_rss_sparse_LD_V_all_chr")){
+  if(model %in% c("mr_mash_rss", "mr_mash_rss_sparse_LD", "mr_mash_rss_sparse_LD_mvsusie_paper_prior", "mr_mash_rss_sparse_LD_V_all_chr", "mr_mash_rss_sparse_LD_V_all_chr_init")){
     ##Read in model fit
     model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_", fold, ".rds"))
     
@@ -186,6 +186,10 @@ for(i in chrs){
   ##Store effects
   Bhat_all[[it]] <- Bhat
   
+  if(model=="ldpred2_auto"){
+    saveRDS(Bhat, file=paste0("../output/estimated_effects/ukb_bc_chr", i, "_ldpred2_auto_effects_", fold, ".rds"))
+  }
+
   ##Compute predictions
   pheno_pred[[it]] <- big_prodMat(X, Bhat, ind.row=test_inds_geno, ind.col=inds, ncores=ncores)
 }
