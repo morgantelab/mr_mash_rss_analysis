@@ -2,11 +2,11 @@
 #
 #SBATCH --job-name=ukb_sim_sm
 #SBATCH --ntasks=1
-#SBATCH --partition=compute
+#SBATCH --partition=fm-bigmem-3
 #SBATCH --time=336:00:00
 #SBATCH --mem=2gb
-#SBATCH --output=run/log/ukb_caucasian_white_british_unrel_100000_equal_effects_low_pve_indep_resid.%j.out
-#SBATCH --error=run/log/ukb_caucasian_white_british_unrel_100000_equal_effects_low_pve_indep_resid.%j.err
+#SBATCH --output=run/log/ukb_caucasian_white_british_unrel_100000_equal_effects_50000causal_indep_resid.%j.out
+#SBATCH --error=run/log/ukb_caucasian_white_british_unrel_100000_equal_effects_50000causal_indep_resid.%j.err
 #SBATCH --mail-type=fail
 #SBATCH --mail-user=fabiom@clemson.edu
 
@@ -31,9 +31,9 @@ snakemake \
   --profile slurm \
   --latency-wait 120 \
   -k \
-  --configfile ukb_sim_equal_effects_low_pve_indep_resid.yaml
+  --configfile ukb_sim_equal_effects_50000causal_indep_resid.yaml
+  #--configfile ukb_sim_equal_effects_10traits_indep_resid.yaml
+  #--configfile ukb_sim_equal_effects_low_pve_indep_resid.yaml
   #--configfile ukb_sim_blocks_shared_effects_indep_resid.yaml
   #--configfile ukb_sim_trait_1_only_effects_indep_resid.yaml
   #--configfile ukb_sim_equal_effects_indep_resid.yaml
-  #--configfile ukb_sim_equal_effects_50000causal_indep_resid.yaml
-  #--configfile ukb_sim_equal_effects_10traits_indep_resid.yaml
