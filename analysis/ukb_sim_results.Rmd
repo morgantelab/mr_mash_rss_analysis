@@ -135,7 +135,7 @@ In this scenario, there is a clear advantage to using multivariate methods. In f
 that the effects are equal across traits and the residuals are uncorrelated, a multivariate
 analysis is roughly equivalent to having 5 times as many samples as in an univariate
 analysis. As expected, the results show that *mr.mash.rss* clearly does better than *LDpred2 auto*
-and *BayesR*, which perform similarly. *mvBayesC* does not seem to better than the univariate 
+and *BayesR*, which perform similarly. *mvBayesC* does not seem to do better than the univariate 
 methods, although no worse than them.
 
 ## Mostly null scenario
