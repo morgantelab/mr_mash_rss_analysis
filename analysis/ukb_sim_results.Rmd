@@ -63,9 +63,14 @@ The residual covariance was initialized as in the [mvSuSiE paper](https://www.bi
 and the mixture weights were initialized as 90\% of the weight on the null component and 10\% of the
 weight split equally across the remaining components. The phenotypic covariance was computed
 as the sample covariance using the individual-level data. NB this is a multivariate method.
-<!-- * [BayesR](https://www.nature.com/articles/s41467-019-12653-0) per-chromosome, with 1000 iterations  -->
-<!-- (after 500 burn-in iterations), $h^2$ initialized as 0.5/22 and other default parameters. NB this is  -->
-<!-- a univariate method. We used the implementation in the *qgg* R package. -->
+* [BayesR](https://www.nature.com/articles/s41467-019-12653-0) per-chromosome, with 5000 iterations, 
+1000 burn-in iterations, thinning factor of 5, $\pi$ (i.e., the proportion of causal variants) 
+initialized as 0.0001 and other default parameters. NB this is a univariate method. 
+We used the implementation in the *qgg* R package.
+* [mvBayesC](https://academic.oup.com/genetics/article/209/1/89/5931015) per-chromosome, 
+with 5000 iterations, 1000 burn-in iterations, thinning factor of 5, $\pi$ (i.e., the proportion of 
+causal variants) initialized as 0.0001 and other default parameters. NB this is a multivariate method. 
+We used the implementation in the *qgg* R package.
 
 Prediction accuracy was evaluated as the $R^2$ of the regression of true phenotypes on the predicted 
 phenotypes. This metric as the attractive property that its upper bound is $h_g^2$.
@@ -129,7 +134,9 @@ print(p_methods_shared)
 In this scenario, there is a clear advantage to using multivariate methods. In fact, given
 that the effects are equal across traits and the residuals are uncorrelated, a multivariate
 analysis is roughly equivalent to having 5 times as many samples as in an univariate
-analysis. The results show that *mr.mash.rss* clearly does better than *LDpred2 auto*.
+analysis. As expected, the results show that *mr.mash.rss* clearly does better than *LDpred2 auto*
+and *BayesR*, which perform similarly. *mvBayesC* does not seem to better than the univariate 
+methods, although no worse than them.
 
 ## Mostly null scenario
 
