@@ -163,7 +163,7 @@ for(i in chrs){
     ##Store effects
     Bhat_all[[it]] <- model_fit$mu1[, traits]
     
-  } else if(model %in% c("mvbayesN","mvbayesA","mvbayesL","mvbayesC","mvbayesR")){
+  } else if(model %in% c("mvbayesN","mvbayesA","mvbayesL","mvbayesC","mvbayesC_rest","mvbayesR")){
     ##Read in model fit
     model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_", data_id, ".rds"))
     
