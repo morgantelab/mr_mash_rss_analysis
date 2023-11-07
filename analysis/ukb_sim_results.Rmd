@@ -45,7 +45,7 @@ We randomly sampled 5,000 (out of the 105,000) individuals to be the test set. T
 evaluate prediction accuracy. All the other steps were carried out on the training set of 100,000 individuals.
 
 Summary statistics (i.e., effect size and its standard error) were obtained by univariate simple linear 
-regression of each trait on each variant, one at a time. Traits and variants were not standardized.
+regression of each trait on each variant, one at a time. Variants were not standardized.
 
 Four different methods were fitted:
 
