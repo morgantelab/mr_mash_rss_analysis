@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree10b51bd8130f4a3188919c1590f031d4bf880d6atargetblank10b51bda">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree0119ffa149fcffe9f6e4c5d08bd14d97d503ca62targetblank0119ffaa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/10b51bd8130f4a3188919c1590f031d4bf880d6a" target="_blank">10b51bd</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/0119ffa149fcffe9f6e4c5d08bd14d97d503ca62" target="_blank">0119ffa</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree10b51bd8130f4a3188919c1590f031d4bf880d6atargetblank10b51bda"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree0119ffa149fcffe9f6e4c5d08bd14d97d503ca62targetblank0119ffaa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/10b51bd8130f4a3188919c1590f031d4bf880d6a" target="_blank">10b51bd</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/0119ffa149fcffe9f6e4c5d08bd14d97d503ca62" target="_blank">0119ffa</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -579,7 +579,6 @@ Untracked files:
     Untracked:  code/compute_sumstats_test_bc_ukb.R
     Untracked:  code/fit_kriging_rss_ukb.R
     Untracked:  code/fit_mrmashrss_test_ukb.R
-    Untracked:  code/fit_qgg_smvbayes_ukb.R
     Untracked:  code/merge_sumstats_all_chr_ukb.R
     Untracked:  code/split_effects_by_chr_imp_ukb.R
     Untracked:  scripts/11_run_fit_mrmashrss_by_chr_V_all_chr_bc_ukb.sbatch
@@ -591,11 +590,6 @@ Untracked files:
 
 Unstaged changes:
     Modified:   analysis/ukb_bc_results.Rmd
-    Modified:   code/compute_prediction_accuracy_ukb.R
-    Modified:   code/fit_qgg_sbayes_ukb.R
-    Modified:   ukb_sim_equal_effects_indep_resid.yaml
-    Modified:   ukb_sim_snakefile
-    Modified:   ukb_sim_snakemake_submitter.sh
 
 </code></pre>
 <p>
@@ -641,6 +635,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/0119ffa149fcffe9f6e4c5d08bd14d97d503ca62/analysis/ukb_sim_results.Rmd" target="_blank">0119ffa</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-11-07
+</td>
+<td>
+Add description of new methods
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/b0ded4869e6f509d8f1be116e05f8e825fbe350d/docs/ukb_sim_results.html" target="_blank">b0ded48</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-11-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1668,10 +1696,21 @@ paper</a> and the mixture weights were initialized as 90% of the weight
 on the null component and 10% of the weight split equally across the
 remaining components. The phenotypic covariance was computed as the
 sample covariance using the individual-level data. NB this is a
-multivariate method.
-<!-- * [BayesR](https://www.nature.com/articles/s41467-019-12653-0) per-chromosome, with 1000 iterations  -->
-<!-- (after 500 burn-in iterations), $h^2$ initialized as 0.5/22 and other default parameters. NB this is  -->
-<!-- a univariate method. We used the implementation in the *qgg* R package. --></li>
+multivariate method.</li>
+<li><a
+href="https://www.nature.com/articles/s41467-019-12653-0">BayesR</a>
+per-chromosome, with 5000 iterations, 1000 burn-in iterations, thinning
+factor of 5, <span class="math inline">\(\pi\)</span> (i.e., the
+proportion of causal variants) initialized as 0.0001 and other default
+parameters. NB this is a univariate method. We used the implementation
+in the <em>qgg</em> R package.</li>
+<li><a
+href="https://academic.oup.com/genetics/article/209/1/89/5931015">mvBayesC</a>
+per-chromosome, with 5000 iterations, 1000 burn-in iterations, thinning
+factor of 5, <span class="math inline">\(\pi\)</span> (i.e., the
+proportion of causal variants) initialized as 0.0001 and other default
+parameters. NB this is a multivariate method. We used the implementation
+in the <em>qgg</em> R package.</li>
 </ul>
 <p>Prediction accuracy was evaluated as the <span
 class="math inline">\(R^2\)</span> of the regression of true phenotypes
@@ -1754,6 +1793,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/b0ded4869e6f509d8f1be116e05f8e825fbe350d/docs/figure/ukb_sim_results.Rmd/equal effects-1.png" target="_blank">b0ded48</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-11-07
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/d850539d7dd55aa0b81c7e271d5b1842e50f2f2c/docs/figure/ukb_sim_results.Rmd/equal effects-1.png" target="_blank">d850539</a>
@@ -1839,8 +1889,10 @@ fmorgante
 methods. In fact, given that the effects are equal across traits and the
 residuals are uncorrelated, a multivariate analysis is roughly
 equivalent to having 5 times as many samples as in an univariate
-analysis. The results show that <em>mr.mash.rss</em> clearly does better
-than <em>LDpred2 auto</em>.</p>
+analysis. As expected, the results show that <em>mr.mash.rss</em>
+clearly does better than <em>LDpred2 auto</em> and <em>BayesR</em>,
+which perform similarly. <em>mvBayesC</em> does not seem to better than
+the univariate methods, although no worse than them.</p>
 </div>
 <div id="mostly-null-scenario" class="section level2">
 <h2>Mostly null scenario</h2>
