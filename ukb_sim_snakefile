@@ -3,9 +3,11 @@ rule all:
     expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mr_mash_rss_effects_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mr_mash_rss_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_ldpred2_auto_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]) #,
-    #expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_bayesR_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    #expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesR_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]) #,
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_bayesR_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesR_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mvbayesC_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]) #,
     #expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_ldpred2_auto_gwide_effects_{DATASET}.rds",DATASET=config["DATASET"]),
     #expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_gwide_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])
 
@@ -410,22 +412,16 @@ rule fit_bayesR_by_chr_trait:
     config["DEST"]+"output/bayesR_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_bayesR_fit_trait{TRAIT}_{DATASET}.rds"
   params:
     n=config["N_TRAIN"],
-    h2_init=config["H2_INIT"],
+    h2_init=config["BAYESR_H2_INIT"],
     pi_init=config["BAYESR_PI_INIT"],
-    nub=config["BAYESR_NUB"],
-    nue=config["BAYESR_NUE"],
     nburn=config["BAYESR_NBURN"],
     nit=config["BAYESR_NIT"],
-    updateB=config["BAYESR_UPDATE_B"],
-    updateE=config["BAYESR_UPDATE_E"],
-    updatePi=config["BAYESR_UPDATE_PI"],
-    updateG=config["BAYESR_UPDATE_G"],
-    adjustE=config["BAYESR_ADJUST_E"],
+    nthin=config["BAYESR_NTHIN"],
     trait="{TRAIT}",
     dataset="{DATASET}",
     chr="{CHR}",
     script=config["SCRIPT"]+"fit_qgg_sbayes_ukb.R"
-  resources: cpus=1, mem_mb=100000, time_min=2880
+  resources: cpus=1, mem_mb=7000, time_min=2880
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -439,16 +435,50 @@ rule fit_bayesR_by_chr_trait:
                                     --method bayesR \
                                     --h2 {params.h2_init} \
                                     --pi {params.pi_init} \
-                                    --nub {params.nub} \
-                                    --nue {params.nue} \
                                     --nburn {params.nburn} \
                                     --nit {params.nit} \
-                                    --updateB {params.updateB} \
-                                    --updateE {params.updateE} \
-                                    --updatePi {params.updatePi} \
-                                    --updateG {params.updateG} \
-                                    --adjustE {params.adjustE} \
+                                    --nthin {params.nthin} \
                                     --trait {params.trait} \
+                                    --seed {params.dataset} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+rule fit_mvbayesC_by_chr:
+  input:
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.ld.bin"
+  output:
+    config["DEST"]+"output/mvbayesC_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mvbayesC_fit_{DATASET}.rds"
+  params:
+    n=config["N_TRAIN"],
+    h2_init=config["MVBAYESC_H2_INIT"],
+    pi_init=config["MVBAYESC_PI_INIT"],
+    nburn=config["MVBAYESC_NBURN"],
+    nit=config["MVBAYESC_NIT"],
+    nthin=config["MVBAYESC_NTHIN"],
+    traits=config["TRAIT_RANGE"],
+    dataset="{DATASET}",
+    chr="{CHR}",
+    script=config["SCRIPT"]+"fit_qgg_smvbayes_ukb.R"
+  resources: cpus=1, mem_mb=7000, time_min=2880
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
+        Rscript {params.script} \
+                                    --sumstats {input.sumstats} \
+                                    --LD_matrix {input.ldmat} \
+                                    --n {params.n} \
+                                    --method bayesC \
+                                    --h2 {params.h2_init} \
+                                    --pi {params.pi_init} \
+                                    --nburn {params.nburn} \
+                                    --nit {params.nit} \
+                                    --nthin {params.nthin} \
+                                    --traits {params.traits} \
                                     --seed {params.dataset} \
                                     --output {output}
         module unload R/4.2.3
@@ -622,6 +652,56 @@ rule compute_prediction_accuracy_bayesR:
   params:
     model=config["BAYESR_MODEL"],
     model_fit_dir=config["BAYESR_MODEL_FIT_DIR"],
+    dataset="{DATASET}",
+    chr_r=config["CHR_RANGE"],
+    trait_r=config["TRAIT_RANGE"],
+    imp_flag=config["IMPUTE_FLAG"],
+    script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R",
+    tmp=config["TMP"],
+    norm_pheno=config["NORMALIZE_PHENO"],
+    prefix=config["DATA_PREFIX"]
+  resources: cpus=4, mem_mb=100000, time_min=120
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --model {params.model} \
+                                    --model_fit_dir {params.model_fit_dir} \
+                                    --pheno {input.pheno} \
+                                    --geno {input.geno} \
+                                    --test_ids {input.tids} \
+                                    --data_id {params.dataset} \
+                                    --chr {params.chr_r} \
+                                    --trait {params.trait_r} \
+                                    --impute_missing {params.imp_flag} \
+                                    --output_eff {output.eff} \
+                                    --output_pred_acc {output.pred_acc} \
+                                    --temp_dir {params.tmp} \
+                                    --normalize {params.norm_pheno} \
+                                    --ncores 4 \
+                                    --prefix {params.prefix}
+        module unload R/4.2.3
+        """
+
+def get_mvbayesC_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    return expand(config["DEST"]+"output/mvbayesC_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mvbayesC_fit_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"])
+
+rule compute_prediction_accuracy_mvbayesC:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
+    geno=config["BED"],
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
+    list=lambda wildcards: get_mvbayesC_input_files(wildcards)
+  output:
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mvbayesC_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_pred_acc_{DATASET}.rds"
+  params:
+    model=config["MVBAYESC_MODEL"],
+    model_fit_dir=config["MVBAYESC_MODEL_FIT_DIR"],
     dataset="{DATASET}",
     chr_r=config["CHR_RANGE"],
     trait_r=config["TRAIT_RANGE"],

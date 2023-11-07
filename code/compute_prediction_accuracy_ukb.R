@@ -155,15 +155,25 @@ for(i in chrs){
     
     ##Compute predictions
     if(!is.null(pheno_means)){
-      pheno_pred[[it]] <- t(t(big_prodMat(X, model_fit$mu1[, traits], ind.col=inds)) + model_fit$intercept[traits])
+      pheno_pred[[it]] <- t(t(big_prodMat(X, model_fit$mu1[, traits], ind.col=inds, ncores=ncores)) + model_fit$intercept[traits])
     } else {
-      pheno_pred[[it]] <- big_prodMat(X, model_fit$mu1[, traits], ind.col=inds)
+      pheno_pred[[it]] <- big_prodMat(X, model_fit$mu1[, traits], ind.col=inds, ncores=ncores)
     }
 
     ##Store effects
     Bhat_all[[it]] <- model_fit$mu1[, traits]
     
-    } else if(model %in% c("ldpred2_auto","bayesN","bayesA","bayesL","bayesC","bayesR")){
+  } else if(model %in% c("mvbayesN","mvbayesA","mvbayesL","mvbayesC","mvbayesR")){
+    ##Read in model fit
+    model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_", data_id, ".rds"))
+    
+    ##Compute predictions
+    pheno_pred[[it]] <- big_prodMat(X, model_fit$bm[, traits], ind.col=inds, ncores=ncores)
+    
+    ##Store effects
+    Bhat_all[[it]] <- model_fit$bm[, traits]
+  
+  } else if(model %in% c("ldpred2_auto","bayesN","bayesA","bayesL","bayesC","bayesR")){
     
     it2 <- 0
     
@@ -202,7 +212,7 @@ for(i in chrs){
     }
     
     ##Compute predictions
-    pheno_pred[[it]] <- big_prodMat(X, Bhat, ind.col=inds)
+    pheno_pred[[it]] <- big_prodMat(X, Bhat, ind.col=inds, ncores=ncores)
     
     ##Store effects
     Bhat_all[[it]] <- Bhat
