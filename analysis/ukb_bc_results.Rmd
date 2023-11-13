@@ -37,6 +37,8 @@ age $\times$ age, assessment centre, and genotype measurement batch, and the top
 model. Then, we ran a GWAS using a simple linear regression on the quantile normalized residuals from the previous
 step.
 
+The sparse LD matrix was computed in the training set as described in the [LDpred2 paper](https://academic.oup.com/bioinformatics/article/36/22-23/5424/6039173)
+
 For the majority of the analyses, we used a use a set of 1,054,330 HapMap3 variants. Only for the computation
 of the data-driven covariance matrices for *mr.mash.rss* we used a larger sets of variants as described in the 
 [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1).
@@ -72,29 +74,39 @@ for(i in 1:5){
   
   if(i>1){
     dat_mrmash <- rbind(dat_mrmash, readRDS(paste0(prefix, "_mr_mash_rss_sparse_LD_V_all_chr_pred_acc_", i, ".rds"))$r2)
+    dat_mrmash_init <- rbind(dat_mrmash_init, readRDS(paste0(prefix, "_mr_mash_rss_sparse_LD_V_all_chr_init_pred_acc_", i, ".rds"))$r2)
     dat_ldpred2 <- rbind(dat_ldpred2, readRDS(paste0(prefix, "_ldpred2_auto_pred_acc_", i, ".rds"))$r2)
   } else {
     dat_mrmash <- readRDS(paste0(prefix, "_mr_mash_rss_sparse_LD_V_all_chr_pred_acc_", i, ".rds"))$r2
+    dat_mrmash_init <- readRDS(paste0(prefix, "_mr_mash_rss_sparse_LD_V_all_chr_init_pred_acc_", i, ".rds"))$r2
     dat_ldpred2 <- readRDS(paste0(prefix, "_ldpred2_auto_pred_acc_", i, ".rds"))$r2
   }
 }
 
+means_mrmash <- colMeans(dat_mrmash)
+means_mrmash_init <- colMeans(dat_mrmash_init)
+means_ldpred2 <- colMeans(dat_ldpred2)
+
+perc_change <- ((means_mrmash_init-means_ldpred2)/means_ldpred2)*100
+
 pheno <- readRDS("data/phenotypes/ukb_cleaned_bc_adjusted_pheno_test_1.rds")
+
+names(perc_change) <- colnames(pheno)
 
 linez <- data.frame(trait=colnames(pheno),
                     h2=colMeans(dat_ldsc))
 
-r2 <- c(as.vector(dat_mrmash), as.vector(dat_ldpred2))
-method <- rep(c("mr_mash_rss", "ldpred2_auto"), each=80)
+r2 <- c(as.vector(dat_mrmash), as.vector(dat_mrmash_init), as.vector(dat_ldpred2))
+method <- rep(c("mr_mash_rss", "mr_mash_rss_init", "ldpred2_auto"), each=80)
 trait <- rep(colnames(pheno), each=5)
 
 res <- data.frame(method, trait, r2)
 
-res <- res[which(res$method %in% c("ldpred2_auto", "mr_mash_rss")), ]
+res <- res[which(res$method %in% c("ldpred2_auto", "mr_mash_rss", "mr_mash_rss_init")), ]
 
 res <- transform(res,
-                 method=factor(method, levels=c("ldpred2_auto", "mr_mash_rss"),
-                               labels=c("LDpred2", "mr.mash.rss")),
+                 method=factor(method, levels=c("ldpred2_auto", "mr_mash_rss", "mr_mash_rss_init"),
+                               labels=c("LDpred2", "mr.mash.rss", "mr.mash.rss init")),
                  trait=factor(trait))
 
 p_methods_shared <- ggplot(res, aes(x = trait, y = r2, fill = method)) +
@@ -111,3 +123,6 @@ p_methods_shared <- ggplot(res, aes(x = trait, y = r2, fill = method)) +
 
 print(p_methods_shared)
 ```
+
+The percentage change in $R^2$ of *mr.mash.rss init* over *LDpred2* is `r print(perc_change)`
+
