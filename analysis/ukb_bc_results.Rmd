@@ -124,5 +124,5 @@ p_methods_shared <- ggplot(res, aes(x = trait, y = r2, fill = method)) +
 print(p_methods_shared)
 ```
 
-The percentage change in $R^2$ of *mr.mash.rss init* over *LDpred2* is `r print(perc_change)`
+The percentage change in $R^2$ of *mr.mash.rss init* over *LDpred2* is `r perc_change`
 
