@@ -11,7 +11,7 @@
 
 <meta name="author" content="Fabio Morgante &amp; Deborah Kunkel" />
 
-<meta name="date" content="2023-10-30" />
+<meta name="date" content="2023-11-13" />
 
 <title>Analysis of blood cell traits in UK Biobank</title>
 
@@ -374,7 +374,7 @@ div.tocify {
 <h1 class="title toc-ignore">Analysis of blood cell traits in UK
 Biobank</h1>
 <h4 class="author">Fabio Morgante &amp; Deborah Kunkel</h4>
-<h4 class="date">October 30, 2023</h4>
+<h4 class="date">November 13, 2023</h4>
 
 </div>
 
@@ -403,7 +403,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-10-30
+<strong>Last updated:</strong> 2023-11-13
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree7822773394720f8ba7cb343f993b17bf6d4f602etargetblank7822773a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree5bd74b48cb57a82c08d32015696a1333277dcd0btargetblank5bd74b4a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/7822773394720f8ba7cb343f993b17bf6d4f602e" target="_blank">7822773</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/5bd74b48cb57a82c08d32015696a1333277dcd0b" target="_blank">5bd74b4</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree7822773394720f8ba7cb343f993b17bf6d4f602etargetblank7822773a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree5bd74b48cb57a82c08d32015696a1333277dcd0btargetblank5bd74b4a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/7822773394720f8ba7cb343f993b17bf6d4f602e" target="_blank">7822773</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/5bd74b48cb57a82c08d32015696a1333277dcd0b" target="_blank">5bd74b4</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -583,11 +583,14 @@ Untracked files:
     Untracked:  code/split_effects_by_chr_imp_ukb.R
     Untracked:  scripts/11_run_fit_mrmashrss_by_chr_V_all_chr_bc_ukb.sbatch
     Untracked:  scripts/11_run_fit_mrmashrss_sparse_LD_mvsusie_paper_prior_by_chr_bc_ukb.sbatch
-    Untracked:  scripts/11_run_fit_mrmashrss_test_by_chr_V_all_chr_bc_ukb.sbatch
     Untracked:  scripts/12_run_compute_pred_accuracy_mrmashrss_sparse_LD_mvsusie_paper_prior_bc_ukb.sbatch
     Untracked:  scripts/3_run_compute_sumstats_by_chr_and_fold_test_bc_ukb.sbatch
     Untracked:  scripts/run_adjust_LD_test.sbatch
     Untracked:  scripts/run_fit_kriging_rss_by_chr_and_trait_bc_ukb.sbatch
+
+Unstaged changes:
+    Modified:   ukb_sim_equal_effects_indep_resid.yaml
+    Modified:   ukb_sim_snakefile
 
 </code></pre>
 <p>
@@ -633,6 +636,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/5bd74b48cb57a82c08d32015696a1333277dcd0b/analysis/ukb_bc_results.Rmd" target="_blank">5bd74b4</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-11-13
+</td>
+<td>
+Add description of new methods
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/090c32310a8fedf6247c37fbcd6d32c6deac4c49/docs/ukb_bc_results.html" target="_blank">090c323</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -856,6 +893,10 @@ class="math inline">\(\times\)</span> age, assessment centre, and
 genotype measurement batch, and the top 10 genotype PCs using a linear
 model. Then, we ran a GWAS using a simple linear regression on the
 quantile normalized residuals from the previous step.</p>
+<p>The sparse LD matrix was computed in the training set as described in
+the <a
+href="https://academic.oup.com/bioinformatics/article/36/22-23/5424/6039173">LDpred2
+paper</a></p>
 <p>For the majority of the analyses, we used a use a set of 1,054,330
 HapMap3 variants. Only for the computation of the data-driven covariance
 matrices for <em>mr.mash.rss</em> we used a larger sets of variants as
@@ -902,29 +943,39 @@ for(i in 1:5){
   
   if(i&gt;1){
     dat_mrmash &lt;- rbind(dat_mrmash, readRDS(paste0(prefix, &quot;_mr_mash_rss_sparse_LD_V_all_chr_pred_acc_&quot;, i, &quot;.rds&quot;))$r2)
+    dat_mrmash_init &lt;- rbind(dat_mrmash_init, readRDS(paste0(prefix, &quot;_mr_mash_rss_sparse_LD_V_all_chr_init_pred_acc_&quot;, i, &quot;.rds&quot;))$r2)
     dat_ldpred2 &lt;- rbind(dat_ldpred2, readRDS(paste0(prefix, &quot;_ldpred2_auto_pred_acc_&quot;, i, &quot;.rds&quot;))$r2)
   } else {
     dat_mrmash &lt;- readRDS(paste0(prefix, &quot;_mr_mash_rss_sparse_LD_V_all_chr_pred_acc_&quot;, i, &quot;.rds&quot;))$r2
+    dat_mrmash_init &lt;- readRDS(paste0(prefix, &quot;_mr_mash_rss_sparse_LD_V_all_chr_init_pred_acc_&quot;, i, &quot;.rds&quot;))$r2
     dat_ldpred2 &lt;- readRDS(paste0(prefix, &quot;_ldpred2_auto_pred_acc_&quot;, i, &quot;.rds&quot;))$r2
   }
 }
 
+means_mrmash &lt;- colMeans(dat_mrmash)
+means_mrmash_init &lt;- colMeans(dat_mrmash_init)
+means_ldpred2 &lt;- colMeans(dat_ldpred2)
+
+perc_change &lt;- ((means_mrmash_init-means_ldpred2)/means_ldpred2)*100
+
 pheno &lt;- readRDS(&quot;data/phenotypes/ukb_cleaned_bc_adjusted_pheno_test_1.rds&quot;)
+
+names(perc_change) &lt;- colnames(pheno)
 
 linez &lt;- data.frame(trait=colnames(pheno),
                     h2=colMeans(dat_ldsc))
 
-r2 &lt;- c(as.vector(dat_mrmash), as.vector(dat_ldpred2))
-method &lt;- rep(c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;), each=80)
+r2 &lt;- c(as.vector(dat_mrmash), as.vector(dat_mrmash_init), as.vector(dat_ldpred2))
+method &lt;- rep(c(&quot;mr_mash_rss&quot;, &quot;mr_mash_rss_init&quot;, &quot;ldpred2_auto&quot;), each=80)
 trait &lt;- rep(colnames(pheno), each=5)
 
 res &lt;- data.frame(method, trait, r2)
 
-res &lt;- res[which(res$method %in% c(&quot;ldpred2_auto&quot;, &quot;mr_mash_rss&quot;)), ]
+res &lt;- res[which(res$method %in% c(&quot;ldpred2_auto&quot;, &quot;mr_mash_rss&quot;, &quot;mr_mash_rss_init&quot;)), ]
 
 res &lt;- transform(res,
-                 method=factor(method, levels=c(&quot;ldpred2_auto&quot;, &quot;mr_mash_rss&quot;),
-                               labels=c(&quot;LDpred2&quot;, &quot;mr.mash.rss&quot;)),
+                 method=factor(method, levels=c(&quot;ldpred2_auto&quot;, &quot;mr_mash_rss&quot;, &quot;mr_mash_rss_init&quot;),
+                               labels=c(&quot;LDpred2&quot;, &quot;mr.mash.rss&quot;, &quot;mr.mash.rss init&quot;)),
                  trait=factor(trait))
 
 p_methods_shared &lt;- ggplot(res, aes(x = trait, y = r2, fill = method)) +
@@ -963,6 +1014,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/090c32310a8fedf6247c37fbcd6d32c6deac4c49/docs/figure/ukb_bc_results.Rmd/results_accuracy-1.png" target="_blank">090c323</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-10-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/9ad448b9e9b4ceaf44d89f9ec737cef07861db93/docs/figure/ukb_bc_results.Rmd/results_accuracy-1.png" target="_blank">9ad448b</a>
@@ -1011,6 +1073,8 @@ fmorgante
 </table>
 </div>
 </div>
+<p>The percentage change in <span class="math inline">\(R^2\)</span> of
+<em>mr.mash.rss init</em> over <em>LDpred2</em> is</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
