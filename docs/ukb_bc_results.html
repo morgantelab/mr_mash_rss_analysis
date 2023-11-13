@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreec254c89fee422037c493937c7cd39cdf47e1f918targetblankc254c89a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreee2a7fe46e0d6f066b5ffaf30e4e3a6b9b0d636fbtargetblanke2a7fe4a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/c254c89fee422037c493937c7cd39cdf47e1f918" target="_blank">c254c89</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/e2a7fe46e0d6f066b5ffaf30e4e3a6b9b0d636fb" target="_blank">e2a7fe4</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreec254c89fee422037c493937c7cd39cdf47e1f918targetblankc254c89a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreee2a7fe46e0d6f066b5ffaf30e4e3a6b9b0d636fbtargetblanke2a7fe4a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/c254c89fee422037c493937c7cd39cdf47e1f918" target="_blank">c254c89</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/e2a7fe46e0d6f066b5ffaf30e4e3a6b9b0d636fb" target="_blank">e2a7fe4</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -638,6 +638,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/e2a7fe46e0d6f066b5ffaf30e4e3a6b9b0d636fb/analysis/ukb_bc_results.Rmd" target="_blank">e2a7fe4</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-11-13
+</td>
+<td>
+Add description of the results
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/8417b2fbf36ee2cac2dd160119c1fc4f925d4b2e/docs/ukb_bc_results.html" target="_blank">8417b2f</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-11-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -960,6 +994,9 @@ on the null component and 10% of the weight split equally across the
 remaining components. The phenotypic covariance was computed as the
 sample covariance using the individual-level data. NB this is a
 multivariate method.</p></li>
+<li><p><em>mr.mash.rss</em> per-chromosome, as above, but posterior mean
+of regression coeffcients initialized using the estimates from
+<em>LDpred2</em>. NB this is a multivariate method.</p></li>
 </ul>
 <p>Prediction accuracy was evaluated as the <span
 class="math inline">\(R^2\)</span> of the regression of (quantile
@@ -1121,10 +1158,25 @@ fmorgante
 </div>
 </div>
 <p>The percentage change in <span class="math inline">\(R^2\)</span> of
-<em>mr.mash.rss init</em> over <em>LDpred2</em> is 2.5640256, 3.0555465,
--0.3191311, 2.6957282, 4.8263237, 2.0825802, 1.7868777, 1.6437104,
-6.4839861, 3.2702777, 9.4011045, -1.1639116, 31.2653491, 5.2106904,
-6.0862484, 3.0587728</p>
+<em>mr.mash.rss init</em> over <em>LDpred2</em> by trait is:</p>
+<pre class="r"><code>perc_change</code></pre>
+<pre><code>        WBC_count         RBC_count       Haemoglobin               MCV 
+        2.5640256         3.0555465        -0.3191311         2.6957282 
+              RDW    Platelet_count      Plateletcrit               PDW 
+        4.8263237         2.0825802         1.7868777         1.6437104 
+  Lymphocyte_perc     Monocyte_perc  Neutrophill_perc  Eosinophill_perc 
+        6.4839861         3.2702777         9.4011045        -1.1639116 
+   Basophill_perc Reticulocyte_perc              MSCV          HLR_perc 
+       31.2653491         5.2106904         6.0862484         3.0587728 </code></pre>
+<p>The overall percentage change in <span
+class="math inline">\(R^2\)</span> of <em>mr.mash.rss init</em> over
+<em>LDpred2</em> across traits is 5.1217612.</p>
+<p>The results show that <em>mr.mash.rss init</em> improves accuracy
+over <em>LDpred2</em> for all but two traits. However, in those two
+traits the performance is very similar. In general, the improvement in
+performance is in line with other papers such as the <a
+href="https://www.nature.com/articles/s41467-019-09718-5">PRS-CS
+paper</a>.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
