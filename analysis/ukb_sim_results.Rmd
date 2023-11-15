@@ -146,7 +146,7 @@ and covariance matrix that achieves effects (with variance 1) to be present only
 
 ```{r mostly null, fig.height=10, fig.width=13}
 scenarioz <- "trait_1_only_effects_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto")#, "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "ldpred2_auto", "bayesR")
 
 i <- 0
 
@@ -208,7 +208,7 @@ traits 4-5.
 
 ```{r shared in subgroups, fig.height=10, fig.width=13}
 scenarioz <- "blocks_shared_effects_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto")#, "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "ldpred2_auto", "bayesR")
 
 i <- 0
 
