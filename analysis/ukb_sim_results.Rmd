@@ -195,7 +195,8 @@ print(p_mostly_null)
 In this scenario, there is no advantage to using multivariate methods. In fact, there is potential
 for multivariate methods to do worse than univariate methods because of the large amount of noise
 modeled jointly with the signal. The results show that *mr.mash.rss* can learn this structure
-from the data and performs similar to *LDpred2 auto*, although a little worse.
+from the data and performs similar to *LDpred2 auto* and *BayesR*, although a little worse.
+*mvBayesC* performs slightly worse than *mr.mash.rss*.
 
 ## Shared in subgroups scenario
 
@@ -256,10 +257,11 @@ print(p_blocks_shared)
 ```
 
 In this scenario, multivariate methods can have some advantage over univariate methods, provided that
-the former can adapt to the complex structure of the effects. The results show that *mr.mash.rss* does
-better than *LDpred2 auto* across all the traits. However, the improvement is more evident in traits 1-3,
-due to the higher effect correlation across traits, the larger number of traits with shared effects, and
-the smaller $h^2_g$ (harder scenario for univariate methods).
+the former can adapt to the complex structure of the effects. The results show that all the methods perform
+very similarly in traits 3 and 4, with *mvBayesC* being a tiny bit better. However, the two multivariate
+methods perform better than the univariate methods in traits 1-3, due to the higher effect correlation across 
+traits, the larger number of traits with shared effects, and the smaller $h^2_g$ (harder scenario for 
+univariate methods).
 
 ## Equal effects scenario -- low PVE
 
