@@ -272,7 +272,7 @@ per-trait genomic heritability was set to 0.2.
 
 ```{r equal effects low pve, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_low_pve_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto")#, "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "ldpred2_auto", "bayesR")
 
 i <- 0
 
