@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree876699a60b5ade36bff8dc3c3fe443970f2c0c9ctargetblank876699aa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreecdd004d249eb6387c14ae66467d807460df4297ctargetblankcdd004da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/876699a60b5ade36bff8dc3c3fe443970f2c0c9c" target="_blank">876699a</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/cdd004d249eb6387c14ae66467d807460df4297c" target="_blank">cdd004d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree876699a60b5ade36bff8dc3c3fe443970f2c0c9ctargetblank876699aa"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreecdd004d249eb6387c14ae66467d807460df4297ctargetblankcdd004da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/876699a60b5ade36bff8dc3c3fe443970f2c0c9c" target="_blank">876699a</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/cdd004d249eb6387c14ae66467d807460df4297c" target="_blank">cdd004d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -639,6 +639,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/cdd004d249eb6387c14ae66467d807460df4297c/analysis/ukb_sim_results.Rmd" target="_blank">cdd004d</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-11-18
+</td>
+<td>
+Update results
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/d9443c6ba7c6c012bdd1d486dab918a090f8f28d/docs/ukb_sim_results.html" target="_blank">d9443c6</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-11-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -2551,7 +2585,7 @@ implies that the effects of the causal variants are equal across
 responses. In addition, the per-trait genomic heritability was set to
 0.2.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;equal_effects_low_pve_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;ldpred2_auto&quot;)#, &quot;bayesR&quot;)
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
 
 i &lt;- 0
 
