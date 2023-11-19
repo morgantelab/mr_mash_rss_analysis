@@ -322,7 +322,7 @@ In this scenario, we expect the relative improvement of multivariate methods com
 methods to be larger than with $h^2_g = 0.5$. This is because with smaller signal-to-noise ratio,
 it is harder for univariate methods to estimate effects accurately. Multivariate methods can borrow
 information across traits (if effects are shared) and improve accuracy. The results show that 
-*mr.mash.rss* clearly does better than *LDpred2 auto*. 
+the multivariate methods outperform the univariate methods, with *mr.mash.rss* being the best overall. 
 
 ## Equal effects scenario -- more polygenic
 
@@ -333,7 +333,7 @@ number of causal variants was set to 50,000.
 
 ```{r equal effects poly filt, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_50000causal_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto")
+methodz <- c("mr_mash_rss", "mvbayesC", "ldpred2_auto", "bayesR")
 
 i <- 0
 
