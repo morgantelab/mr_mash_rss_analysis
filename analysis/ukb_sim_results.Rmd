@@ -395,7 +395,7 @@ number of traits was increased to 10.
 
 ```{r equal effects 10 traits, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_10traits_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto")#, "bayesR")
+methodz <- c("mr_mash_rss", "ldpred2_auto", "bayesR")
 
 i <- 0
 
@@ -447,5 +447,5 @@ print(p_methods_shared_10traits)
 In this scenario, we expect the relative improvement of multivariate methods compared to univariate
 methods to be a little larger than with 5 traits. This is because multivariate methods can borrow
 information across a larger number of traits (if effects are shared) and improve accuracy. The results 
-show that *mr.mash.rss* clearly does better than *LDpred2 auto*, but the improvement compared to the
-scenario with 5 traits is small. 
+show that *mr.mash.rss* clearly does better than the univariate methods, but the improvement compared 
+to the scenario with 5 traits is small. *mvBayesC* is currently too slow to be run in this scenario. 
