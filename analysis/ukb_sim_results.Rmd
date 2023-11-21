@@ -268,7 +268,8 @@ univariate methods).
 In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0
 and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1.
 This implies that the effects of the causal variants are equal across responses. In addition, the 
-per-trait genomic heritability was set to 0.2.
+per-trait genomic heritability was set to 0.2. In this scenario, $h^2$ was initialized as 0.01 in 
+*BayesR* and *mvBayesC*.
 
 ```{r equal effects low pve, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_low_pve_indep_resid"
@@ -329,7 +330,8 @@ the multivariate methods outperform the univariate methods, with *mr.mash.rss* b
 In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0
 and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1.
 This implies that the effects of the causal variants are equal across responses. In addition, the 
-number of causal variants was set to 50,000.
+number of causal variants was set to 50,000. In this scenario, $\pi$ was initialized as 0.001 in 
+*BayesR* and *mvBayesC*.
 
 ```{r equal effects poly filt, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_50000causal_indep_resid"
