@@ -143,8 +143,8 @@ In this scenario, there is a clear advantage to using multivariate methods. In f
 that the effects are equal across traits and the residuals are uncorrelated, a multivariate
 analysis is roughly equivalent to having 5 times as many samples as in an univariate
 analysis. As expected, the results show that *mr.mash.rss* clearly does better than *LDpred2 auto*
-and *BayesR*, which perform similarly. *mvBayesC* does better than the univariate 
-methods, but not as well as *mr.mash.rss*.
+*BayesC*, and *BayesR*, which perform similarly. *mvBayesC* (both versions) does better than the 
+univariate methods, but not as well as *mr.mash.rss*.
 
 ## Mostly null scenario
 
@@ -204,7 +204,7 @@ In this scenario, there is no advantage to using multivariate methods. In fact, 
 for multivariate methods to do worse than univariate methods because of the large amount of noise
 modeled jointly with the signal. The results show that *mr.mash.rss* can learn this structure
 from the data and performs similar to *LDpred2 auto* and *BayesR*, although a little worse.
-*mvBayesC* performs slightly worse than *mr.mash.rss*.
+*mvBayesC* performs slightly worse than *mr.mash.rss*. *mvBayesCrest* cannot adapt well to this scenario.
 
 ## Shared in subgroups scenario
 
@@ -266,10 +266,10 @@ print(p_blocks_shared)
 
 In this scenario, multivariate methods can have some advantage over univariate methods, provided that
 the former can adapt to the complex structure of the effects. The results show that all the methods perform
-very similarly in traits 3 and 4, with *mvBayesC* being a tiny bit better. However, the two multivariate
-methods perform better than the univariate methods in traits 1-3, due to the higher effect correlation across 
-traits, the larger number of traits with shared effects, and the smaller $h^2_g$ (harder scenario for 
-univariate methods).
+very similarly in traits 3 and 4 -- with *mvBayesC* being a tiny bit better -- but *mvBayesCrest*. 
+However, *mr.mash.rss* and *mvBayesC* methods perform better than the univariate methods and *mvBayesCrest* 
+in traits 1-3, due to the higher effect correlation across traits, the larger number of traits with shared 
+effects, and the smaller $h^2_g$ (harder scenario for univariate methods).
 
 ## Equal effects scenario -- low PVE
 
@@ -277,7 +277,7 @@ In this scenario, the effects were drawn from a Multivariate Normal distribution
 and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1.
 This implies that the effects of the causal variants are equal across responses. In addition, the 
 per-trait genomic heritability was set to 0.2. In this scenario, $h^2$ was initialized as 0.01 in 
-*BayesR* and *mvBayesC*.
+*BayesC*, *BayesR*, *mvBayesC* and *mvBayesCrest*.
 
 ```{r equal effects low pve, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_low_pve_indep_resid"
@@ -339,7 +339,7 @@ In this scenario, the effects were drawn from a Multivariate Normal distribution
 and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1.
 This implies that the effects of the causal variants are equal across responses. In addition, the 
 number of causal variants was set to 50,000. In this scenario, $\pi$ was initialized as 0.01 in 
-*BayesC*, *BayesR*, *mvBayesCrest*, and *mvBayesC*.
+*BayesC*, *BayesR*, *mvBayesC*, and *mvBayesCrest*.
 
 ```{r equal effects poly filt, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_50000causal_indep_resid"
@@ -393,7 +393,7 @@ In this scenario, we expect the accuracy to be lower because of the much larger 
 variants, each explaining a much lower proportion of the total $h^2_g=0.5$. Multivariate methods
 can borrow information across traits (if effects are shared) and improve accuracy. The results 
 show that *mr.mash.rss* clearly does better than the univariate methods in this scenario too.
-Unexpectedly, *mvBayesC* seems to have difficulties in this scenario.
+*mvBayesC* (both versions) seems to have difficulties in this scenario.
 
 
 ## Equal effects scenario -- 10 traits
@@ -458,4 +458,5 @@ In this scenario, we expect the relative improvement of multivariate methods com
 methods to be a little larger than with 5 traits. This is because multivariate methods can borrow
 information across a larger number of traits (if effects are shared) and improve accuracy. The results 
 show that *mr.mash.rss* clearly does better than the univariate methods, but the improvement compared 
-to the scenario with 5 traits is small. *mvBayesC* is currently too slow to be run in this scenario. 
+to the scenario with 5 traits is small. *mvBayesCrest* does better than the univariate methods but worse 
+than *mr.mash.rss*. *mvBayesC* is currently too slow to be run in this scenario. 
