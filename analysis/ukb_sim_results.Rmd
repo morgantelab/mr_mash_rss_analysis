@@ -47,7 +47,7 @@ evaluate prediction accuracy. All the other steps were carried out on the traini
 Summary statistics (i.e., effect size and its standard error) were obtained by univariate simple linear 
 regression of each trait on each variant, one at a time. Variants were not standardized.
 
-Four different methods were fitted:
+A few different methods were fitted:
 
 * [LDpred2](https://academic.oup.com/bioinformatics/article/36/22-23/5424/6039173) per-chromosome with 
 the auto option, 1000 iterations (after 500 burn-in iterations), $h^2$ initialized using an estimate from 
@@ -67,8 +67,16 @@ as the sample covariance using the individual-level data. NB this is a multivari
 1000 burn-in iterations, thinning factor of 5, $\pi$ (i.e., the proportion of causal variants) 
 initialized as 0.0001, $h^2$ initialized as 0.1, and other default parameters. NB this is a univariate method. 
 We used the implementation in the *qgg* R package.
+* [BayesC](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-186) per-chromosome, 
+with 5000 iterations, 1000 burn-in iterations, thinning factor of 5, $\pi$ (i.e., the proportion of causal variants) 
+initialized as 0.0001, $h^2$ initialized as 0.1, and other default parameters. NB this is a univariate method. 
+We used the implementation in the *qgg* R package.
 * [mvBayesC](https://academic.oup.com/genetics/article/209/1/89/5931015) per-chromosome, 
 with 5000 iterations, 1000 burn-in iterations, thinning factor of 5, $\pi$ (i.e., the proportion of 
+causal variants) initialized as 0.0001, $h^2$ initialized as 0.1,  and other default parameters. 
+NB this is a multivariate method. We used the implementation in the *qgg* R package.
+* _mvBayesCrest_ -- a version of _mvBayesC_ that only allows a variant to affect all or none of the traits -- 
+per-chromosome, with 5000 iterations, 1000 burn-in iterations, thinning factor of 5, $\pi$ (i.e., the proportion of 
 causal variants) initialized as 0.0001, $h^2$ initialized as 0.1,  and other default parameters. 
 NB this is a multivariate method. We used the implementation in the *qgg* R package.
 
@@ -85,7 +93,7 @@ This implies that the effects of the causal variants are equal across responses.
 
 ```{r equal effects, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_indep_resid"
-methodz <- c("mr_mash_rss", "mvbayesC", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesC", "bayesR")
 
 i <- 0
 
@@ -123,7 +131,7 @@ p_methods_shared <- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.51) +
-  scale_fill_manual(values = c("pink", "red", "green", "blue")) +
+  scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
@@ -146,7 +154,7 @@ and covariance matrix that achieves effects (with variance 1) to be present only
 
 ```{r mostly null, fig.height=10, fig.width=13}
 scenarioz <- "trait_1_only_effects_indep_resid"
-methodz <- c("mr_mash_rss", "mvbayesC", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesC", "bayesR")
 
 i <- 0
 
@@ -184,7 +192,7 @@ p_mostly_null <- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0.0, 0.51) +
-  scale_fill_manual(values = c("pink", "red", "green", "blue")) +
+  scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
@@ -209,7 +217,7 @@ traits 4-5.
 
 ```{r shared in subgroups, fig.height=10, fig.width=13}
 scenarioz <- "blocks_shared_effects_indep_resid"
-methodz <- c("mr_mash_rss", "mvbayesC", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesC", "bayesR")
 
 i <- 0
 
@@ -247,7 +255,7 @@ p_blocks_shared <- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.51) +
-  scale_fill_manual(values = c("pink", "red", "green", "blue")) +
+  scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   geom_hline(yintercept=0.3, linetype="dashed", linewidth=1, color = "black") +
@@ -273,7 +281,7 @@ per-trait genomic heritability was set to 0.2. In this scenario, $h^2$ was initi
 
 ```{r equal effects low pve, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_low_pve_indep_resid"
-methodz <- c("mr_mash_rss", "mvbayesC", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesC", "bayesR")
 
 i <- 0
 
@@ -311,7 +319,7 @@ p_methods_shared_lowpve <- ggplot(res, aes(x = trait, y = score, fill = method))
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.2) +
-  scale_fill_manual(values = c("pink", "red", "green", "blue")) +
+  scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.2, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
@@ -330,12 +338,12 @@ the multivariate methods outperform the univariate methods, with *mr.mash.rss* b
 In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0
 and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1.
 This implies that the effects of the causal variants are equal across responses. In addition, the 
-number of causal variants was set to 50,000. In this scenario, $\pi$ was initialized as 0.001 in 
-*BayesR* and *mvBayesC*.
+number of causal variants was set to 50,000. In this scenario, $\pi$ was initialized as 0.01 in 
+*BayesC*, *BayesR*, *mvBayesCrest*, and *mvBayesC*.
 
 ```{r equal effects poly filt, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_50000causal_indep_resid"
-methodz <- c("mr_mash_rss", "mvbayesC", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesC", "bayesR")
 
 i <- 0
 
@@ -373,7 +381,7 @@ p_methods_shared_lowpve <- ggplot(res, aes(x = trait, y = score, fill = method))
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.5) +
-  scale_fill_manual(values = c("pink", "red", "green", "blue")) +
+  scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
@@ -397,7 +405,7 @@ number of traits was increased to 10.
 
 ```{r equal effects 10 traits, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_10traits_indep_resid"
-methodz <- c("mr_mash_rss", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC_rest", "ldpred2_auto", "bayesC", "bayesR")
 
 i <- 0
 
@@ -438,7 +446,7 @@ p_methods_shared_10traits <- ggplot(res, aes(x = trait, y = score, fill = method
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.51) +
-  scale_fill_manual(values = c("pink", "red", "green", "blue")) +
+  scale_fill_manual(values = c("pink", "red", "yellow", "green", "lightblue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
