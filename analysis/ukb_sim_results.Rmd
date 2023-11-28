@@ -14,8 +14,7 @@ editor_options:
 library(ggplot2)
 library(cowplot)
 
-#repz <- 1:20
-repz <- c(1:7,9:20)
+repz <- 1:20
 prefix <- "output/prediction_accuracy/ukb_caucasian_white_british_unrel_100000"
 metric <- "r2"
 traitz <- 1:5
