@@ -32,8 +32,8 @@ snakemake \
   --latency-wait 120 \
   -k \
   --configfile ukb_sim_equal_effects_indep_resid.yaml
-  #--configfile ukb_sim_equal_effects_50000causal_indep_resid.yaml
-  #--configfile ukb_sim_equal_effects_10traits_indep_resid.yaml
   #--configfile ukb_sim_equal_effects_low_pve_indep_resid.yaml
   #--configfile ukb_sim_blocks_shared_effects_indep_resid.yaml
   #--configfile ukb_sim_trait_1_only_effects_indep_resid.yaml
+  #--configfile ukb_sim_equal_effects_50000causal_indep_resid.yaml
+  #--configfile ukb_sim_equal_effects_10traits_indep_resid.yaml
