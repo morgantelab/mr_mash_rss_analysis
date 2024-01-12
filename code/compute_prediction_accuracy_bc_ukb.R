@@ -161,6 +161,9 @@ for(i in chrs){
       model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_trait", j, "_", fold, ".rds"))
       
       if(model=="ldpred2_auto"){
+        
+        model_fit$elapsed_time <- NULL
+        
         ##Quality control over chains
         range_corr <- sapply(model_fit, function(auto) diff(range(auto$corr_est)))
         to_keep <- (range_corr > (0.95 * quantile(range_corr, 0.95, na.rm = TRUE)))
@@ -189,7 +192,7 @@ for(i in chrs){
   Bhat_all[[it]] <- Bhat
   
   if(model=="ldpred2_auto"){
-    saveRDS(Bhat, file=paste0("../output/estimated_effects/ukb_bc_chr", i, "_ldpred2_auto_effects_", fold, ".rds"))
+    saveRDS(Bhat, file=paste0("../output/estimated_effects/", prefix, "_chr", i, "_ldpred2_auto_effects_", fold, ".rds"))
   }
 
   ##Compute predictions
