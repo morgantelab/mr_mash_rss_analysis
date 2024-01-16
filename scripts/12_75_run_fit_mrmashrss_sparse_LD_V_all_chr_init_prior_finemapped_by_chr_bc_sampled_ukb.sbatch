@@ -31,7 +31,7 @@ Rscript ../code/fit_mrmashrss_ukb.R --sumstats ../output/summary_statistics/ukb_
                                     --LD_matrix ../data/LD_matrices/ukb_bc_chr"${CHR}"_LD_sparse_"${FOLD}".ld.bin \
                                     --pheno_cov ../output/misc/ukb_bc_sampled_phenotypic_cov_"${FOLD}".rds \
                                     --residual_cov ../output/misc/ukb_bc_sampled_chrAll_residual_cov_"${FOLD}".rds \
-                                    --data_driven_cov ../output/misc/ukb_bc_"${ED}"_prior_finemapped_"${FOLD}".rds \
+                                    --data_driven_cov ../output/misc/ukb_bc_sampled_"${ED}"_prior_finemapped_"${FOLD}".rds \
                                     --mu1_init ../output/estimated_effects/ukb_bc_sampled_chr"${CHR}"_ldpred2_auto_effects_"${FOLD}".rds \
                                     --canonical_cov FALSE \
                                     --n 60000 \
