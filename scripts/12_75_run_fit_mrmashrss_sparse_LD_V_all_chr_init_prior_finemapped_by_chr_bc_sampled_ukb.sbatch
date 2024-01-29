@@ -3,7 +3,7 @@
 #SBATCH --job-name=run_fit_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped_by_chr_bc_sampled_ukb
 #SBATCH --cpus-per-task=4
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
-#SBATCH --time=96:00:00
+#SBATCH --time=120:00:00
 #SBATCH --mem=250G
 #SBATCH --output=run_fit_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped_by_chr_bc_sampled_ukb.%j.out
 #SBATCH --error=run_fit_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped_by_chr_bc_sampled_ukb.%j.err
