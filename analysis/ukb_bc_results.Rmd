@@ -15,6 +15,7 @@ library(ggplot2)
 library(cowplot)
 
 prefix <- "output/prediction_accuracy/ukb_bc"
+prefix_2 <- "output/prediction_accuracy/ukb_bc_sampled"
 ```
 
 ## Introduction
@@ -61,13 +62,17 @@ as the sample covariance using the individual-level data. NB this is a multivari
 * _mr.mash.rss_ per-chromosome, as above, but posterior mean of regression coeffcients initialized using the 
 estimates from *LDpred2*. NB this is a multivariate method.
 
+* _mr.mash.rss_ per-chromosome, as above, but posterior mean of regression coeffcients initialized using the 
+estimates from *LDpred2*, and using finemapped variants (via SuSiE-RSS) to compute the data-driven covariance
+matrices. NB this is a multivariate method.
+
 Prediction accuracy was evaluated as the $R^2$ of the regression of (quantile normalized) true phenotypes 
 on the predicted phenotypes in the test set. This metric as the attractive property that its upper bound 
 is $h_g^2$. Here we report the results for each fold.
 
-## Results
+## Results with 244K individuals
 
-```{r results_accuracy, fig.height=10, fig.width=13}
+```{r results_244K_accuracy, fig.height=10, fig.width=13}
 dat_ldsc <- matrix(as.numeric(NA), 5, 16)
 
 for(i in 1:5){
@@ -132,11 +137,11 @@ p_methods_shared <- ggplot(res, aes(x = trait, y = r2, fill = method)) +
 print(p_methods_shared)
 ```
 
-The percentage change in $R^2$ of *mr.mash.rss init* over *LDpred2* by trait is: 
+<!-- The percentage change in $R^2$ of *mr.mash.rss init* over *LDpred2* by trait is:  -->
 
-```{r perc_change}
-perc_change
-```
+<!-- ```{r perc_change} -->
+<!-- perc_change -->
+<!-- ``` -->
 
 The percentage change in $R^2$ of *mr.mash.rss init prior* over *LDpred2* by trait is: 
 
@@ -144,10 +149,78 @@ The percentage change in $R^2$ of *mr.mash.rss init prior* over *LDpred2* by tra
 perc_change_fm_prior
 ```
 
-The overall percentage change in $R^2$ of *mr.mash.rss init* over *LDpred2* across traits is `r mean(perc_change)`.
+<!-- The overall percentage change in $R^2$ of *mr.mash.rss init* over *LDpred2* across traits is `r mean(perc_change)`. -->
 
 The overall percentage change in $R^2$ of *mr.mash.rss init prior* over *LDpred2* across traits is `r mean(perc_change_fm_prior)`.
 
-The results show that *mr.mash.rss init* improves accuracy over *LDpred2* for all but two traits. However,
-in those two traits the performance is very similar. In general, the improvement in performance is in line with
+The results show that *mr.mash.rss init* improves accuracy over *LDpred2* for all but one trait. However,
+in that trait the performance is very similar. In general, the improvement in performance is in line with
 other papers such as the [PRS-CS paper](https://www.nature.com/articles/s41467-019-09718-5).
+
+
+## Results with 75K individuals
+
+We hypothesized that the advantage of a multivariate analysis would be more pronounced with a smaller sample
+size. Thus, we randomly sampled 75,000 individuals from the 244,000 and repeated the analyses above.
+
+```{r results_75K_accuracy, fig.height=10, fig.width=13}
+dat_ldsc <- matrix(as.numeric(NA), 5, 16)
+
+for(i in 1:5){
+  if(i>1){
+    dat_mrmash_init_fm_prior <- rbind(dat_mrmash_init_fm_prior, readRDS(paste0(prefix_2, "_mr_mash_rss_sparse_LD_V_all_chr_init_prior_finemapped_pred_acc_", i, ".rds"))$r2)
+    dat_ldpred2 <- rbind(dat_ldpred2, readRDS(paste0(prefix_2, "_ldpred2_auto_pred_acc_", i, ".rds"))$r2)
+  } else {
+    dat_mrmash_init_fm_prior <- readRDS(paste0(prefix_2, "_mr_mash_rss_sparse_LD_V_all_chr_init_prior_finemapped_pred_acc_", i, ".rds"))$r2
+    dat_ldpred2 <- readRDS(paste0(prefix_2, "_ldpred2_auto_pred_acc_", i, ".rds"))$r2
+  }
+}
+
+means_mrmash_init_fm_prior <- colMeans(dat_mrmash_init_fm_prior)
+means_ldpred2 <- colMeans(dat_ldpred2)
+
+perc_change_fm_prior <- ((means_mrmash_init_fm_prior-means_ldpred2)/means_ldpred2)*100
+
+pheno <- readRDS("data/phenotypes/ukb_cleaned_bc_adjusted_pheno_test_1.rds")
+
+names(perc_change_fm_prior) <- colnames(pheno)
+
+r2 <- c(as.vector(dat_mrmash_init_fm_prior), as.vector(dat_ldpred2))
+method <- rep(c("mr_mash_rss_init_fm_prior", "ldpred2_auto"), each=80)
+trait <- rep(colnames(pheno), each=5)
+
+res <- data.frame(method, trait, r2)
+
+res <- res[which(res$method %in% c("ldpred2_auto", "mr_mash_rss_init_fm_prior")), ]
+
+res <- transform(res,
+                 method=factor(method, levels=c("ldpred2_auto", "mr_mash_rss_init_fm_prior"),
+                               labels=c("LDpred2", "mr.mash.rss init prior")),
+                 trait=factor(trait))
+
+p_methods_shared <- ggplot(res, aes(x = trait, y = r2, fill = method)) +
+  geom_boxplot(color = "black", outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom="point", shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = "single")) +
+  scale_fill_manual(values = c("pink", "blue")) +
+  labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") + 
+  # facet_grid(~trait, scales="free_x") +
+  # geom_hline(aes(yintercept = h2), linez) +
+  theme_cowplot(font_size = 18) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+print(p_methods_shared)
+```
+
+The percentage change in $R^2$ of *mr.mash.rss init prior* over *LDpred2* by trait is: 
+
+```{r perc_change_fm_prior_75K}
+perc_change_fm_prior
+```
+
+The overall percentage change in $R^2$ of *mr.mash.rss init prior* over *LDpred2* across traits is `r mean(perc_change_fm_prior)`.
+
+The results show that *mr.mash.rss init* improves accuracy over *LDpred2* more substantially with a smaller
+sample size, highlighting the scenario where a multivariate analysis is really advantageous.
+
