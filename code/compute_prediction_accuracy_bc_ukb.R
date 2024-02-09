@@ -142,7 +142,9 @@ for(i in chrs){
   
   if(model %in% c("mr_mash_rss", "mr_mash_rss_sparse_LD", "mr_mash_rss_sparse_LD_mvsusie_paper_prior",
                   "mr_mash_rss_sparse_LD_V_all_chr", "mr_mash_rss_sparse_LD_V_all_chr_init",
-                  "mr_mash_rss_sparse_LD_Vcor_all_chr_init", "mr_mash_rss_sparse_LD_V_all_chr_init_prior_finemapped")){
+                  "mr_mash_rss_sparse_LD_Vcor_all_chr_init", "mr_mash_rss_sparse_LD_V_all_chr_init_prior_finemapped",
+                  "mr_mash_rss_sparse_LD_V_all_chr_ldpred2_auto_init_prior_finemapped",
+                  "mr_mash_rss_sparse_LD_V_all_chr_bayesR_init_prior_finemapped")){
     ##Read in model fit
     model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_", fold, ".rds"))
     
@@ -193,6 +195,10 @@ for(i in chrs){
   
   if(model=="ldpred2_auto"){
     saveRDS(Bhat, file=paste0("../output/estimated_effects/", prefix, "_chr", i, "_ldpred2_auto_effects_", fold, ".rds"))
+  }
+  
+  if(model=="bayesR"){
+    saveRDS(Bhat, file=paste0("../output/estimated_effects/", prefix, "_chr", i, "_bayesR_effects_", fold, ".rds"))
   }
 
   ##Compute predictions
