@@ -3,8 +3,8 @@
 #SBATCH --job-name=run_fit_bayesR_by_chr_and_trait_bc_ukb
 #SBATCH --cpus-per-task=1
 #SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
-#SBATCH --time=96:00:00
-#SBATCH --mem=310G
+#SBATCH --time=24:00:00
+#SBATCH --mem=15G
 #SBATCH --output=run_fit_bayesR_by_chr_and_trait_bc_ukb.%j.out
 #SBATCH --error=run_fit_bayesR_by_chr_and_trait_bc_ukb.%j.err
 
@@ -20,7 +20,6 @@ export OMP_NUM_THREADS=1
 CHR="${SLURM_ARRAY_TASK_ID}"
 
 ###Set some variables
-H2_INIT=0.01
 FOLD=${1}
 TRAIT=${2}
 
@@ -28,19 +27,14 @@ TRAIT=${2}
 echo "Start analyzing trait ${TRAIT}, chromosome ${CHR} and fold ${FOLD} ..."
 
 Rscript ../code/fit_qgg_sbayes_ukb.R --sumstats ../output/summary_statistics/ukb_bc_chr"${CHR}"_sumstats_"${FOLD}".rds \
-                                      --LD_matrix ../data/LD_matrices/ukb_bc_chr"${CHR}"_LD_"${FOLD}".ld.bin \
+                                      --LD_matrix ../data/LD_matrices/ukb_bc_chr"${CHR}"_LD_sparse_"${FOLD}".ld.bin \
                                       --n 195239 \
                                       --method bayesR \
-                                      --h2 "${H2_INIT}" \
-                                      --nburn 15000 \
-                                      --nit 25000 \
-                                      --nub 4 \
-                                      --nue 4 \
-                                      --updateB TRUE \
-                                      --updateE TRUE \
-                                      --updatePi TRUE \
-                                      --updateG TRUE \
-                                      --adjustE TRUE \
+                                      --h2 0.1 \
+                                      --pi 0.0001 \
+                                      --nburn 1000 \
+                                      --nit 5000 \
+                                      --nthin 5 \
                                       --trait ${TRAIT} \
                                       --seed ${FOLD} \
                                       --output ../output/bayesR_fit/ukb_bc_chr"${CHR}"_bayesR_fit_trait"${TRAIT}"_"${FOLD}".rds
