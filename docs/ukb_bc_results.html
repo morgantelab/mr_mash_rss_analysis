@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree9383eec5b7094e531fe07800531ea3103b8e4e44targetblank9383eeca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree53c26a18073bf5137ca3d089c0b614efef1e9a98targetblank53c26a1a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/9383eec5b7094e531fe07800531ea3103b8e4e44" target="_blank">9383eec</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/53c26a18073bf5137ca3d089c0b614efef1e9a98" target="_blank">53c26a1</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree9383eec5b7094e531fe07800531ea3103b8e4e44targetblank9383eeca"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree53c26a18073bf5137ca3d089c0b614efef1e9a98targetblank53c26a1a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/9383eec5b7094e531fe07800531ea3103b8e4e44" target="_blank">9383eec</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/53c26a18073bf5137ca3d089c0b614efef1e9a98" target="_blank">53c26a1</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -638,6 +638,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/53c26a18073bf5137ca3d089c0b614efef1e9a98/analysis/ukb_bc_results.Rmd" target="_blank">53c26a1</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-02-13
+</td>
+<td>
+Minor change
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/98405f207cf141c10a92543804cfb8a5d693257a/docs/ukb_bc_results.html" target="_blank">98405f2</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-02-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1180,12 +1214,12 @@ trait &lt;- rep(colnames(pheno), each=5)
 
 res &lt;- data.frame(method, trait, r2)
 
-res &lt;- res[which(res$method %in% c(&quot;bayesR&quot;, &quot;ldpred2_auto&quot;, &quot;mr_mash_rss&quot;, &quot;mr_mash_rss_init&quot;, &quot;mr_mash_rss_init_fm_prior&quot;)), ]
+#res &lt;- res[which(res$method %in% c(&quot;bayesR&quot;, &quot;ldpred2_auto&quot;, &quot;mr_mash_rss&quot;, &quot;mr_mash_rss_init&quot;, &quot;mr_mash_rss_init_fm_prior&quot;)), ]
+res &lt;- res[which(res$method %in% c(&quot;bayesR&quot;, &quot;ldpred2_auto&quot;, &quot;mr_mash_rss_init_fm_prior&quot;)), ]
 
 res &lt;- transform(res,
-                 method=factor(method, levels=c(&quot;bayesR&quot;, &quot;ldpred2_auto&quot;, 
-                                                &quot;mr_mash_rss&quot;, &quot;mr_mash_rss_init&quot;, &quot;mr_mash_rss_init_fm_prior&quot;),
-                               labels=c(&quot;BayesR&quot;, &quot;LDpred2&quot;, &quot;mr.mash.rss&quot;, &quot;mr.mash.rss init&quot;, &quot;mr.mash.rss init prior&quot;)),
+                 method=factor(method, levels=c(&quot;bayesR&quot;, &quot;ldpred2_auto&quot;, &quot;mr_mash_rss_init_fm_prior&quot;),
+                               labels=c(&quot;BayesR&quot;, &quot;LDpred2&quot;, &quot;mr.mash.rss init prior&quot;)),
                  trait=factor(trait))
 
 p_methods_shared &lt;- ggplot(res, aes(x = trait, y = r2, fill = method)) +
@@ -1193,7 +1227,7 @@ p_methods_shared &lt;- ggplot(res, aes(x = trait, y = r2, fill = method)) +
   stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;green&quot;, &quot;orange&quot;, &quot;blue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;green&quot;, &quot;orange&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) + 
   # facet_grid(~trait, scales=&quot;free_x&quot;) +
   # geom_hline(aes(yintercept = h2), linez) +
@@ -1224,6 +1258,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/98405f207cf141c10a92543804cfb8a5d693257a/docs/figure/ukb_bc_results.Rmd/results_244K_accuracy-1.png" target="_blank">98405f2</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-02-13
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/60889dd871514919b74d43907d52d9ee47e06821/docs/figure/ukb_bc_results.Rmd/results_244K_accuracy-1.png" target="_blank">60889dd</a>
@@ -1340,6 +1385,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/98405f207cf141c10a92543804cfb8a5d693257a/docs/figure/ukb_bc_results.Rmd/results_75K_accuracy-1.png" target="_blank">98405f2</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-02-13
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/60889dd871514919b74d43907d52d9ee47e06821/docs/figure/ukb_bc_results.Rmd/results_75K_accuracy-1.png" target="_blank">60889dd</a>
