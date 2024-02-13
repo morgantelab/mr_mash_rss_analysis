@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree53c26a18073bf5137ca3d089c0b614efef1e9a98targetblank53c26a1a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreecae9684371f81f2148aee19603734a54dfd779a1targetblankcae9684a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/53c26a18073bf5137ca3d089c0b614efef1e9a98" target="_blank">53c26a1</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/cae9684371f81f2148aee19603734a54dfd779a1" target="_blank">cae9684</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree53c26a18073bf5137ca3d089c0b614efef1e9a98targetblank53c26a1a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistreecae9684371f81f2148aee19603734a54dfd779a1targetblankcae9684a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/53c26a18073bf5137ca3d089c0b614efef1e9a98" target="_blank">53c26a1</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/cae9684371f81f2148aee19603734a54dfd779a1" target="_blank">cae9684</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -638,6 +638,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/cae9684371f81f2148aee19603734a54dfd779a1/analysis/ukb_bc_results.Rmd" target="_blank">cae9684</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-02-13
+</td>
+<td>
+Update description
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/106e7db84f7e86efca11837af1a89abe928a4af8/docs/ukb_bc_results.html" target="_blank">106e7db</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-02-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1129,33 +1163,37 @@ href="https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1">mvSuSiE
 paper</a>.</p>
 <p>Two different methods were fitted to the summary statistics:</p>
 <ul>
-<li><p><a
+<li><a
 href="https://academic.oup.com/bioinformatics/article/36/22-23/5424/6039173">LDpred2</a>
 per-chromosome with the auto option, 1000 iterations (after 500 burn-in
 iterations), <span class="math inline">\(h^2\)</span> initialized using
 an estimate from LD Score regression (LDSC) and <span
 class="math inline">\(p\)</span> initialized using the same grid as in
-the original paper. NB this is a univariate method.</p></li>
-<li><p><em>mr.mash.rss</em> per-chromosome, with both canonical and
-data-driven covariance matrices computed as described in the <a
-href="https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1">mvSuSiE
-paper</a>, updating the (full rank) residual covariance and the mixture
-weights, without standardizing the variables. The residual covariance
-was initialized as in the <a
-href="https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1">mvSuSiE
-paper</a> and the mixture weights were initialized as 90% of the weight
-on the null component and 10% of the weight split equally across the
-remaining components. The phenotypic covariance was computed as the
-sample covariance using the individual-level data. NB this is a
-multivariate method.</p></li>
-<li><p><em>mr.mash.rss</em> per-chromosome, as above, but posterior mean
-of regression coeffcients initialized using the estimates from
-<em>LDpred2</em>. NB this is a multivariate method.</p></li>
-<li><p><em>mr.mash.rss</em> per-chromosome, as above, but posterior mean
-of regression coeffcients initialized using the estimates from
+the original paper. NB this is a univariate method.</li>
+<li><a
+href="https://www.nature.com/articles/s41467-019-12653-0">BayesR</a>
+per-chromosome, with 5000 iterations, 1000 burn-in iterations, thinning
+factor of 5, <span class="math inline">\(\pi\)</span> (i.e., the
+proportion of causal variants) initialized as 0.0001, <span
+class="math inline">\(h^2\)</span> initialized as 0.1, and other default
+parameters. NB this is a univariate method. We used the implementation
+in the <em>qgg</em> R package.</li>
+</ul>
+<!-- * _mr.mash.rss_ per-chromosome, with both canonical and data-driven covariance matrices computed  -->
+<!-- as described in the [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1), -->
+<!-- updating the (full rank) residual covariance and the mixture weights, without standardizing the variables.  -->
+<!-- The residual covariance was initialized as in the [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1) -->
+<!-- and the mixture weights were initialized as 90\% of the weight on the null component and 10\% of the -->
+<!-- weight split equally across the remaining components. The phenotypic covariance was computed -->
+<!-- as the sample covariance using the individual-level data. NB this is a multivariate method. -->
+<!-- * _mr.mash.rss_ per-chromosome, as above, but posterior mean of regression coeffcients initialized using the  -->
+<!-- estimates from *LDpred2*. NB this is a multivariate method. -->
+<ul>
+<li><em>mr.mash.rss</em> per-chromosome, as above, but posterior mean of
+regression coeffcients initialized using the estimates from
 <em>LDpred2</em>, and using finemapped variants (via SuSiE-RSS) to
 compute the data-driven covariance matrices. NB this is a multivariate
-method.</p></li>
+method.</li>
 </ul>
 <p>Prediction accuracy was evaluated as the <span
 class="math inline">\(R^2\)</span> of the regression of (quantile
@@ -1258,6 +1296,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/106e7db84f7e86efca11837af1a89abe928a4af8/docs/figure/ukb_bc_results.Rmd/results_244K_accuracy-1.png" target="_blank">106e7db</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-02-13
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/98405f207cf141c10a92543804cfb8a5d693257a/docs/figure/ukb_bc_results.Rmd/results_244K_accuracy-1.png" target="_blank">98405f2</a>
