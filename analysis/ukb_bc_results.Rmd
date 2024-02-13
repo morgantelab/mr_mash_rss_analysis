@@ -121,12 +121,12 @@ trait <- rep(colnames(pheno), each=5)
 
 res <- data.frame(method, trait, r2)
 
-res <- res[which(res$method %in% c("bayesR", "ldpred2_auto", "mr_mash_rss", "mr_mash_rss_init", "mr_mash_rss_init_fm_prior")), ]
+#res <- res[which(res$method %in% c("bayesR", "ldpred2_auto", "mr_mash_rss", "mr_mash_rss_init", "mr_mash_rss_init_fm_prior")), ]
+res <- res[which(res$method %in% c("bayesR", "ldpred2_auto", "mr_mash_rss_init_fm_prior")), ]
 
 res <- transform(res,
-                 method=factor(method, levels=c("bayesR", "ldpred2_auto", 
-                                                "mr_mash_rss", "mr_mash_rss_init", "mr_mash_rss_init_fm_prior"),
-                               labels=c("BayesR", "LDpred2", "mr.mash.rss", "mr.mash.rss init", "mr.mash.rss init prior")),
+                 method=factor(method, levels=c("bayesR", "ldpred2_auto", "mr_mash_rss_init_fm_prior"),
+                               labels=c("BayesR", "LDpred2", "mr.mash.rss init prior")),
                  trait=factor(trait))
 
 p_methods_shared <- ggplot(res, aes(x = trait, y = r2, fill = method)) +
@@ -134,7 +134,7 @@ p_methods_shared <- ggplot(res, aes(x = trait, y = r2, fill = method)) +
   stat_summary(fun=mean, geom="point", shape=23,
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
-  scale_fill_manual(values = c("pink", "red", "green", "orange", "blue")) +
+  scale_fill_manual(values = c("pink", "red", "blue", "green", "orange")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") + 
   # facet_grid(~trait, scales="free_x") +
   # geom_hline(aes(yintercept = h2), linez) +
