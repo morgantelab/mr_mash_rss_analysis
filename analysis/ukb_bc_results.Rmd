@@ -50,17 +50,20 @@ Two different methods were fitted to the summary statistics:
 the auto option, 1000 iterations (after 500 burn-in iterations), $h^2$ initialized using an estimate from 
 LD Score regression (LDSC) and $p$ initialized using the same grid as in the original paper. 
 NB this is a univariate method.
+* [BayesR](https://www.nature.com/articles/s41467-019-12653-0) per-chromosome, with 5000 iterations, 
+1000 burn-in iterations, thinning factor of 5, $\pi$ (i.e., the proportion of causal variants) 
+initialized as 0.0001, $h^2$ initialized as 0.1, and other default parameters. NB this is a univariate method. 
+We used the implementation in the *qgg* R package.
 
-* _mr.mash.rss_ per-chromosome, with both canonical and data-driven covariance matrices computed 
-as described in the [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1),
-updating the (full rank) residual covariance and the mixture weights, without standardizing the variables. 
-The residual covariance was initialized as in the [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1)
-and the mixture weights were initialized as 90\% of the weight on the null component and 10\% of the
-weight split equally across the remaining components. The phenotypic covariance was computed
-as the sample covariance using the individual-level data. NB this is a multivariate method.
-
-* _mr.mash.rss_ per-chromosome, as above, but posterior mean of regression coeffcients initialized using the 
-estimates from *LDpred2*. NB this is a multivariate method.
+<!-- * _mr.mash.rss_ per-chromosome, with both canonical and data-driven covariance matrices computed  -->
+<!-- as described in the [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1), -->
+<!-- updating the (full rank) residual covariance and the mixture weights, without standardizing the variables.  -->
+<!-- The residual covariance was initialized as in the [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1) -->
+<!-- and the mixture weights were initialized as 90\% of the weight on the null component and 10\% of the -->
+<!-- weight split equally across the remaining components. The phenotypic covariance was computed -->
+<!-- as the sample covariance using the individual-level data. NB this is a multivariate method. -->
+<!-- * _mr.mash.rss_ per-chromosome, as above, but posterior mean of regression coeffcients initialized using the  -->
+<!-- estimates from *LDpred2*. NB this is a multivariate method. -->
 
 * _mr.mash.rss_ per-chromosome, as above, but posterior mean of regression coeffcients initialized using the 
 estimates from *LDpred2*, and using finemapped variants (via SuSiE-RSS) to compute the data-driven covariance
