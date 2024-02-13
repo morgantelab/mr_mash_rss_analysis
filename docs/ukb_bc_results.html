@@ -11,7 +11,7 @@
 
 <meta name="author" content="Fabio Morgante &amp; Deborah Kunkel" />
 
-<meta name="date" content="2024-02-04" />
+<meta name="date" content="2024-02-13" />
 
 <title>Analysis of blood cell traits in UK Biobank</title>
 
@@ -374,7 +374,7 @@ div.tocify {
 <h1 class="title toc-ignore">Analysis of blood cell traits in UK
 Biobank</h1>
 <h4 class="author">Fabio Morgante &amp; Deborah Kunkel</h4>
-<h4 class="date">February 04, 2024</h4>
+<h4 class="date">February 13, 2024</h4>
 
 </div>
 
@@ -403,7 +403,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-02-04
+<strong>Last updated:</strong> 2024-02-13
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree36dc3cfd44741d8dc17962ba00b2850bf7065669targetblank36dc3cfa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree9383eec5b7094e531fe07800531ea3103b8e4e44targetblank9383eeca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/36dc3cfd44741d8dc17962ba00b2850bf7065669" target="_blank">36dc3cf</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/9383eec5b7094e531fe07800531ea3103b8e4e44" target="_blank">9383eec</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree36dc3cfd44741d8dc17962ba00b2850bf7065669targetblank36dc3cfa"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree9383eec5b7094e531fe07800531ea3103b8e4e44targetblank9383eeca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/36dc3cfd44741d8dc17962ba00b2850bf7065669" target="_blank">36dc3cf</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/9383eec5b7094e531fe07800531ea3103b8e4e44" target="_blank">9383eec</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -590,6 +590,9 @@ Untracked files:
     Untracked:  scripts/7_run_compute_residual_cor_all_chr_bc_ukb.sbatch
     Untracked:  scripts/run_adjust_LD_test.sbatch
     Untracked:  scripts/run_fit_kriging_rss_by_chr_and_trait_bc_ukb.sbatch
+
+Unstaged changes:
+    Modified:   scripts/12_75_run_fit_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped_by_chr_bc_sampled_ukb.sbatch
 
 </code></pre>
 <p>
@@ -635,6 +638,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/9383eec5b7094e531fe07800531ea3103b8e4e44/analysis/ukb_bc_results.Rmd" target="_blank">9383eec</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-02-13
+</td>
+<td>
+Add BayesR results with small sample size
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/adb9a12b1fa3c4419cf04ff5536785aad04c615c/analysis/ukb_bc_results.Rmd" target="_blank">adb9a12</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-02-09
+</td>
+<td>
+Allow for mr.mash.rss to be initialized using any other method
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/60889dd871514919b74d43907d52d9ee47e06821/docs/ukb_bc_results.html" target="_blank">60889dd</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-02-04
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1090,11 +1144,13 @@ for(i in 1:5){
     dat_mrmash_init &lt;- rbind(dat_mrmash_init, readRDS(paste0(prefix, &quot;_mr_mash_rss_sparse_LD_V_all_chr_init_pred_acc_&quot;, i, &quot;.rds&quot;))$r2)
     dat_mrmash_init_fm_prior &lt;- rbind(dat_mrmash_init_fm_prior, readRDS(paste0(prefix, &quot;_mr_mash_rss_sparse_LD_V_all_chr_init_prior_finemapped_pred_acc_&quot;, i, &quot;.rds&quot;))$r2)
     dat_ldpred2 &lt;- rbind(dat_ldpred2, readRDS(paste0(prefix, &quot;_ldpred2_auto_pred_acc_&quot;, i, &quot;.rds&quot;))$r2)
+    dat_bayesR &lt;- rbind(dat_bayesR, readRDS(paste0(prefix, &quot;_bayesR_pred_acc_&quot;, i, &quot;.rds&quot;))$r2)
   } else {
     dat_mrmash &lt;- readRDS(paste0(prefix, &quot;_mr_mash_rss_sparse_LD_V_all_chr_pred_acc_&quot;, i, &quot;.rds&quot;))$r2
     dat_mrmash_init &lt;- readRDS(paste0(prefix, &quot;_mr_mash_rss_sparse_LD_V_all_chr_init_pred_acc_&quot;, i, &quot;.rds&quot;))$r2
     dat_mrmash_init_fm_prior &lt;- readRDS(paste0(prefix, &quot;_mr_mash_rss_sparse_LD_V_all_chr_init_prior_finemapped_pred_acc_&quot;, i, &quot;.rds&quot;))$r2
     dat_ldpred2 &lt;- readRDS(paste0(prefix, &quot;_ldpred2_auto_pred_acc_&quot;, i, &quot;.rds&quot;))$r2
+    dat_bayesR &lt;- readRDS(paste0(prefix, &quot;_bayesR_pred_acc_&quot;, i, &quot;.rds&quot;))$r2
   }
 }
 
@@ -1102,29 +1158,34 @@ means_mrmash &lt;- colMeans(dat_mrmash)
 means_mrmash_init &lt;- colMeans(dat_mrmash_init)
 means_mrmash_init_fm_prior &lt;- colMeans(dat_mrmash_init_fm_prior)
 means_ldpred2 &lt;- colMeans(dat_ldpred2)
+means_bayesR &lt;- colMeans(dat_bayesR)
 
 perc_change &lt;- ((means_mrmash_init-means_ldpred2)/means_ldpred2)*100
 perc_change_fm_prior &lt;- ((means_mrmash_init_fm_prior-means_ldpred2)/means_ldpred2)*100
+perc_change_bayesR_fm_prior &lt;- ((means_mrmash_init_fm_prior-means_bayesR)/means_bayesR)*100
 
 pheno &lt;- readRDS(&quot;data/phenotypes/ukb_cleaned_bc_adjusted_pheno_test_1.rds&quot;)
 
 names(perc_change) &lt;- colnames(pheno)
 names(perc_change_fm_prior) &lt;- colnames(pheno)
+names(perc_change_bayesR_fm_prior) &lt;- colnames(pheno)
 
 linez &lt;- data.frame(trait=colnames(pheno),
                     h2=colMeans(dat_ldsc))
 
-r2 &lt;- c(as.vector(dat_mrmash), as.vector(dat_mrmash_init), as.vector(dat_mrmash_init_fm_prior), as.vector(dat_ldpred2))
-method &lt;- rep(c(&quot;mr_mash_rss&quot;, &quot;mr_mash_rss_init&quot;, &quot;mr_mash_rss_init_fm_prior&quot;, &quot;ldpred2_auto&quot;), each=80)
+r2 &lt;- c(as.vector(dat_mrmash), as.vector(dat_mrmash_init), as.vector(dat_mrmash_init_fm_prior), 
+        as.vector(dat_ldpred2), as.vector(dat_bayesR))
+method &lt;- rep(c(&quot;mr_mash_rss&quot;, &quot;mr_mash_rss_init&quot;, &quot;mr_mash_rss_init_fm_prior&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;), each=80)
 trait &lt;- rep(colnames(pheno), each=5)
 
 res &lt;- data.frame(method, trait, r2)
 
-res &lt;- res[which(res$method %in% c(&quot;ldpred2_auto&quot;, &quot;mr_mash_rss&quot;, &quot;mr_mash_rss_init&quot;, &quot;mr_mash_rss_init_fm_prior&quot;)), ]
+res &lt;- res[which(res$method %in% c(&quot;bayesR&quot;, &quot;ldpred2_auto&quot;, &quot;mr_mash_rss&quot;, &quot;mr_mash_rss_init&quot;, &quot;mr_mash_rss_init_fm_prior&quot;)), ]
 
 res &lt;- transform(res,
-                 method=factor(method, levels=c(&quot;ldpred2_auto&quot;, &quot;mr_mash_rss&quot;, &quot;mr_mash_rss_init&quot;, &quot;mr_mash_rss_init_fm_prior&quot;),
-                               labels=c(&quot;LDpred2&quot;, &quot;mr.mash.rss&quot;, &quot;mr.mash.rss init&quot;, &quot;mr.mash.rss init prior&quot;)),
+                 method=factor(method, levels=c(&quot;bayesR&quot;, &quot;ldpred2_auto&quot;, 
+                                                &quot;mr_mash_rss&quot;, &quot;mr_mash_rss_init&quot;, &quot;mr_mash_rss_init_fm_prior&quot;),
+                               labels=c(&quot;BayesR&quot;, &quot;LDpred2&quot;, &quot;mr.mash.rss&quot;, &quot;mr.mash.rss init&quot;, &quot;mr.mash.rss init prior&quot;)),
                  trait=factor(trait))
 
 p_methods_shared &lt;- ggplot(res, aes(x = trait, y = r2, fill = method)) +
@@ -1132,7 +1193,7 @@ p_methods_shared &lt;- ggplot(res, aes(x = trait, y = r2, fill = method)) +
   stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;green&quot;, &quot;blue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;green&quot;, &quot;orange&quot;, &quot;blue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) + 
   # facet_grid(~trait, scales=&quot;free_x&quot;) +
   # geom_hline(aes(yintercept = h2), linez) +
@@ -1141,69 +1202,106 @@ p_methods_shared &lt;- ggplot(res, aes(x = trait, y = r2, fill = method)) +
 
 print(p_methods_shared)</code></pre>
 <p><img src="figure/ukb_bc_results.Rmd/results_244K_accuracy-1.png" width="1248" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-results_244K_accuracy-1">
+Past versions of results_244K_accuracy-1.png
+</button>
+</p>
+<div id="fig-results_244K_accuracy-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/60889dd871514919b74d43907d52d9ee47e06821/docs/figure/ukb_bc_results.Rmd/results_244K_accuracy-1.png" target="_blank">60889dd</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-02-04
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <!-- The percentage change in $R^2$ of *mr.mash.rss init* over *LDpred2* by trait is:  -->
 <!-- ```{r perc_change} -->
 <!-- perc_change -->
 <!-- ``` -->
 <p>The percentage change in <span class="math inline">\(R^2\)</span> of
-<em>mr.mash.rss init prior</em> over <em>LDpred2</em> by trait is:</p>
-<pre class="r"><code>perc_change_fm_prior</code></pre>
+<em>mr.mash.rss init prior</em> over <em>BayesR</em> by trait is:</p>
+<pre class="r"><code>perc_change_bayesR_fm_prior</code></pre>
 <pre><code>        WBC_count         RBC_count       Haemoglobin               MCV 
-        2.4241474         2.5306770         0.3568875         2.3379550 
+        1.0764560         1.0705411        -1.3652685         1.3731148 
               RDW    Platelet_count      Plateletcrit               PDW 
-        4.7172863         2.0194201         1.6206067         1.7425206 
+        3.1868160         1.1206196         0.5615176         0.6856654 
   Lymphocyte_perc     Monocyte_perc  Neutrophill_perc  Eosinophill_perc 
-        7.0857193         3.0207773        10.0738061        -0.9699018 
+        5.2227381         1.0893654         7.4217879        -2.2419269 
    Basophill_perc Reticulocyte_perc              MSCV          HLR_perc 
-       31.7807615         6.2438722         6.3090459         4.1308564 </code></pre>
+       13.0740144         3.4547098         4.6498409         1.4944277 </code></pre>
 <!-- The overall percentage change in $R^2$ of *mr.mash.rss init* over *LDpred2* across traits is 5.1217612. -->
 <p>The overall percentage change in <span
 class="math inline">\(R^2\)</span> of <em>mr.mash.rss init prior</em>
-over <em>LDpred2</em> across traits is 5.3390273.</p>
-<p>The results show that <em>mr.mash.rss init</em> improves accuracy
-over <em>LDpred2</em> for all but one trait. However, in that trait the
-performance is very similar. In general, the improvement in performance
-is in line with other papers such as the <a
-href="https://www.nature.com/articles/s41467-019-09718-5">PRS-CS
-paper</a>.</p>
+over <em>BayesR</em> across traits is 2.6171512.</p>
+<!-- The results show that *mr.mash.rss init* improves accuracy over *LDpred2* for all but one trait. However, -->
+<!-- in that trait the performance is very similar. In general, the improvement in performance is in line with -->
+<!-- other papers such as the [PRS-CS paper](https://www.nature.com/articles/s41467-019-09718-5). -->
 </div>
 <div id="results-with-75k-individuals" class="section level2">
 <h2>Results with 75K individuals</h2>
 <p>We hypothesized that the advantage of a multivariate analysis would
 be more pronounced with a smaller sample size. Thus, we randomly sampled
 75,000 individuals from the 244,000 and repeated the analyses above.</p>
-<pre class="r"><code>dat_ldsc &lt;- matrix(as.numeric(NA), 5, 16)
-
-for(i in 1:5){
+<pre class="r"><code>for(i in 1:5){
   if(i&gt;1){
     dat_mrmash_init_fm_prior &lt;- rbind(dat_mrmash_init_fm_prior, readRDS(paste0(prefix_2, &quot;_mr_mash_rss_sparse_LD_V_all_chr_init_prior_finemapped_pred_acc_&quot;, i, &quot;.rds&quot;))$r2)
     dat_ldpred2 &lt;- rbind(dat_ldpred2, readRDS(paste0(prefix_2, &quot;_ldpred2_auto_pred_acc_&quot;, i, &quot;.rds&quot;))$r2)
+    dat_bayesR &lt;- rbind(dat_bayesR, readRDS(paste0(prefix_2, &quot;_bayesR_pred_acc_&quot;, i, &quot;.rds&quot;))$r2)
   } else {
     dat_mrmash_init_fm_prior &lt;- readRDS(paste0(prefix_2, &quot;_mr_mash_rss_sparse_LD_V_all_chr_init_prior_finemapped_pred_acc_&quot;, i, &quot;.rds&quot;))$r2
     dat_ldpred2 &lt;- readRDS(paste0(prefix_2, &quot;_ldpred2_auto_pred_acc_&quot;, i, &quot;.rds&quot;))$r2
+    dat_bayesR &lt;- readRDS(paste0(prefix_2, &quot;_bayesR_pred_acc_&quot;, i, &quot;.rds&quot;))$r2
   }
 }
 
 means_mrmash_init_fm_prior &lt;- colMeans(dat_mrmash_init_fm_prior)
 means_ldpred2 &lt;- colMeans(dat_ldpred2)
+means_bayesR &lt;- colMeans(dat_bayesR)
 
 perc_change_fm_prior &lt;- ((means_mrmash_init_fm_prior-means_ldpred2)/means_ldpred2)*100
+perc_change_bayesR_fm_prior &lt;- ((means_mrmash_init_fm_prior-means_bayesR)/means_bayesR)*100
 
 pheno &lt;- readRDS(&quot;data/phenotypes/ukb_cleaned_bc_adjusted_pheno_test_1.rds&quot;)
 
 names(perc_change_fm_prior) &lt;- colnames(pheno)
+names(perc_change_bayesR_fm_prior) &lt;- colnames(pheno)
 
-r2 &lt;- c(as.vector(dat_mrmash_init_fm_prior), as.vector(dat_ldpred2))
-method &lt;- rep(c(&quot;mr_mash_rss_init_fm_prior&quot;, &quot;ldpred2_auto&quot;), each=80)
+r2 &lt;- c(as.vector(dat_mrmash_init_fm_prior), as.vector(dat_ldpred2), as.vector(dat_bayesR))
+method &lt;- rep(c(&quot;mr_mash_rss_init_fm_prior&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;), each=80)
 trait &lt;- rep(colnames(pheno), each=5)
 
 res &lt;- data.frame(method, trait, r2)
 
-res &lt;- res[which(res$method %in% c(&quot;ldpred2_auto&quot;, &quot;mr_mash_rss_init_fm_prior&quot;)), ]
+res &lt;- res[which(res$method %in% c(&quot;bayesR&quot;, &quot;ldpred2_auto&quot;, &quot;mr_mash_rss_init_fm_prior&quot;)), ]
 
 res &lt;- transform(res,
-                 method=factor(method, levels=c(&quot;ldpred2_auto&quot;, &quot;mr_mash_rss_init_fm_prior&quot;),
-                               labels=c(&quot;LDpred2&quot;, &quot;mr.mash.rss init prior&quot;)),
+                 method=factor(method, levels=c(&quot;bayesR&quot;, &quot;ldpred2_auto&quot;, &quot;mr_mash_rss_init_fm_prior&quot;),
+                               labels=c(&quot;BayesR&quot;, &quot;LDpred2&quot;, &quot;mr.mash.rss init prior&quot;)),
                  trait=factor(trait))
 
 p_methods_shared &lt;- ggplot(res, aes(x = trait, y = r2, fill = method)) +
@@ -1211,7 +1309,7 @@ p_methods_shared &lt;- ggplot(res, aes(x = trait, y = r2, fill = method)) +
   stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;blue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;blue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) + 
   # facet_grid(~trait, scales=&quot;free_x&quot;) +
   # geom_hline(aes(yintercept = h2), linez) +
@@ -1220,24 +1318,59 @@ p_methods_shared &lt;- ggplot(res, aes(x = trait, y = r2, fill = method)) +
 
 print(p_methods_shared)</code></pre>
 <p><img src="figure/ukb_bc_results.Rmd/results_75K_accuracy-1.png" width="1248" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-results_75K_accuracy-1">
+Past versions of results_75K_accuracy-1.png
+</button>
+</p>
+<div id="fig-results_75K_accuracy-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/60889dd871514919b74d43907d52d9ee47e06821/docs/figure/ukb_bc_results.Rmd/results_75K_accuracy-1.png" target="_blank">60889dd</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-02-04
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The percentage change in <span class="math inline">\(R^2\)</span> of
-<em>mr.mash.rss init prior</em> over <em>LDpred2</em> by trait is:</p>
-<pre class="r"><code>perc_change_fm_prior</code></pre>
+<em>mr.mash.rss init prior</em> over <em>BayesR</em> by trait is:</p>
+<pre class="r"><code>perc_change_bayesR_fm_prior</code></pre>
 <pre><code>        WBC_count         RBC_count       Haemoglobin               MCV 
-        17.037136         18.394163         14.327925          7.790081 
+     3.2036534199      6.3578037992     -0.0001688431      1.3798038543 
               RDW    Platelet_count      Plateletcrit               PDW 
-        17.600836         10.933460         10.818435          8.755323 
+     5.7435803143      3.9794938660      2.8926057502      1.5244281537 
   Lymphocyte_perc     Monocyte_perc  Neutrophill_perc  Eosinophill_perc 
-        30.020449          5.372682         33.417410         12.405572 
+     9.1073094157     -3.0325083273     11.5823290872     -2.4125973315 
    Basophill_perc Reticulocyte_perc              MSCV          HLR_perc 
-       115.749354         18.822531         16.895025         14.423909 </code></pre>
+    10.2058431304      7.0892935140      7.3419703787      3.0189283421 </code></pre>
 <p>The overall percentage change in <span
 class="math inline">\(R^2\)</span> of <em>mr.mash.rss init prior</em>
-over <em>LDpred2</em> across traits is 22.0477682.</p>
-<p>The results show that <em>mr.mash.rss init</em> improves accuracy
-over <em>LDpred2</em> more substantially with a smaller sample size,
-highlighting the scenario where a multivariate analysis is really
-advantageous.</p>
+over <em>BayesR</em> across traits is 4.2488605.</p>
+<!-- The results show that *mr.mash.rss init* improves accuracy over *LDpred2* more substantially with a smaller -->
+<!-- sample size, highlighting the scenario where a multivariate analysis is really advantageous. -->
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
