@@ -22,6 +22,7 @@ CHR="${SLURM_ARRAY_TASK_ID}"
 
 ###Set some variable
 FOLD=${1}
+METHOD=${2}
 ED=bovy
 
 ###Run R script
@@ -32,7 +33,7 @@ Rscript ../code/fit_mrmashrss_ukb.R --sumstats ../output/summary_statistics/ukb_
                                     --pheno_cov ../output/misc/ukb_bc_sampled_phenotypic_cov_"${FOLD}".rds \
                                     --residual_cov ../output/misc/ukb_bc_sampled_chrAll_residual_cov_"${FOLD}".rds \
                                     --data_driven_cov ../output/misc/ukb_bc_sampled_"${ED}"_prior_finemapped_"${FOLD}".rds \
-                                    --mu1_init ../output/estimated_effects/ukb_bc_sampled_chr"${CHR}"_ldpred2_auto_effects_"${FOLD}".rds \
+                                    --mu1_init ../output/estimated_effects/ukb_bc_sampled_chr"${CHR}"_"${METHOD}"_effects_"${FOLD}".rds \
                                     --canonical_cov FALSE \
                                     --n 60000 \
                                     --prop_nonzero 0.01 \
@@ -42,7 +43,7 @@ Rscript ../code/fit_mrmashrss_ukb.R --sumstats ../output/summary_statistics/ukb_
                                     --w0_threshold 1e-8 \
                                     --ncores 4 \
                                     --seed ${FOLD} \
-                                    --output ../output/mr_mash_rss_fit/ukb_bc_sampled_chr"${CHR}"_mr_mash_rss_sparse_LD_V_all_chr_init_prior_finemapped_fit_"${FOLD}".rds
+                                    --output ../output/mr_mash_rss_fit/ukb_bc_sampled_chr"${CHR}"_mr_mash_rss_sparse_LD_V_all_chr_"${METHOD}"_init_prior_finemapped_fit_"${FOLD}".rds
 
 echo "Finished analyzing chromosome ${CHR} and fold ${FOLD}."
 

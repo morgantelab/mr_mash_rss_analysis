@@ -10,6 +10,7 @@
 
 ###Set some variable
 FOLD=${1}
+METHOD=${2}
 
 ###Load module
 source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -19,7 +20,7 @@ module load R/4.2.3
 export MKL_NUM_THREADS=1
 
 ###Run R script
-Rscript ../code/compute_prediction_accuracy_bc_ukb.R --model mr_mash_rss_sparse_LD_V_all_chr_init_prior_finemapped \
+Rscript ../code/compute_prediction_accuracy_bc_ukb.R --model mr_mash_rss_sparse_LD_V_all_chr_"${METHOD}"_init_prior_finemapped \
                                                      --model_fit_dir ../output/mr_mash_rss_fit/ \
                                                      --pheno ../data/phenotypes/ukb_cleaned_bc_sampled_adjusted_pheno_test_"${FOLD}".rds \
                                                      --geno /scratch1/fabiom/ukb_bc_sampled_geno_imp_HM3.rds \
@@ -28,8 +29,8 @@ Rscript ../code/compute_prediction_accuracy_bc_ukb.R --model mr_mash_rss_sparse_
                                                      --chr 1:22 \
                                                      --trait 1:16 \
                                                      --impute_missing FALSE \
-                                                     --output_eff ../output/estimated_effects/ukb_bc_sampled_mr_mash_rss_sparse_LD_V_all_chr_init_prior_finemapped_effects_"${FOLD}".rds \
-                                                     --output_pred_acc ../output/prediction_accuracy/ukb_bc_sampled_mr_mash_rss_sparse_LD_V_all_chr_init_prior_finemapped_pred_acc_"${FOLD}".rds \
+                                                     --output_eff ../output/estimated_effects/ukb_bc_sampled_mr_mash_rss_sparse_LD_V_all_chr_"${METHOD}"_init_prior_finemapped_effects_"${FOLD}".rds \
+                                                     --output_pred_acc ../output/prediction_accuracy/ukb_bc_sampled_mr_mash_rss_sparse_LD_V_all_chr_"${METHOD}"_init_prior_finemapped_pred_acc_"${FOLD}".rds \
                                                      --prefix ukb_bc_sampled \
                                                      --fold ${FOLD} \
                                                      --ncores 8
