@@ -14,7 +14,14 @@ res_full <- transform(res_full,
                  method=factor(method, levels=c("bayesR", "ldpred2_auto", 
                                                 "mr_mash_rss_sparse_LD_V_all_chr_bayesR_init_prior_finemapped"),
                                labels=c("SBayesR", "LDpred2", "mr.mash-rss")),
-                 trait=factor(trait))
+                 trait=factor(trait, levels=c("RBC_count", "Haemoglobin", "MCV", "RDW", "MSCV", 
+                                                "Reticulocyte_perc", "HLR_perc",
+                                                "Platelet_count", "Plateletcrit", "PDW", 
+                                                "WBC_count", "Lymphocyte_perc", "Monocyte_perc", "Neutrophill_perc", "Eosinophill_perc", "Basophill_perc"),
+                              labels=c("RBC#", "HGB", "MCV", "RDW", "MSCV", 
+                                       "RET%", "HLR%",
+                                       "PLT#", "PCT", "PDW", 
+                                       "WBC#", "LYMPH%", "MONO%", "NEUT%", "EO%", "BASO%")))
 
 p_3 <- ggplot(res_full, aes(x = trait, y = score, fill = method)) +
   geom_boxplot(color = "black", outlier.size = 0.5, width = 0.75) +
@@ -25,7 +32,7 @@ p_3 <- ggplot(res_full, aes(x = trait, y = score, fill = method)) +
   labs(x = "Phenotype", y = expression(italic(R)^2), fill="Method", title="") +
   theme_cowplot(font_size = 14) +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),
-        legend.position=c(0.05,0.9))
+        legend.position=c(0.80,0.9))
 
 #print(p_3)
 
@@ -39,7 +46,14 @@ res_sampled <- transform(res_sampled,
                  method=factor(method, levels=c("bayesR", "ldpred2_auto", 
                                                 "mr_mash_rss_sparse_LD_V_all_chr_bayesR_init_prior_finemapped"),
                                labels=c("SBayesR", "LDpred2", "mr.mash-rss")),
-                 trait=factor(trait))
+                 trait=factor(trait, levels=c("RBC_count", "Haemoglobin", "MCV", "RDW", "MSCV", 
+                                              "Reticulocyte_perc", "HLR_perc",
+                                              "Platelet_count", "Plateletcrit", "PDW", 
+                                              "WBC_count", "Lymphocyte_perc", "Monocyte_perc", "Neutrophill_perc", "Eosinophill_perc", "Basophill_perc"),
+                              labels=c("RBC#", "HGB", "MCV", "RDW", "MSCV", 
+                                       "RET%", "HLR%",
+                                       "PLT#", "PCT", "PDW", 
+                                       "WBC#", "LYMPH%", "MONO%", "NEUT%", "EO%", "BASO%")))
 
 p_4 <- ggplot(res_sampled, aes(x = trait, y = score, fill = method)) +
   geom_boxplot(color = "black", outlier.size = 0.5, width = 0.75) +
@@ -50,7 +64,7 @@ p_4 <- ggplot(res_sampled, aes(x = trait, y = score, fill = method)) +
   labs(x = "Phenotype", y = expression(italic(R)^2), fill="Method", title="") +
   theme_cowplot(font_size = 14) +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),
-        legend.position=c(0.05,0.9))
+        legend.position=c(0.8,0.9))
 
 #print(p_4)
 
