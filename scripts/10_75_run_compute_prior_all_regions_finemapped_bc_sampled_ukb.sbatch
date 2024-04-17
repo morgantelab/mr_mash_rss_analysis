@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=run_compute_prior_all_regions_finemapped_bc_sampled_ukb
 #SBATCH --cpus-per-task=16
-#SBATCH --partition=fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
+#SBATCH --partition=fm-bigmem-4,fm-bigmem-1,fm-bigmem-2,fm-bigmem-3
 #SBATCH --time=96:00:00
 #SBATCH --mem=150G
 #SBATCH --output=run_compute_prior_all_regions_finemapped_bc_sampled_ukb.%j.out
@@ -28,7 +28,7 @@ Rscript ../code/compute_prior_all_regions_finemapped_bc_sampled_ukb.R --sumstats
                                                                       --regions_dir ../data/blood_cell_finemapping_regions \
                                                                       --residual_cov full \
                                                                       --canonical_cov TRUE \
-                                                                      --geno /scratch1/fabiom/ukb_bc_sampled_geno_imp_prior.rds \
+                                                                      --geno /scratch3/fabiom/ukbiobank_files/ukb_bc_sampled_geno_imp_prior.rds \
                                                                       --fold_file ../data/phenotypes/ukb_cleaned_bc_sampled_covar_pheno.rds \
                                                                       --sample_file /data2/morgante_lab/data/ukbiobank/genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample \
                                                                       --n_weak 2 \
