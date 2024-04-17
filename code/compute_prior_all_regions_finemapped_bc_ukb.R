@@ -112,7 +112,7 @@ for(nam in filenames){
       pips <- fit_susie_rss$pip
     }
     
-    high_pip_snps_no_cs_idx <- which(pips > 0.7)
+    high_pip_snps_no_cs_idx <- c(high_pip_snps_no_cs_idx, which(pips > 0.7))
   }
   
   if(length(high_pip_snps_cs_idx)>0 && length(high_pip_snps_no_cs_idx)>0){
