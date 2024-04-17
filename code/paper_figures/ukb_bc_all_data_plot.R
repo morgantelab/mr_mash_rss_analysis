@@ -61,14 +61,14 @@ dat_bayesR_full <- inner_join(dat_change_bayesR_mrmashrss_full, h2_dat, by=join_
 p_bayesR <- ggplot(dat_bayesR_full, aes(x=h2, y=perc_change)) + 
   geom_point(shape=16) +
   geom_smooth(method='lm', formula= y~x) +
-  labs(x = expression(h["g"]^2), y = expression("Relative difference in" ~ italic(R)^2), title="mr.mash-rss vs SBayesR") + 
+  labs(x = expression(italic(h["g"]^2)), y = expression("Relative difference in" ~ italic(R)^2), title="mr.mash-rss vs SBayesR") + 
   theme_cowplot(font_size = 14) +
   theme(plot.title = element_text(hjust = 0.5, size=14))
 
 p_LDpred2 <- ggplot(dat_LDpred2_full, aes(x=h2, y=perc_change)) + 
   geom_point(shape=16) +
   geom_smooth(method='lm', formula= y~x) +
-  labs(x = expression(h["g"]^2), y = expression("Relative difference in" ~ italic(R)^2), title="mr.mash-rss vs LDpred2") + 
+  labs(x = expression(italic(h["g"]^2)), y = expression("Relative difference in" ~ italic(R)^2), title="mr.mash-rss vs LDpred2") + 
   theme_cowplot(font_size = 14) +
   theme(plot.title = element_text(hjust = 0.5, size=14))
 
