@@ -31,6 +31,7 @@ parser <- add_option(parser, c("--ED_algorithm"), type="character")
 parser <- add_option(parser, c("--ted_zero_thresh"), type="numeric", default=1e-10)
 parser <- add_option(parser, c("--canonical_cov"), type="logical")
 parser <- add_option(parser, c("--seed"), type="integer")
+parser <- add_option(parser, c("--temp_dir"), type="character")
 outparse <- parse_args(parser)
 
 geno_dat <- outparse$geno
@@ -48,6 +49,7 @@ ED_algorithm <- outparse$ED_algorithm
 ted_zero_thresh <- outparse$ted_zero_thresh
 canonical_cov <- outparse$canonical_cov
 seed <- outparse$seed
+temp_dir <- outparse$temp_dir
 
 ###Set seed
 set.seed(seed)
@@ -81,19 +83,21 @@ for(nam in filenames){
   rsids <- fread(paste(regions_dir, nam, sep="/"), showProgress=FALSE, 
                colClasses = "character", header=TRUE, data.table = FALSE)
 
-  Z_sel <- Z[rsids$ID, ]
-  Bhat_sel <- dat$Bhat[rsids$ID, ]
-  Shat_sel <- dat$Shat[rsids$ID, ]
-  snp_sel_geno <- which(geno$map$rsid %in% rsids$ID)
+  rsids_common <- intersect(rownames(Z), rsids$ID)
+  
+  Z_sel <- Z[rsids_common, ]
+  Bhat_sel <- dat$Bhat[rsids_common, ]
+  Shat_sel <- dat$Shat[rsids_common, ]
+  snp_sel_geno <- which(geno$map$rsid %in% rsids_common)
   
   ##Compute LD
-  LD <- big_cor(X=geno$genotypes, ind.col=snp_sel_geno, ind.row=train_inds)
+  tmp <- tempfile(tmpdir=temp_dir)
+  LD <- big_cor(X=geno$genotypes, backingfile=tmp, ind.col=snp_sel_geno, ind.row=train_inds)
   LD <- LD[]
 
   ##Fine mapping with susie_rss
   high_pip_snps_cs_idx <- c()
   snps_cs_idx <- c()
-  high_pip_snps_no_cs_idx <- c()
     
   for(i in 1:ncol(Z_sel)){
     fit_susie_rss <- suppressMessages(susie_rss(bhat=Bhat_sel[, i], shat=Shat_sel[, i], 
@@ -107,21 +111,15 @@ for(nam in filenames){
       }
       
       snps_cs_idx <- c(snps_cs_idx, unlist(cs, use.names=FALSE))
-      pips <- fit_susie_rss$pip[-snps_cs_idx]  
     } else {
-      pips <- fit_susie_rss$pip
+      next
     }
-    
-    high_pip_snps_no_cs_idx <- c(high_pip_snps_no_cs_idx, which(pips > 0.7))
   }
   
-  if(length(high_pip_snps_cs_idx)>0 && length(high_pip_snps_no_cs_idx)>0){
-    high_pip_snps_idx <- c(high_pip_snps_cs_idx, high_pip_snps_no_cs_idx)
-  } else if(length(high_pip_snps_cs_idx)>0 && length(high_pip_snps_no_cs_idx)==0){
+  if(length(high_pip_snps_cs_idx)>0){
     high_pip_snps_idx <- high_pip_snps_cs_idx
-  } else if(length(high_pip_snps_cs_idx)==0 && length(high_pip_snps_no_cs_idx)>0){
-    high_pip_snps_idx <- high_pip_snps_no_cs_idx
   } else {
+    file.remove(paste0(tmp, c(".bk", ".rds")))
     warning(paste0("Region ", nam, " does not have any finemapped SNP."))
     cat(sprintf("Finished analyzing region %d.\n", it))
     next
@@ -135,35 +133,38 @@ for(nam in filenames){
     to_remove_idx <- c()
     
     if(length(snps_cs_idx) > 0){
-     to_remove_idx <- unique(snps_cs_idx)
+      to_remove_idx <- unique(snps_cs_idx)
     }
-    
+      
     if(length(high_pip_snps_no_cs_idx) > 0){
       to_remove_idx <- c(to_remove_idx, unique(high_pip_snps_no_cs_idx))
     }
-    
+      
     if(length(to_remove_idx) > 0){
       to_remove_idx <- sort(unique(to_remove_idx))
       Z_sel_no_strong_id <- Z_sel[-to_remove_idx, ]
     }
-    
+      
     weak_id <- names(sample(x=which(apply(Z_sel, 1, is_weak, 2)), size=n_weak))
   }
   
+  ###Extract strong and weak signals
   if(it==1){
     Z_strong <- Z_sel[strong_idx, ]
     
     if(residual_cov=="full"){
       Z_weak <- Z_sel[weak_id, ]
     }
+
   } else {
     Z_strong <- rbind(Z_strong, Z_sel[strong_idx, ])
-    
+
     if(residual_cov=="full"){
       Z_weak <- rbind(Z_weak, Z_sel[weak_id, ])
     }
   }
   
+  file.remove(paste0(tmp, c(".bk", ".rds")))
   cat(sprintf("Finished analyzing region %d.\n", it))
 }
 
@@ -177,7 +178,7 @@ if(residual_cov=="diagonal"){
   for(j in 1:nrow(Z_weak)){
     V <- V + tcrossprod(Z_weak[j,])
   }
-  
+    
   V <- V/nrow(Z_weak)
 }
 
@@ -219,7 +220,8 @@ if(ED_algorithm=="bovy"){
   # 2. Add small amount of penalty(inverse-Wishart), strength = R. When sample size is large, 
   # the penalty amount R is small.
   fit0 <- ud_init(dat_mash, n_unconstrained = K)
-  fit1 <- ud_fit(fit0, control = list(unconstrained.update = "ted", lambda = R, penalty.type = "iw",                                      maxiter=5000, tol = 1e-2, tol.lik = 1e-3), verbose=TRUE,
+  fit1 <- ud_fit(fit0, control = list(unconstrained.update = "ted", lambda = R, penalty.type = "iw",
+                                      maxiter=5000, tol = 1e-2, tol.lik = 1e-3), verbose=TRUE,
                                       zero.threshold=ted_zero_thresh)
 
   U_ed <- fit1$U
