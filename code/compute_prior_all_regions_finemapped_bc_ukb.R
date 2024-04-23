@@ -119,7 +119,7 @@ for(nam in filenames){
   if(length(high_pip_snps_cs_idx)>0){
     high_pip_snps_idx <- high_pip_snps_cs_idx
   } else {
-    file.remove(paste0(tmp, c(".bk", ".rds")))
+    file.remove(paste0(tmp, ".bk"))
     warning(paste0("Region ", nam, " does not have any finemapped SNP."))
     cat(sprintf("Finished analyzing region %d.\n", it))
     next
@@ -130,22 +130,9 @@ for(nam in filenames){
   
   ##Obtain weak signals
   if(residual_cov=="full"){
-    to_remove_idx <- c()
-    
-    if(length(snps_cs_idx) > 0){
-      to_remove_idx <- unique(snps_cs_idx)
-    }
+    Z_sel_no_strong <- Z_sel[-strong_idx, ]
       
-    if(length(high_pip_snps_no_cs_idx) > 0){
-      to_remove_idx <- c(to_remove_idx, unique(high_pip_snps_no_cs_idx))
-    }
-      
-    if(length(to_remove_idx) > 0){
-      to_remove_idx <- sort(unique(to_remove_idx))
-      Z_sel_no_strong_id <- Z_sel[-to_remove_idx, ]
-    }
-      
-    weak_id <- names(sample(x=which(apply(Z_sel, 1, is_weak, 2)), size=n_weak))
+    weak_id <- names(sample(x=which(apply(Z_sel_no_strong, 1, is_weak, 2)), size=n_weak))
   }
   
   ###Extract strong and weak signals
@@ -164,7 +151,7 @@ for(nam in filenames){
     }
   }
   
-  file.remove(paste0(tmp, c(".bk", ".rds")))
+  file.remove(paste0(tmp, ".bk"))
   cat(sprintf("Finished analyzing region %d.\n", it))
 }
 
