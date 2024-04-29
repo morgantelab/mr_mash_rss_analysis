@@ -37,7 +37,8 @@ Rscript ../code/compute_prior_all_regions_finemapped_bc_ukb.R --sumstats ../outp
                                                               --ED_algorithm ${ED} \
                                                               --fold ${FOLD} \
                                                               --output ../output/misc/ukb_bc_"${ED}"_prior_finemapped_"${FOLD}".rds \
-                                                              --seed ${FOLD}
+                                                              --seed ${FOLD} \
+                                                             --temp_dir /scratch3/fabiom/tmp
 
 echo "Finished analyzing fold ${FOLD}."
 
