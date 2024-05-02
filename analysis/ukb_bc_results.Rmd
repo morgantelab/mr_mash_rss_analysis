@@ -126,7 +126,7 @@ trait <- rep(colnames(pheno), each=5)
 res <- data.frame(method, trait, r2)
 
 #res <- res[which(res$method %in% c("bayesR", "ldpred2_auto", "mr_mash_rss", "mr_mash_rss_init", "mr_mash_rss_init_fm_prior")), ]
-res <- res[which(res$method %in% c("bayesR", "ldpred2_auto", "mr_mash_rss_init_fm_prior",
+res <- res[which(res$method %in% c("bayesR", "ldpred2_auto",
                                    "mr_mash_rss_bayesR_init_fm_prior")), ]
 
 res <- transform(res,
