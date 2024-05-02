@@ -211,11 +211,11 @@ trait <- rep(colnames(pheno), each=5)
 
 res <- data.frame(method, trait, r2)
 
-res <- res[which(res$method %in% c("bayesR", "ldpred2_auto", "mr_mash_rss_init_fm_prior", "mr_mash_rss_bayesR_init_fm_prior")), ]
+res <- res[which(res$method %in% c("bayesR", "ldpred2_auto", "mr_mash_rss_bayesR_init_fm_prior")), ]
 
 res <- transform(res,
-                 method=factor(method, levels=c("bayesR", "ldpred2_auto", "mr_mash_rss_init_fm_prior", "mr_mash_rss_bayesR_init_fm_prior"),
-                               labels=c("BayesR", "LDpred2", "mr.mash.rss init prior", "mr.mash.rss BayesR init prior")),
+                 method=factor(method, levels=c("bayesR", "ldpred2_auto", "mr_mash_rss_bayesR_init_fm_prior"),
+                               labels=c("BayesR", "LDpred2", "mr.mash.rss BayesR init prior")),
                  trait=factor(trait))
 
 p_methods_shared <- ggplot(res, aes(x = trait, y = r2, fill = method)) +
