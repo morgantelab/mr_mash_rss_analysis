@@ -2,7 +2,6 @@
 
 This repository contains code and data resources to accompany our research paper:
 
-If you use any of the summary data methods such as `mr.mash.rss`, please also cite:
 > Kunkel, D., Sørensen, P., Shankar, V. & Morgante, F. (2024).
 > Improving polygenic prediction from summary data by learning patterns of effect
 > sharing across multiple phenotypes. *bioRxiv* 2024.05.06.592745.
