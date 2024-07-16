@@ -64,7 +64,11 @@ set.seed(seed)
 univ_sumstats <- readRDS(sumstats)
 p <- nrow(univ_sumstats$Bhat)
 r <- ncol(univ_sumstats$Bhat)
-LD <- matrix(readBin(LD_matrix, what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
+if(tail(unlist(strsplit(LD_matrix, ".", fixed = TRUE)), 1) == "bin"){
+  LD <- matrix(readBin(LD_matrix, what="numeric", n=p^2), nrow=p, ncol=p, byrow=TRUE)
+} else if(tail(unlist(strsplit(LD_matrix, ".", fixed = TRUE)), 1) == "rds"){
+  LD <- readRDS(LD_matrix)
+}
 covY <- readRDS(pheno_cov)
 V <- readRDS(residual_cov)
 S0_data <- tryCatch(readRDS(data_driven_cov), 
