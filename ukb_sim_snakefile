@@ -425,13 +425,13 @@ rule fit_bayesR_by_chr_trait:
     dataset="{DATASET}",
     chr="{CHR}",
     script=config["SCRIPT"]+"fit_qgg_sbayes_ukb.R"
-  resources: cpus=1, mem_mb=7000, time_min=1440
+  resources: cpus=4, mem_mb=7000, time_min=1440
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
-        export MKL_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
+        export MKL_NUM_THREADS=4
+        export OMP_NUM_THREADS=4
         Rscript {params.script} \
                                     --sumstats {input.sumstats} \
                                     --LD_matrix {input.ldmat} \
@@ -465,13 +465,13 @@ rule fit_bayesC_by_chr_trait:
     dataset="{DATASET}",
     chr="{CHR}",
     script=config["SCRIPT"]+"fit_qgg_sbayes_ukb.R"
-  resources: cpus=1, mem_mb=7000, time_min=1440
+  resources: cpus=4, mem_mb=7000, time_min=1440
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
-        export MKL_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
+        export MKL_NUM_THREADS=4
+        export OMP_NUM_THREADS=4
         Rscript {params.script} \
                                     --sumstats {input.sumstats} \
                                     --LD_matrix {input.ldmat} \
@@ -505,13 +505,13 @@ rule fit_mvbayesC_by_chr:
     dataset="{DATASET}",
     chr="{CHR}",
     script=config["SCRIPT"]+"fit_qgg_smvbayes_ukb.R"
-  resources: cpus=1, mem_mb=7000, time_min=2880
+  resources: cpus=4, mem_mb=7000, time_min=2880
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
-        export MKL_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
+        export MKL_NUM_THREADS=4
+        export OMP_NUM_THREADS=4
         Rscript {params.script} \
                                     --sumstats {input.sumstats} \
                                     --LD_matrix {input.ldmat} \
@@ -547,13 +547,13 @@ rule fit_mvbayesC_rest_by_chr:
     dataset="{DATASET}",
     chr="{CHR}",
     script=config["SCRIPT"]+"fit_qgg_smvbayes_ukb.R"
-  resources: cpus=1, mem_mb=7000, time_min=2880
+  resources: cpus=4, mem_mb=7000, time_min=2880
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
         module load R/4.2.3
-        export MKL_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
+        export MKL_NUM_THREADS=4
+        export OMP_NUM_THREADS=4
         Rscript {params.script} \
                                     --sumstats {input.sumstats} \
                                     --LD_matrix {input.ldmat} \
