@@ -57,10 +57,16 @@ compute_univariate_sumstats_bigsnp <- function(geno_obj, Y, chr=0, standardize=F
   colnames(Bhat) <- colnames(Shat) <- response_names
   rownames(Bhat) <- rownames(Shat) <- variable_names[inds]
   
+  ###Add some information
+  statz <- bigstatsr::big_colstats(X=X, ind.col=inds, ncores=mc.cores)
+  a1f <- (statz$sum/nrow(X))/2
+  alleles_df <- data.frame(chr=chr, bp=geno_obj$map$physical.pos[inds], a1=geno_obj$map$allele1[inds], a2=geno_obj$map$allele2[inds], freq=a1f)
+  rownames(alleles_df) <- variable_names[inds]
+  
   ###Put coefficients and ses on the standardized X scale   
   if(standardize){
-    sds <- sqrt(bigstatsr::big_colstats(X, ind.col=inds)$var)
-  	
+    sds <- sqrt(statz$var)
+    
     Bhat <- Bhat*sds
     Shat <- Shat*sds
   }

@@ -173,7 +173,7 @@ for(i in chrs){
     ##Store effects
     Bhat_all[[it]] <- model_fit$bm[, traits]
   
-  } else if(model %in% c("ldpred2_auto","bayesN","bayesA","bayesL","bayesC","bayesR")){
+  } else if(model %in% c("ldpred2_auto","mtag_ldpred2_auto","bayesN","bayesA","bayesL","bayesC","bayesR")){
     
     it2 <- 0
     
