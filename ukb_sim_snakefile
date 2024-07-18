@@ -8,13 +8,14 @@ rule all:
     expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesR_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mvbayesC_rest_effects_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_rest_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_bayesC_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesC_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mvbayesC_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]) #,
-    #expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_ldpred2_auto_gwide_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    #expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_gwide_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])
-
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_wmt_sblup_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_wmt_sblup_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])#,
+    #expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_bayesC_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    #expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesC_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])
 rule split_train_test:
   input:
     config["FAM"]
@@ -1012,7 +1013,7 @@ rule fit_mtag_ldpred2auto_by_chr_trait:
     sumstats=config["DEST"]+"output/mtag_summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}.rds",
     ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.rds"
   output:
-    config["DEST"]+"output/ldpred2_auto_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mtag_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds"
+    config["DEST"]+"output/mtag_ldpred2_auto_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mtag_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds"
   params:
     n=config["N_TRAIN"],
     h2_init=config["H2_INIT"],
@@ -1094,3 +1095,128 @@ rule compute_prediction_accuracy_mtag_ldpred2:
                                     --prefix {params.prefix}
         module unload R/4.2.3
         """
+
+rule fit_sblup_by_chr_trait:
+  input:
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    ldscores=config["LDSCORES"]+{CHR}.l2.ldscore.gz",
+    geno=config["GENO_REF"]+ukb_caucasian_white_british_unrel_for_LD_genetic_dist_chr{CHR}"
+  output:
+    config["DEST"]+"output/sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_sblup_fit_trait{TRAIT}_{DATASET}.rds"
+  params:
+    n=config["N_TRAIN"],
+    imp=config["IMPUTE_FLAG"],
+    trait="{TRAIT}",
+    dataset="{DATASET}",
+    window=config["SBLUP_WIND_SIZE"],
+    script=config["SCRIPT"]+"fit_sblup_ukb.R"
+  resources: cpus=4, mem_mb=10000, time_min=720
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
+        Rscript {params.script} \
+                                    --sumstats {input.sumstats} \
+                                    --LD_scores {input.ldscores} \
+                                    --geno {input.geno} \
+                                    --n {params.n} \
+                                    --impute_missing {params.imp} \
+                                    --wind_size {params.window} \
+                                    --trait {params.trait} \
+                                    --ncores 4 \
+                                    --seed {params.dataset} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+def get_sumstats_wmt_sblup_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    return expand(config["DEST"]+"output/sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_sblup_fit_trait{TRAIT}_{DATASET}.rds", DATASET=DATASET, CHR=CHR, TRAIT=config["TRAIT"])
+
+rule wmt_sblup_by_chr:
+  input:
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    ldscores=config["LDSCORES"]+{CHR}.l2.ldscore.gz",
+    list=lambda wildcards: get_sumstats_wmt_sblup_input_files(wildcards),
+  output:
+    config["DEST"]+"output/wmt_sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_wmt_sblup_fit_{DATASET}.rds"
+  params:
+    n=config["N_TRAIN"],
+    method=config["WMTSBLUP_METHOD"],
+    meff=config["WMTSBLUP_MEFF"],
+    dataset="{DATASET}",
+    chr="{CHR}",
+    prefix=config["DEST"]+"output/sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_sblup_fit",
+    script=config["SCRIPT"]+"fit_wmt_sblup_ukb.R"
+  resources: cpus=4, mem_mb=10000, time_min=720
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=4
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --sumstats {input.sumstats} \
+                                    --LD_scores {input.ldscores} \
+                                    --sblub_fit_prefix {input.geno} \
+                                    --n {params.n} \
+                                    --data_id {params.dataset} \
+                                    --seed {params.dataset} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+def get_wmtsblup_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    return expand(config["DEST"]+"output/wmt_sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_wmt_sblup_fit_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"])
+
+rule compute_prediction_accuracy_wmtsblup:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
+    geno=config["BED"],
+    #pheno_means=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds",
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
+    list=lambda wildcards: get_wmtsblup_input_files(wildcards)
+  output:
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_wmt_sblup_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_wmt_sblup_pred_acc_{DATASET}.rds"
+  params:
+    model=config["WMTSBLUP_MODEL"],
+    model_fit_dir=config["WMTSBLUP_MODEL_FIT_DIR"],
+    dataset="{DATASET}",
+    chr_r=config["CHR_RANGE"],
+    trait_r=config["TRAIT_RANGE"],
+    imp_flag=config["IMPUTE_FLAG"],
+    prefix=config["DATA_PREFIX"],
+    norm_pheno=config["NORMALIZE_PHENO"],
+    tmp=config["TMP"],
+    script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R"
+  resources: cpus=4, mem_mb=50000, time_min=120
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --model {params.model} \
+                                    --model_fit_dir {params.model_fit_dir} \
+                                    --pheno {input.pheno} \
+                                    --geno {input.geno} \
+                                    --test_ids {input.tids} \
+                                    --data_id {params.dataset} \
+                                    --chr {params.chr_r} \
+                                    --trait {params.trait_r} \
+                                    --impute_missing {params.imp_flag} \
+                                    --output_eff {output.eff} \
+                                    --output_pred_acc {output.pred_acc} \
+                                    --prefix {params.prefix} \
+                                    --normalize {params.norm_pheno} \
+                                    --temp_dir {params.tmp} \
+                                    --ncores 4
+        module unload R/4.2.3
+        """
+
+

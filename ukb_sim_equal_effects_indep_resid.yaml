@@ -7,7 +7,9 @@ FAM: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/data/genotypes/ukb_cauc
 BIM: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/data/genotypes/ukb_caucasian_white_british_unrel_100000.bim"
 BED: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/data/genotypes/ukb_caucasian_white_british_unrel_100000.bed"
 SNPLIST: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/data/genotypes/ukb_caucasian_white_british_unrel_100000.snplist"
+GENO_REF: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/data/genotypes/"
 LDMAT: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/data/LD_matrices/"
+LDSCORES: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/data/LD_scores/simulations/"
 DEST: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/"
 LDMAT_PREFIX: "ukb_caucasian_white_british_unrel_chr"
 DATA_PREFIX: "ukb_caucasian_white_british_unrel_100000_equal_effects_indep_resid"
@@ -76,3 +78,14 @@ MVBAYESCREST_NIT: "5000"
 MVBAYESCREST_NTHIN: "5"
 MVBAYESCREST_MODEL: "mvbayesC_rest"
 MVBAYESCREST_MODEL_FIT_DIR: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/output/mvbayesC_fit/"
+SBLUP_WIND_SIZE: "2000000"
+WMTSBLUP_METHOD: "blup"
+WMTSBLUP_MEFF: "60000"
+WMTSBLUP_MODEL_FIT_DIR: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/output/wmt_sblup_fit/"
+WMTSBLUP_MODEL: "wmt_sblup"
+
+
+
+
+
+

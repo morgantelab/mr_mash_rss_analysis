@@ -173,6 +173,14 @@ for(i in chrs){
     ##Store effects
     Bhat_all[[it]] <- model_fit$bm[, traits]
   
+  } else if(model=="wmt_sblup"){
+    model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_", data_id, ".rds"))
+    
+    ##Compute predictions
+    pheno_pred[[it]] <- big_prodMat(X, model_fit$b[, traits], ind.col=inds, ncores=ncores)
+    
+    ##Store effects
+    Bhat_all[[it]] <- model_fit$b[, traits]
   } else if(model %in% c("ldpred2_auto","mtag_ldpred2_auto","bayesN","bayesA","bayesL","bayesC","bayesR")){
     
     it2 <- 0
