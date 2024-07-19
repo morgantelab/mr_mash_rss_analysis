@@ -6,8 +6,7 @@ library(optparse)
 
 ###Simulate data from given big X
 simulate_mr_mash_data_from_given_big_X <- function(X, p_causal, r, r_causal, intercepts,
-                                               pve, B_cor, B_scale, w, V_cor, seed,
-                                               ncores){
+                                               pve, B_cor, B_scale, w, V_cor, ncores){
   ##Check that the inputs are correct
   if(!inherits(X, 'FBM')){
     stop("X must be an object of class FBM")
@@ -72,7 +71,7 @@ simulate_mr_mash_data_from_given_big_X <- function(X, p_causal, r, r_causal, int
   V <- D %*% V_cor_mat %*% D
   
   ##Simulate Y from MN(XB, I_n, V) where I_n is an nxn identity matrix and V is the residual covariance  
-  Y <- mr.mash.alpha:::matrix_normal_indep_rows(G + matrix(intercepts, n, r, byrow=TRUE), V, seed)
+  Y <- mr.mash.alpha:::matrix_normal_indep_rows(G + matrix(intercepts, n, r, byrow=TRUE), V)
   
   ##Compile output
   causal_responses <- r_causal
@@ -146,8 +145,7 @@ IID <- dat$fam$sample.ID
 
 ###Simulate phenotype
 out_sim <- simulate_mr_mash_data_from_given_big_X(X=X, p_causal=p_causal, r=r, r_causal=r_causal, intercepts=rep(1, r),
-                                                  pve=pve, B_cor=B_cor, B_scale=B_scale, w=w, V_cor=V_cor, seed=seed,
-                                                  ncores=ncores)
+                                                  pve=pve, B_cor=B_cor, B_scale=B_scale, w=w, V_cor=V_cor, ncores=ncores)
 colnames(out_sim$Y) <- paste0("y", 1:r)
 rownames(out_sim$Y) <- IID
 
