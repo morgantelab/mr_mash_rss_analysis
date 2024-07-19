@@ -16,6 +16,7 @@ parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--seed"), type="integer")
 parser <- add_option(parser, c("--trait"), type="integer")
 parser <- add_option(parser, c("--wind_size"), type="numeric", default=2000000)
+parser <- add_option(parser, c("--temp_dir"), type="character")
 outparse <- parse_args(parser)
 
 sumstats <- outparse$sumstats
@@ -29,6 +30,7 @@ ncores <- outparse$ncores
 trait <- outparse$trait
 seed <- outparse$seed
 wind_size <- outparse$wind_size
+temp_dir <- outparse$temp_dir
 
 ###Set seed
 set.seed(seed)
@@ -36,7 +38,8 @@ set.seed(seed)
 ###Read in data
 univ_sumstats <- readRDS(sumstats)
 ld_scores <- read.table(gzfile(LD_scores), header=TRUE, sep="\t")
-geno_dat <- SumTool::read_binary(bfile=geno, impute=impute_missing, additive=TRUE, threads=ncores)
+tmp <- tempfile(tmpdir=temp_dir)
+geno_dat <- SumTool::read_binary(bfile=geno, impute=impute_missing, additive=TRUE, out=tmp, verbose=verbose, threads=ncores)
 geno_bed <- geno_dat$geno
 geno_map <- geno_dat$map
 rm(geno_dat)
@@ -68,3 +71,5 @@ fit_sblup$elapsed_time <- toc-tic
 ###Save output
 saveRDS(fit_wMT_BLUP, file=output)
 
+###Remove temprary files
+file.remove(paste0(tmp, c(".bin", ".map", ".desc")))
