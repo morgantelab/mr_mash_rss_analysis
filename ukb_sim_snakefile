@@ -10,12 +10,13 @@ rule all:
     expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_rest_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mvbayesC_effects_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_wmt_sblup_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_wmt_sblup_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])#,
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_wmt_sblup_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])#,
+    #expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    #expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
     #expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_bayesC_effects_{DATASET}.rds",DATASET=config["DATASET"]),
     #expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesC_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])
+    
 rule split_train_test:
   input:
     config["FAM"]
@@ -87,7 +88,7 @@ rule simulate_phenotype:
     dataset="{DATASET}",
     tmp=config["TMP"],
     script=config["SCRIPT"]+"sim_pheno_ukb.R"
-  resources: cpus=16, mem_mb=200000, time_min=1440
+  resources: cpus=16, mem_mb=100000, time_min=1440
   shell:
         """
         module load gsl/2.7
@@ -217,7 +218,7 @@ rule compute_residual_covariance_all_chr:
     chr_r=config["CHR_RANGE"],
     dataset="{DATASET}",
     script=config["SCRIPT"]+"compute_residual_cov_all_chr_ukb.R"
-  resources: cpus=1, mem_mb=4096, time_min=60
+  resources: cpus=1, mem_mb=4000, time_min=60
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -336,7 +337,7 @@ rule fit_mrmash_rss:
     script=config["SCRIPT"]+"fit_mrmashrss_ukb.R",
     chr="{CHR}",
     dataset="{DATASET}"
-  resources: cpus=4, mem_mb=50000, time_min=4320
+  resources: cpus=4, mem_mb=15000, time_min=4320
   shell:
         """
         module load gsl/2.7
@@ -597,7 +598,7 @@ rule compute_prediction_accuracy_ldpred:
     tmp=config["TMP"],
     norm_pheno=config["NORMALIZE_PHENO"],
     prefix=config["DATA_PREFIX"]
-  resources: cpus=4, mem_mb=100000, time_min=120
+  resources: cpus=4, mem_mb=20000, time_min=120
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -648,7 +649,7 @@ rule compute_prediction_accuracy_mrmashrss:
     norm_pheno=config["NORMALIZE_PHENO"],
     tmp=config["TMP"],
     script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R"
-  resources: cpus=4, mem_mb=50000, time_min=120
+  resources: cpus=4, mem_mb=20000, time_min=120
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -698,7 +699,7 @@ rule compute_prediction_accuracy_ldpred_gwide:
     tmp=config["TMP"],
     norm_pheno=config["NORMALIZE_PHENO"],
     prefix=config["DATA_PREFIX"]
-  resources: cpus=4, mem_mb=50000, time_min=120
+  resources: cpus=4, mem_mb=20000, time_min=120
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -748,7 +749,7 @@ rule compute_prediction_accuracy_bayesR:
     tmp=config["TMP"],
     norm_pheno=config["NORMALIZE_PHENO"],
     prefix=config["DATA_PREFIX"]
-  resources: cpus=4, mem_mb=50000, time_min=120
+  resources: cpus=4, mem_mb=20000, time_min=120
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -798,7 +799,7 @@ rule compute_prediction_accuracy_bayesC:
     tmp=config["TMP"],
     norm_pheno=config["NORMALIZE_PHENO"],
     prefix=config["DATA_PREFIX"]
-  resources: cpus=4, mem_mb=50000, time_min=120
+  resources: cpus=4, mem_mb=20000, time_min=120
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -849,7 +850,7 @@ rule compute_prediction_accuracy_mvbayesC:
     tmp=config["TMP"],
     norm_pheno=config["NORMALIZE_PHENO"],
     prefix=config["DATA_PREFIX"]
-  resources: cpus=4, mem_mb=50000, time_min=120
+  resources: cpus=4, mem_mb=20000, time_min=120
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -899,7 +900,7 @@ rule compute_prediction_accuracy_mvbayesC_rest:
     tmp=config["TMP"],
     norm_pheno=config["NORMALIZE_PHENO"],
     prefix=config["DATA_PREFIX"]
-  resources: cpus=4, mem_mb=50000, time_min=120
+  resources: cpus=4, mem_mb=20000, time_min=120
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -929,148 +930,195 @@ rule compute_prediction_accuracy_mvbayesC_rest:
 ###########################
 
 
-rule munge_summary_stats_for_mtag:
+# rule munge_summary_stats_for_mtag:
+#   input:
+#     sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+#   output:
+#     config["TMP"]+"/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_for_mtag_trait{TRAIT}_{DATASET}.txt"
+#   params:
+#     n=config["N_TRAIN"],
+#     trait="{TRAIT}",
+#     script=config["SCRIPT"]+"munge_sumstats_for_mtag_ukb.R"
+#   resources: cpus=1, mem_mb=2000, time_min=30
+#   shell:
+#         """
+#         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+#         module load R/4.2.3
+#         export MKL_NUM_THREADS=1
+#         export OMP_NUM_THREADS=1
+#         Rscript {params.script} \
+#                                     --sumstats {input.sumstats} \
+#                                     --n {params.n} \
+#                                     --trait {params.trait} \
+#                                     --output {output}
+#         module unload R/4.2.3
+#         """
+# 
+# def get_sumstats_for_mtag_input_files(wildcards):
+#     DATASET = wildcards.DATASET
+#     CHR = wildcards.CHR
+#     return expand(config["TMP"]+"/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_for_mtag_trait{TRAIT}_{DATASET}.txt", DATASET=DATASET, CHR=CHR, TRAIT=config["TRAIT"])
+#  
+# def get_sumstats_mtag_output_files(wildcards):
+#     DATASET = wildcards.DATASET
+#     return expand(config["TMP"]+"/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}_trait_{TRAIT}.txt", DATASET=DATASET, CHR=CHR, TRAIT=config["TRAIT"])
+#    
+# rule compute_mtag_summary_stats_by_chr:
+#   input:
+#     lambda wildcards: get_sumstats_for_mtag_input_files(wildcards)
+#   output:
+#     lambda wildcards: get_sumstats_mtag_output_files(wildcards)
+#   params:
+#     ldscores=config["LDSCORES"],
+#     out_prefix=config["TMP"]+"/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}",
+#     maf_min=0.0,
+#     n_min=0.0
+#   resources: cpus=4, mem_mb=10000, time_min=120
+#   shell:
+#         """
+#         module load python2.7-fm/2.7.18
+#         python2 /data2/morgante_lab/fabiom/software/mtag/mtag.py  \
+# 	              --sumstats /scratch3/fabiom/tmp/ss_test21_trait1.txt,/scratch3/fabiom/tmp/ss_test21_trait2.txt \
+# 	              --ld_ref_panel {params.ldscores} \
+# 	              --out {params.out_prefix} \
+# 	              --maf_min {params.maf_min} \
+# 	              --n_min {params.n_min} \
+# 	              --incld_ambig_snps
+#         module unload python2.7-fm/2.7.18
+#         """
+# 
+# rule postprocess_mtag_summary_stats:
+#   input:
+#     sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+#     mtag_sumstats=lambda wildcards: get_sumstats_mtag_output_files(wildcards)
+#   output:
+#     config["DEST"]+"output/mtag_summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}.rds"
+#   params:
+#     sumstats_mtag_prefix=config["TMP"]+"/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}_trait_",
+#     trait_r=config["TRAIT_RANGE"],
+#     script=config["SCRIPT"]+"process_mtag_sumstats_ukb.R"
+#   resources: cpus=1, mem_mb=6000, time_min=60
+#   shell:
+#         """
+#         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+#         module load R/4.2.3
+#         export MKL_NUM_THREADS=1
+#         export OMP_NUM_THREADS=1
+#         Rscript {params.script} \
+#                                     --sumstats {input.sumstats} \
+#                                     --sumstats_mtag_prefix {params.sumstats_mtag_prefix} \
+#                                     --traits {params.trait_r} \
+#                                     --output {output}
+#         module unload R/4.2.3
+#         """
+# 
+# rule fit_mtag_ldpred2auto_by_chr_trait:
+#   input:
+#     sumstats=config["DEST"]+"output/mtag_summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}.rds",
+#     ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.rds"
+#   output:
+#     config["DEST"]+"output/mtag_ldpred2_auto_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mtag_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds"
+#   params:
+#     n=config["N_TRAIN"],
+#     h2_init=config["H2_INIT"],
+#     burn_in=config["MTAG_LDPRED_BURN_IN"],
+#     num_iter=config["MTAG_LDPRED_ITER"],
+#     trait="{TRAIT}",
+#     dataset="{DATASET}",
+#     chr="{CHR}",
+#     tmp=config["TMP"],
+#     script=config["SCRIPT"]+"fit_ldpred2auto_ukb.R"
+#   resources: cpus=4, mem_mb=50000, time_min=720
+#   shell:
+#         """
+#         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+#         module load R/4.2.3
+#         export MKL_NUM_THREADS=1
+#         export OMP_NUM_THREADS=1
+#         Rscript {params.script} \
+#                                     --sumstats {input.sumstats} \
+#                                     --LD_matrix {input.ldmat} \
+#                                     --n {params.n} \
+#                                     --h2_init {params.h2_init} \
+#                                     --burn_in {params.burn_in} \
+#                                     --num_iter {params.num_iter} \
+#                                     --trait {params.trait} \
+#                                     --ncores 4 \
+#                                     --seed {params.dataset} \
+#                                     --temp_dir {params.tmp} \
+#                                     --output {output}
+#         module unload R/4.2.3
+#         """
+# 
+# def get_mtag_ldpred2_input_files(wildcards):
+#     DATASET = wildcards.DATASET
+#     return expand(config["DEST"]+"output/mtag_ldpred2_auto_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mtag_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"],TRAIT=config["TRAIT"])
+# 
+# rule compute_prediction_accuracy_mtag_ldpred2:
+#   input:
+#     pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
+#     geno=config["BED"],
+#     tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
+#     list=lambda wildcards: get_mtag_ldpred2_input_files(wildcards)
+#   output:
+#     eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_effects_{DATASET}.rds",
+#     pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_pred_acc_{DATASET}.rds"
+#   params:
+#     model=config["MTAG_LDPRED_MODEL"],
+#     model_fit_dir=config["MTAG_LDPRED_MODEL_FIT_DIR"],
+#     dataset="{DATASET}",
+#     chr_r=config["CHR_RANGE"],
+#     trait_r=config["TRAIT_RANGE"],
+#     imp_flag=config["IMPUTE_FLAG"],
+#     script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R",
+#     tmp=config["TMP"],
+#     norm_pheno=config["NORMALIZE_PHENO"],
+#     prefix=config["DATA_PREFIX"]
+#   resources: cpus=4, mem_mb=20000, time_min=120
+#   shell:
+#         """
+#         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+#         module load R/4.2.3
+#         export MKL_NUM_THREADS=1
+#         export OMP_NUM_THREADS=4
+#         Rscript {params.script} \
+#                                     --model {params.model} \
+#                                     --model_fit_dir {params.model_fit_dir} \
+#                                     --pheno {input.pheno} \
+#                                     --geno {input.geno} \
+#                                     --test_ids {input.tids} \
+#                                     --data_id {params.dataset} \
+#                                     --chr {params.chr_r} \
+#                                     --trait {params.trait_r} \
+#                                     --impute_missing {params.imp_flag} \
+#                                     --output_eff {output.eff} \
+#                                     --output_pred_acc {output.pred_acc} \
+#                                     --temp_dir {params.tmp} \
+#                                     --normalize {params.norm_pheno} \
+#                                     --ncores 4 \
+#                                     --prefix {params.prefix}
+#         module unload R/4.2.3
+#         """
+
+###########################
+
+rule fit_sblup_by_chr_trait:
   input:
     sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    ldscores=config["LDSCORES"]+"{CHR}.l2.ldscore.gz",
+    geno=config["GENO_REF"]+"ukb_caucasian_white_british_unrel_for_LD_genetic_dist_chr{CHR}.bed"
   output:
-    config["TMP"]+"/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_for_mtag_trait{TRAIT}_{DATASET}.txt"
+    config["DEST"]+"output/sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_sblup_fit_trait{TRAIT}_{DATASET}.rds"
   params:
     n=config["N_TRAIN"],
-    trait="{TRAIT}",
-    script=config["SCRIPT"]+"munge_sumstats_for_mtag_ukb.R"
-  resources: cpus=1, mem_mb=2000, time_min=30
-  shell:
-        """
-        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
-        module load R/4.2.3
-        export MKL_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
-        Rscript {params.script} \
-                                    --sumstats {input.sumstats} \
-                                    --n {params.n} \
-                                    --trait {params.trait} \
-                                    --output {output}
-        module unload R/4.2.3
-        """
-
-def get_sumstats_for_mtag_input_files(wildcards):
-    DATASET = wildcards.DATASET
-    return expand(config["TMP"]+"/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_for_mtag_trait{TRAIT}_{DATASET}.txt", DATASET=DATASET, CHR=CHR, TRAIT=config["TRAIT"])
- 
-def get_sumstats_mtag_output_files(wildcards):
-    DATASET = wildcards.DATASET
-    return expand(config["TMP"]+"/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}_trait_{TRAIT}.txt", DATASET=DATASET, CHR=CHR, TRAIT=config["TRAIT"])
-   
-rule compute_mtag_summary_stats_by_chr:
-  input:
-    lambda wildcards: get_sumstats_for_mtag_input_files(wildcards)
-  output:
-    lambda wildcards: get_sumstats_mtag_output_files(wildcards)
-  params:
-    ldscores=ldmat=config["LDSCORES"],
-    out_prefix=config["TMP"]+"/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET},
-    maf_min=0.0,
-    n_min=0.0
-  resources: cpus=4, mem_mb=10000, time_min=120
-  shell:
-        """
-        python2 /data2/morgante_lab/fabiom/software/mtag/mtag.py  \
-	              --sumstats /scratch3/fabiom/tmp/ss_test21_trait1.txt,/scratch3/fabiom/tmp/ss_test21_trait2.txt \
-	              --ld_ref_panel {params.ldscores} \
-	              --out {params.out_prefix} \
-	              --maf_min {params.maf_min} \
-	              --n_min {params.n_min} \
-	              --incld_ambig_snps
-        """
-
-rule postprocess_mtag_summary_stats:
-  input:
-    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
-    mtag_sumstats=lambda wildcards: get_sumstats_mtag_output_files(wildcards)
-  output:
-    config["DEST"]+"output/mtag_summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}.rds"
-  params:
-    sumstats_mtag_prefix=config["TMP"]+"/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}_trait_,
-    trait_r=config["TRAIT_RANGE"],
-    script=config["SCRIPT"]+"process_mtag_sumstats_ukb.R"
-  resources: cpus=1, mem_mb=6000, time_min=60
-  shell:
-        """
-        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
-        module load R/4.2.3
-        export MKL_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
-        Rscript {params.script} \
-                                    --sumstats {input.sumstats} \
-                                    --sumstats_mtag_prefix {params.sumstats_mtag_prefix} \
-                                    --traits {params.trait_r} \
-                                    --output {output}
-        module unload R/4.2.3
-        """
-
-rule fit_mtag_ldpred2auto_by_chr_trait:
-  input:
-    sumstats=config["DEST"]+"output/mtag_summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}.rds",
-    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.rds"
-  output:
-    config["DEST"]+"output/mtag_ldpred2_auto_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mtag_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds"
-  params:
-    n=config["N_TRAIN"],
-    h2_init=config["H2_INIT"],
-    burn_in=config["MTAG_LDPRED_BURN_IN"],
-    num_iter=config["MTAG_LDPRED_ITER"],
+    geno_noext=config["GENO_REF"]+"ukb_caucasian_white_british_unrel_for_LD_genetic_dist_chr{CHR}",
+    imp=config["IMPUTE_FLAG"],
     trait="{TRAIT}",
     dataset="{DATASET}",
-    chr="{CHR}",
+    window=config["SBLUP_WIND_SIZE"],
     tmp=config["TMP"],
-    script=config["SCRIPT"]+"fit_ldpred2auto_ukb.R"
-  resources: cpus=4, mem_mb=50000, time_min=720
-  shell:
-        """
-        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
-        module load R/4.2.3
-        export MKL_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
-        Rscript {params.script} \
-                                    --sumstats {input.sumstats} \
-                                    --LD_matrix {input.ldmat} \
-                                    --n {params.n} \
-                                    --h2_init {params.h2_init} \
-                                    --burn_in {params.burn_in} \
-                                    --num_iter {params.num_iter} \
-                                    --trait {params.trait} \
-                                    --ncores 4 \
-                                    --seed {params.dataset} \
-                                    --temp_dir {params.tmp} \
-                                    --output {output}
-        module unload R/4.2.3
-        """
-
-def get_mtag_ldpred2_input_files(wildcards):
-    DATASET = wildcards.DATASET
-    return expand(config["DEST"]+"output/mtag_ldpred2_auto_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mtag_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"],TRAIT=config["TRAIT"])
-
-rule compute_prediction_accuracy_mtag_ldpred2:
-  input:
-    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
-    geno=config["BED"],
-    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
-    list=lambda wildcards: get_mtag_ldpred2_input_files(wildcards)
-  output:
-    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_effects_{DATASET}.rds",
-    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_pred_acc_{DATASET}.rds"
-  params:
-    model=config["MTAG_LDPRED_MODEL"],
-    model_fit_dir=config["MTAG_LDPRED_MODEL_FIT_DIR"],
-    dataset="{DATASET}",
-    chr_r=config["CHR_RANGE"],
-    trait_r=config["TRAIT_RANGE"],
-    imp_flag=config["IMPUTE_FLAG"],
-    script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R",
-    tmp=config["TMP"],
-    norm_pheno=config["NORMALIZE_PHENO"],
-    prefix=config["DATA_PREFIX"]
-  resources: cpus=4, mem_mb=50000, time_min=120
+    script=config["SCRIPT"]+"fit_sblup_ukb.R"
+  resources: cpus=4, mem_mb=20000, time_min=1440
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -1078,67 +1126,29 @@ rule compute_prediction_accuracy_mtag_ldpred2:
         export MKL_NUM_THREADS=1
         export OMP_NUM_THREADS=4
         Rscript {params.script} \
-                                    --model {params.model} \
-                                    --model_fit_dir {params.model_fit_dir} \
-                                    --pheno {input.pheno} \
-                                    --geno {input.geno} \
-                                    --test_ids {input.tids} \
-                                    --data_id {params.dataset} \
-                                    --chr {params.chr_r} \
-                                    --trait {params.trait_r} \
-                                    --impute_missing {params.imp_flag} \
-                                    --output_eff {output.eff} \
-                                    --output_pred_acc {output.pred_acc} \
-                                    --temp_dir {params.tmp} \
-                                    --normalize {params.norm_pheno} \
-                                    --ncores 4 \
-                                    --prefix {params.prefix}
-        module unload R/4.2.3
-        """
-
-rule fit_sblup_by_chr_trait:
-  input:
-    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
-    ldscores=config["LDSCORES"]+{CHR}.l2.ldscore.gz",
-    geno=config["GENO_REF"]+ukb_caucasian_white_british_unrel_for_LD_genetic_dist_chr{CHR}"
-  output:
-    config["DEST"]+"output/sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_sblup_fit_trait{TRAIT}_{DATASET}.rds"
-  params:
-    n=config["N_TRAIN"],
-    imp=config["IMPUTE_FLAG"],
-    trait="{TRAIT}",
-    dataset="{DATASET}",
-    window=config["SBLUP_WIND_SIZE"],
-    script=config["SCRIPT"]+"fit_sblup_ukb.R"
-  resources: cpus=4, mem_mb=10000, time_min=720
-  shell:
-        """
-        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
-        module load R/4.2.3
-        export MKL_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
-        Rscript {params.script} \
                                     --sumstats {input.sumstats} \
                                     --LD_scores {input.ldscores} \
-                                    --geno {input.geno} \
+                                    --geno {params.geno_noext} \
                                     --n {params.n} \
                                     --impute_missing {params.imp} \
                                     --wind_size {params.window} \
                                     --trait {params.trait} \
                                     --ncores 4 \
                                     --seed {params.dataset} \
+                                    --temp_dir {params.tmp} \
                                     --output {output}
         module unload R/4.2.3
         """
 
 def get_sumstats_wmt_sblup_input_files(wildcards):
     DATASET = wildcards.DATASET
+    CHR = wildcards.CHR
     return expand(config["DEST"]+"output/sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_sblup_fit_trait{TRAIT}_{DATASET}.rds", DATASET=DATASET, CHR=CHR, TRAIT=config["TRAIT"])
 
-rule wmt_sblup_by_chr:
+rule fit_wmt_sblup_by_chr:
   input:
     sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
-    ldscores=config["LDSCORES"]+{CHR}.l2.ldscore.gz",
+    ldscores=config["LDSCORES"]+"{CHR}.l2.ldscore.gz",
     list=lambda wildcards: get_sumstats_wmt_sblup_input_files(wildcards),
   output:
     config["DEST"]+"output/wmt_sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_wmt_sblup_fit_{DATASET}.rds"
@@ -1147,10 +1157,9 @@ rule wmt_sblup_by_chr:
     method=config["WMTSBLUP_METHOD"],
     meff=config["WMTSBLUP_MEFF"],
     dataset="{DATASET}",
-    chr="{CHR}",
     prefix=config["DEST"]+"output/sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_sblup_fit",
     script=config["SCRIPT"]+"fit_wmt_sblup_ukb.R"
-  resources: cpus=4, mem_mb=10000, time_min=720
+  resources: cpus=4, mem_mb=7000, time_min=120
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
@@ -1193,7 +1202,7 @@ rule compute_prediction_accuracy_wmtsblup:
     norm_pheno=config["NORMALIZE_PHENO"],
     tmp=config["TMP"],
     script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R"
-  resources: cpus=4, mem_mb=50000, time_min=120
+  resources: cpus=4, mem_mb=20000, time_min=120
   shell:
         """
         source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
