@@ -88,7 +88,7 @@ rule simulate_phenotype:
     dataset="{DATASET}",
     tmp=config["TMP"],
     script=config["SCRIPT"]+"sim_pheno_ukb.R"
-  resources: cpus=16, mem_mb=100000, time_min=1440
+  resources: cpus=16, mem_mb=150000, time_min=1440
   shell:
         """
         module load gsl/2.7
@@ -129,7 +129,7 @@ rule compute_summary_stats:
     tmp=config["TMP"],
     norm_pheno=config["NORMALIZE_PHENO"],
     script=config["SCRIPT"]+"compute_sumstats_ukb.R"
-  resources: cpus=5, mem_mb=20000, time_min=1440
+  resources: cpus=5, mem_mb=150000, time_min=1440
   shell:
         """
         module load gsl/2.7
@@ -1169,7 +1169,7 @@ rule fit_wmt_sblup_by_chr:
         Rscript {params.script} \
                                     --sumstats {input.sumstats} \
                                     --LD_scores {input.ldscores} \
-                                    --sblub_fit_prefix {input.geno} \
+                                    --sblub_fit_prefix {input.prefix} \
                                     --n {params.n} \
                                     --data_id {params.dataset} \
                                     --seed {params.dataset} \
