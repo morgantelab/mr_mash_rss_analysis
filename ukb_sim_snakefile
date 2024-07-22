@@ -961,6 +961,7 @@ rule compute_prediction_accuracy_mvbayesC_rest:
 #  
 # def get_sumstats_mtag_output_files(wildcards):
 #     DATASET = wildcards.DATASET
+#     CHR = wildcards.CHR
 #     return expand(config["TMP"]+"/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}_trait_{TRAIT}.txt", DATASET=DATASET, CHR=CHR, TRAIT=config["TRAIT"])
 #    
 # rule compute_mtag_summary_stats_by_chr:
