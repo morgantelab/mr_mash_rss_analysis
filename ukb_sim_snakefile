@@ -129,7 +129,7 @@ rule compute_summary_stats:
     tmp=config["TMP"],
     norm_pheno=config["NORMALIZE_PHENO"],
     script=config["SCRIPT"]+"compute_sumstats_ukb.R"
-  resources: cpus=5, mem_mb=150000, time_min=1440
+  resources: cpus=5, mem_mb=200000, time_min=1440
   shell:
         """
         module load gsl/2.7
@@ -1169,8 +1169,10 @@ rule fit_wmt_sblup_by_chr:
         Rscript {params.script} \
                                     --sumstats {input.sumstats} \
                                     --LD_scores {input.ldscores} \
-                                    --sblub_fit_prefix {input.prefix} \
+                                    --sblub_fit_prefix {params.prefix} \
                                     --n {params.n} \
+                                    --method {params.method} \
+                                    --meff {params.meff} \
                                     --data_id {params.dataset} \
                                     --seed {params.dataset} \
                                     --output {output}
