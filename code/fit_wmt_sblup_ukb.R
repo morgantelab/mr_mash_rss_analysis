@@ -43,20 +43,17 @@ p <- nrow(Z)
 ###Compute genetic parameters
 genpar <- ldsc(ldscores=ldscores, z=Z, n=rep(n, r), what="rg")
 
+###If h2 is <= 0, set it to 1e-8
+genpar$h2[which(genpar$h2<=0)] <- 1e-8
+
+###Load SBLUP results
 if(method=="blup"){
   Bhat_sblup <- matrix(as.numeric(NA), nrow=p, ncol=r)
     
   for(i in 1:r){
-    sblup_fit <- tryCatch(readRDS(pate0(sblub_fit_prefix, "_trait", i, "_", data_id)), 
-                         error = function(e) {
-                           return(NULL)
-                         },
-                         warning = function(w) {
-                           return(NULL)
-                         }
-    )
+    fit_sblup <- readRDS(paste0(sblub_fit_prefix, "_trait", i, "_", data_id, ".rds"))
     
-    Bhat_sblup[, i] <- fit_sblup$Effect
+    Bhat_sblup[, i] <- fit_sblup$res[, "Effect"]
   }
   
   Bhat <- Bhat_sblup
