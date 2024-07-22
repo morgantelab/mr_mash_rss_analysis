@@ -69,7 +69,7 @@ toc <- proc.time()[[3]]
 fit_sblup_res <- list(res=fit_sblup, elapsed_time=toc-tic)
 
 ###Save output
-saveRDS(fit_sblup, file=output)
+saveRDS(fit_sblup_res, file=output)
 
 ###Remove temprary files
 file.remove(paste0(tmp, c(".bin", ".map", ".desc")))

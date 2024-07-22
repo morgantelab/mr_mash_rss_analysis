@@ -53,7 +53,7 @@ if(method=="blup"){
   for(i in 1:r){
     fit_sblup <- readRDS(paste0(sblub_fit_prefix, "_trait", i, "_", data_id, ".rds"))
     
-    Bhat_sblup[, i] <- fit_sblup$res[, "Effect"]
+    Bhat_sblup[, i] <- fit_sblup$res$Effect
   }
   
   Bhat <- Bhat_sblup
