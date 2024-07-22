@@ -66,7 +66,7 @@ fit_sblup <- SumTool::SBLUP(sumstat=sumstats, geno=geno_bed, map=geno_map, lambd
 
 toc <- proc.time()[[3]]
 
-fit_sblup$elapsed_time <- toc-tic
+fit_sblup_res <- list(res=fit_sblup, elapsed_time=toc-tic)
 
 ###Save output
 saveRDS(fit_sblup, file=output)
