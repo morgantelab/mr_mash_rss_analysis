@@ -147,7 +147,8 @@ that the effects are equal across traits and the residuals are uncorrelated, a m
 analysis is roughly equivalent to having 5 times as many samples as in an univariate
 analysis. As expected, the results show that *mr.mash.rss* clearly does better than *LDpred2 auto*
 *BayesC*, and *BayesR*, which perform similarly. *mvBayesC* (both versions) does better than the 
-univariate methods, but not as well as *mr.mash.rss*.
+univariate methods, but not as well as *mr.mash.rss*. *wMT-SBLUP* does poorly as its infinitesimal 
+architecture assumption is not well-suited for the true genetic architecture of the traits.
 
 ## Mostly null scenario
 
