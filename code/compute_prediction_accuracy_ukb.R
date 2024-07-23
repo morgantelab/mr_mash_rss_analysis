@@ -192,7 +192,7 @@ for(i in chrs){
       ##Read in model fit
       model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_trait", j, "_", data_id, ".rds"))
       
-      if(model=="ldpred2_auto"){
+      if(model %in% c("ldpred2_auto", "mtag_ldpred2_auto")){
         
         model_fit$elapsed_time <- NULL
         
