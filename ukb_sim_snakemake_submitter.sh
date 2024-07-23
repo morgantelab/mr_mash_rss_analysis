@@ -17,7 +17,7 @@ conda activate mr_mash_rss_proj
 #--dag | display | dot
 #-p -n \
 ## test dag generation
-#snakemake -p -n -s ukb_sim_snakefile \
+# snakemake -p -n -s ukb_sim_snakefile \
 #           --configfile ukb_sim_equal_effects_indep_resid.yaml
            #--rerun-triggers mtime \
            #--configfile ukb_sim_equal_effects_50000causal_indep_resid.yaml 
@@ -30,7 +30,6 @@ snakemake \
   -s ukb_sim_snakefile \
   --profile slurm \
   --latency-wait 120 \
-  -k \
   --configfile ukb_sim_equal_effects_indep_resid.yaml
   #--configfile ukb_sim_equal_effects_low_pve_indep_resid.yaml
   #--configfile ukb_sim_blocks_shared_effects_indep_resid.yaml
