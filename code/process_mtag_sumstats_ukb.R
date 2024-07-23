@@ -6,7 +6,7 @@ parser <- OptionParser()
 parser <- add_option(parser, c("--sumstats"), type="character")
 parser <- add_option(parser, c("--sumstats_mtag_prefix"), type="character")
 parser <- add_option(parser, c("--output"), type="character")
-parser <- add_option(parser, c("--traits"), type="charcter")
+parser <- add_option(parser, c("--traits"), type="character")
 outparse <- parse_args(parser)
 
 sumstats <- outparse$sumstats
