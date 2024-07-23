@@ -11,11 +11,11 @@
 
 <meta name="author" content="Fabio Morgante &amp; Deborah Kunkel" />
 
-<meta name="date" content="2023-11-29" />
+<meta name="date" content="2024-07-23" />
 
 <title>Simulations with UK Biobank genotypes and different effect structure across traits</title>
 
-<script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
@@ -38,8 +38,8 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -374,7 +374,7 @@ div.tocify {
 <h1 class="title toc-ignore">Simulations with UK Biobank genotypes and
 different effect structure across traits</h1>
 <h4 class="author">Fabio Morgante &amp; Deborah Kunkel</h4>
-<h4 class="date">November 29, 2023</h4>
+<h4 class="date">July 23, 2024</h4>
 
 </div>
 
@@ -403,7 +403,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2023-11-29
+<strong>Last updated:</strong> 2024-07-23
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree3e703046456d97239799fa078fb3a5ca9d56d754targetblank3e70304a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree97da64cfcc97f5e7b4c52921f0c63ac0757835a8targetblank97da64ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/3e703046456d97239799fa078fb3a5ca9d56d754" target="_blank">3e70304</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/97da64cfcc97f5e7b4c52921f0c63ac0757835a8" target="_blank">97da64c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree3e703046456d97239799fa078fb3a5ca9d56d754targetblank3e70304a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree97da64cfcc97f5e7b4c52921f0c63ac0757835a8targetblank97da64ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/3e703046456d97239799fa078fb3a5ca9d56d754" target="_blank">3e70304</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/97da64cfcc97f5e7b4c52921f0c63ac0757835a8" target="_blank">97da64c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -569,20 +569,32 @@ were generated:
 Ignored files:
     Ignored:    .snakemake/
     Ignored:    data/
-    Ignored:    output/
+    Ignored:    output/bayesC_fit/
+    Ignored:    output/bayesR_fit/
+    Ignored:    output/estimated_effects/
+    Ignored:    output/kriging_rss_fit/
+    Ignored:    output/ldpred2_auto_fit/
+    Ignored:    output/ldpred2_auto_gwide_fit/
+    Ignored:    output/ldsc_fit/
+    Ignored:    output/misc/
+    Ignored:    output/mr_mash_rss_fit/
+    Ignored:    output/mvbayesC_fit/
+    Ignored:    output/prediction_accuracy/
+    Ignored:    output/sblup_fit/
+    Ignored:    output/summary_statistics/
+    Ignored:    output/wmt_sblup_fit/
     Ignored:    run/
     Ignored:    tmp/
 
 Untracked files:
     Untracked:  Snakefile_old
     Untracked:  code/adjust_LD_test.R
-    Untracked:  code/compute_prior_all_regions_finemapped_bc_ukb.R
     Untracked:  code/compute_sumstats_test_bc_ukb.R
+    Untracked:  code/compute_sumstats_ukb_2.R
     Untracked:  code/fit_kriging_rss_ukb.R
     Untracked:  code/fit_mrmashrss_test_ukb.R
     Untracked:  code/merge_sumstats_all_chr_ukb.R
     Untracked:  code/split_effects_by_chr_imp_ukb.R
-    Untracked:  scripts/10_run_compute_prior_all_regions_finemapped_bc_ukb.sbatch
     Untracked:  scripts/11_run_fit_mrmashrss_by_chr_V_all_chr_bc_ukb.sbatch
     Untracked:  scripts/11_run_fit_mrmashrss_sparse_LD_mvsusie_paper_prior_by_chr_bc_ukb.sbatch
     Untracked:  scripts/12_run_compute_pred_accuracy_mrmashrss_sparse_LD_mvsusie_paper_prior_bc_ukb.sbatch
@@ -592,11 +604,8 @@ Untracked files:
     Untracked:  scripts/7_run_compute_residual_cor_all_chr_bc_ukb.sbatch
     Untracked:  scripts/run_adjust_LD_test.sbatch
     Untracked:  scripts/run_fit_kriging_rss_by_chr_and_trait_bc_ukb.sbatch
-
-Unstaged changes:
-    Modified:   code/compute_prediction_accuracy_bc_ukb.R
-    Modified:   ukb_sim_snakefile
-    Modified:   ukb_sim_snakemake_submitter.sh
+    Untracked:  vs_sm_convert/
+    Untracked:  vs_sm_test/
 
 </code></pre>
 <p>
@@ -642,6 +651,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/97da64cfcc97f5e7b4c52921f0c63ac0757835a8/analysis/ukb_sim_results.Rmd" target="_blank">97da64c</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-07-23
+</td>
+<td>
+Add wMT-SBLUP results for the Equal Effects scenario
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/fe97ab89bd4edd57eac111378bcd8c67e88d545d/docs/ukb_sim_results.html" target="_blank">fe97ab8</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-11-29
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -2314,6 +2357,12 @@ variants) initialized as 0.0001, <span
 class="math inline">\(h^2\)</span> initialized as 0.1, and other default
 parameters. NB this is a multivariate method. We used the implementation
 in the <em>qgg</em> R package.</li>
+<li><a
+href="https://www.nature.com/articles/s41467-017-02769-6">wMT-SBLUP</a>
+per-chromosome, with <span class="math inline">\(M_{eff}=60000\)</span>
+and SBLUP estimate obtained with a window size of 2 Mb (using the
+<em>SumTool</em> R package implementation). NB this is a multivariate
+method. We used the implementation in the <em>qgg</em> R package.</li>
 </ul>
 <p>Prediction accuracy was evaluated as the <span
 class="math inline">\(R^2\)</span> of the regression of true phenotypes
@@ -2329,7 +2378,7 @@ per-trait variance of 1 and a correlation across traits of 1. This
 implies that the effects of the causal variants are equal across
 responses.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;equal_effects_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;mvbayesC_rest&quot;, &quot;ldpred2_auto&quot;, &quot;bayesC&quot;, &quot;bayesR&quot;)
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;mvbayesC_rest&quot;, &quot;wmt_sblup&quot;, &quot;ldpred2_auto&quot;, &quot;bayesC&quot;, &quot;bayesR&quot;)
 
 i &lt;- 0
 
@@ -2367,7 +2416,7 @@ p_methods_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
   ylim(0, 0.51) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;lightblue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;orange&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;lightblue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
@@ -2396,6 +2445,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/fe97ab89bd4edd57eac111378bcd8c67e88d545d/docs/figure/ukb_sim_results.Rmd/equal effects-1.png" target="_blank">fe97ab8</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2023-11-29
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/3e703046456d97239799fa078fb3a5ca9d56d754/docs/figure/ukb_sim_results.Rmd/equal effects-1.png" target="_blank">3e70304</a>
@@ -3590,22 +3650,22 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] cowplot_1.1.1 ggplot2_3.4.3
+[1] cowplot_1.1.3 ggplot2_3.5.1
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.11       highr_0.10        pillar_1.9.0      compiler_4.1.2   
- [5] bslib_0.5.0       later_1.3.1       jquerylib_0.1.4   git2r_0.32.0     
- [9] workflowr_1.7.0   tools_4.1.2       digest_0.6.33     gtable_0.3.3     
-[13] jsonlite_1.8.7    evaluate_0.21     lifecycle_1.0.3   tibble_3.2.1     
-[17] pkgconfig_2.0.3   rlang_1.1.1       cli_3.6.1         rstudioapi_0.15.0
-[21] yaml_2.3.7        xfun_0.39         fastmap_1.1.1     withr_2.5.0      
-[25] dplyr_1.1.2       stringr_1.5.0     knitr_1.43        generics_0.1.3   
-[29] fs_1.6.3          vctrs_0.6.3       sass_0.4.7        tidyselect_1.2.0 
-[33] rprojroot_2.0.3   grid_4.1.2        glue_1.6.2        R6_2.5.1         
-[37] fansi_1.0.4       rmarkdown_2.23    farver_2.1.1      magrittr_2.0.3   
-[41] whisker_0.4.1     scales_1.2.1      promises_1.2.0.1  htmltools_0.5.5  
-[45] colorspace_2.1-0  httpuv_1.6.11     labeling_0.4.2    utf8_1.2.3       
-[49] stringi_1.7.12    munsell_0.5.0     cachem_1.0.8     </code></pre>
+ [1] Rcpp_1.0.13       highr_0.11        pillar_1.9.0      compiler_4.1.2   
+ [5] bslib_0.7.0       later_1.3.2       jquerylib_0.1.4   git2r_0.32.0     
+ [9] workflowr_1.7.0   tools_4.1.2       digest_0.6.35     gtable_0.3.5     
+[13] jsonlite_1.8.8    evaluate_0.23     lifecycle_1.0.4   tibble_3.2.1     
+[17] pkgconfig_2.0.3   rlang_1.1.4       cli_3.6.2         rstudioapi_0.15.0
+[21] yaml_2.3.8        xfun_0.44         fastmap_1.2.0     withr_3.0.0      
+[25] dplyr_1.1.4       stringr_1.5.1     knitr_1.47        generics_0.1.3   
+[29] fs_1.6.4          vctrs_0.6.5       sass_0.4.9        tidyselect_1.2.1 
+[33] rprojroot_2.0.4   grid_4.1.2        glue_1.7.0        R6_2.5.1         
+[37] fansi_1.0.6       rmarkdown_2.27    farver_2.1.2      magrittr_2.0.3   
+[41] whisker_0.4.1     scales_1.3.0      promises_1.3.0    htmltools_0.5.8.1
+[45] colorspace_2.1-0  httpuv_1.6.11     labeling_0.4.3    utf8_1.2.4       
+[49] stringi_1.8.4     munsell_0.5.1     cachem_1.1.0     </code></pre>
 </div>
 </div>
 
