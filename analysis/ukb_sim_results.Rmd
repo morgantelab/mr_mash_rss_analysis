@@ -79,6 +79,9 @@ NB this is a multivariate method. We used the implementation in the *qgg* R pack
 per-chromosome, with 5000 iterations, 1000 burn-in iterations, thinning factor of 5, $\pi$ (i.e., the proportion of 
 causal variants) initialized as 0.0001, $h^2$ initialized as 0.1,  and other default parameters. 
 NB this is a multivariate method. We used the implementation in the *qgg* R package.
+* [wMT-SBLUP](https://www.nature.com/articles/s41467-017-02769-6) per-chromosome, with $M_{eff}=60000$ and 
+SBLUP estimate obtained with a window size of 2 Mb (using the *SumTool* R package implementation).
+NB this is a multivariate method. We used the implementation in the *qgg* R package.
 
 Prediction accuracy was evaluated as the $R^2$ of the regression of true phenotypes on the predicted 
 phenotypes. This metric as the attractive property that its upper bound is $h_g^2$.
@@ -93,7 +96,7 @@ This implies that the effects of the causal variants are equal across responses.
 
 ```{r equal effects, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_indep_resid"
-methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesC", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "wmt_sblup", "ldpred2_auto", "bayesC", "bayesR")
 
 i <- 0
 
@@ -131,7 +134,7 @@ p_methods_shared <- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.51) +
-  scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) +
+  scale_fill_manual(values = c("pink", "red", "yellow", "orange", "green", "blue", "lightblue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
