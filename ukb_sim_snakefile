@@ -931,10 +931,6 @@ rule compute_prediction_accuracy_mvbayesC_rest:
         module unload R/4.2.3
         """
 
-
-###########################
-
-
 rule munge_summary_stats_for_mtag:
   input:
     sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
@@ -1024,7 +1020,8 @@ rule postprocess_mtag_summary_stats:
 
 rule fit_mtag_ldpred2auto_by_chr_trait:
   input:
-    sumstats=config["DEST"]+"output/mtag_summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}.rds",
+    sumstats_mtag=config["DEST"]+"output/mtag_summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}.rds",
+    sumstats_ols=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
     ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.rds"
   output:
     config["DEST"]+"output/mtag_ldpred2_auto_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mtag_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds"
@@ -1033,11 +1030,13 @@ rule fit_mtag_ldpred2auto_by_chr_trait:
     h2_init=config["H2_INIT"],
     burn_in=config["MTAG_LDPRED_BURN_IN"],
     num_iter=config["MTAG_LDPRED_ITER"],
+    shrink_corr=config["MTAG_LDPRED_SHRINK_CORR"],
+    allow_jump_sign=config["MTAG_LDPRED_ALLOW_JUMP_SIGN"],
     trait="{TRAIT}",
     dataset="{DATASET}",
     chr="{CHR}",
     tmp=config["TMP"],
-    script=config["SCRIPT"]+"fit_ldpred2auto_ukb.R"
+    script=config["SCRIPT"]+"fit_ldpred2auto_neff_ukb.R"
   resources: cpus=4, mem_mb=50000, time_min=720
   shell:
         """
@@ -1046,12 +1045,15 @@ rule fit_mtag_ldpred2auto_by_chr_trait:
         export MKL_NUM_THREADS=1
         export OMP_NUM_THREADS=1
         Rscript {params.script} \
-                                    --sumstats {input.sumstats} \
+                                    --sumstats_mixed {input.sumstats_mtag} \
+                                    --sumstats_ols {input.sumstats_ols} \
                                     --LD_matrix {input.ldmat} \
                                     --n {params.n} \
                                     --h2_init {params.h2_init} \
                                     --burn_in {params.burn_in} \
                                     --num_iter {params.num_iter} \
+                                    --shrink_corr {params.shrink_corr} \
+                                    --allow_jump_sign {params.allow_jump_sign} \
                                     --trait {params.trait} \
                                     --ncores 4 \
                                     --seed {params.dataset} \
@@ -1109,8 +1111,6 @@ rule compute_prediction_accuracy_mtag_ldpred2:
                                     --prefix {params.prefix}
         module unload R/4.2.3
         """
-
-###########################
 
 rule fit_sblup_by_chr_trait:
   input:
