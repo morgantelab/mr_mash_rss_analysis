@@ -989,7 +989,8 @@ rule compute_mtag_summary_stats_by_chr:
 	              --out {params.out_prefix} \
 	              --maf_min {params.maf_min} \
 	              --n_min {params.n_min} \
-	              --incld_ambig_snps
+	              --incld_ambig_snps \
+                      --median_z_cutoff 0.3
         module unload python2.7-fm/2.7.18
         """
 
