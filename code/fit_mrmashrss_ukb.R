@@ -125,7 +125,9 @@ w0 <- c((1-prop_nonzero), rep(prop_nonzero/(length(S0)-1), (length(S0)-1)))
 
 ###Subsets traits
 if(length(traits)>1){
-  univ_sumstats <- lapply(univ_sumstats, function(x, sel){x[, sel]}, traits)
+  univ_sumstats$Bhat <- univ_sumstats$Bhat[, traits]
+  univ_sumstats$Shat <- univ_sumstats$Shat[, traits]
+  univ_sumstats$n <- univ_sumstats$n[traits]
   S0 <- lapply(S0, function(x, sel){x[sel, sel]}, traits)
   covY <- covY[traits, traits]
   V <- V[traits, traits]

@@ -1168,6 +1168,7 @@ rule fit_wmt_sblup_by_chr:
     method=config["WMTSBLUP_METHOD"],
     meff=config["WMTSBLUP_MEFF"],
     dataset="{DATASET}",
+    traits=config["TRAIT_RANGE"],
     prefix=config["DEST"]+"output/sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_sblup_fit",
     script=config["SCRIPT"]+"fit_wmt_sblup_ukb.R"
   resources: cpus=4, mem_mb=7000, time_min=120
@@ -1184,6 +1185,7 @@ rule fit_wmt_sblup_by_chr:
                                     --n {params.n} \
                                     --method {params.method} \
                                     --meff {params.meff} \
+                                    --traits {params.traits} \
                                     --data_id {params.dataset} \
                                     --seed {params.dataset} \
                                     --output {output}

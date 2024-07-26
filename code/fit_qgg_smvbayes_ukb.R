@@ -41,7 +41,9 @@ univ_sumstats <- readRDS(sumstats)
 LD <- qgg:::readLD(LD_matrix)
 
 if(length(traits)>1){
-  univ_sumstats <- lapply(univ_sumstats, function(x, sel){x[, sel]}, traits)
+  univ_sumstats$Bhat <- univ_sumstats$Bhat[, traits]
+  univ_sumstats$Shat <- univ_sumstats$Shat[, traits]
+  univ_sumstats$n <- univ_sumstats$n[traits]
 }
 
 if(models == "NULL"){
