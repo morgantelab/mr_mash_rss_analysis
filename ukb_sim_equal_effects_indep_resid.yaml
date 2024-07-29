@@ -43,7 +43,7 @@ LDPRED_MODEL_FIT_GWIDE_DIR: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/
 MTAG_LDPRED_BURN_IN: "500"
 MTAG_LDPRED_ITER: "1000"
 MTAG_LDPRED_SHRINK_CORR: "0.95"
-MTAG_LDPRED_ALLOW_JUMP_SIGN: "TRUE"
+MTAG_LDPRED_ALLOW_JUMP_SIGN: "FALSE"
 MTAG_LDPRED_MODEL: "mtag_ldpred2_auto"
 MTAG_LDPRED_MODEL_FIT_DIR: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/output/mtag_ldpred2_auto_fit/"
 MRMASH_CAN_COV: "FALSE"
