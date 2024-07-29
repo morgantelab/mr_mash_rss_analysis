@@ -1,0 +1,1246 @@
+wildcard_constraints:
+    CHR = "|".join(map(str, config["CHR"])),
+    DATASET = "|".join(map(str, config["DATASET"])),
+    TRAIT = "|".join(map(str, config["TRAIT"]))
+
+rule all:
+  input:
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mr_mash_rss_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mr_mash_rss_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_ldpred2_auto_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_bayesR_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesR_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mvbayesC_rest_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_rest_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mvbayesC_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_wmt_sblup_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_wmt_sblup_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])#,
+    #expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_bayesC_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    #expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesC_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])
+    
+rule split_train_test:
+  input:
+    config["FAM"]
+  output:
+    config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
+  params:
+    script=config["SCRIPT"]+"split_train_test_ukb_list_plink.R",
+    n=config["N_TRAIN"],
+    dataset="{DATASET}"
+  resources: cpus=1, mem_mb=2048, time_min=10
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
+        Rscript {params.script} \
+                                  --input {input} \
+                                  --n_train {params.n} \
+                                  --seed {params.dataset} \
+                                  --output {output}
+        module unload R/4.2.3
+        """
+
+#rule compute_genotype_means:
+#  input:
+#    geno=config["BED"],
+#    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
+#  output:
+#    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_chr{CHR}_geno_means_{DATASET}.rds"
+#  params:
+#    script=config["SCRIPT"]+"compute_genotype_means_ukb.R",
+#    dataset="{DATASET}",
+#    imp_flag=config["IMPUTE_FLAG"],
+#    tmp=config["TMP"],
+#    chr="{CHR}"
+#  resources: cpus=13, mem_mb=100000, time_min=1440
+#  shell:
+#        """
+#        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+#        module load R/4.2.3
+#        export MKL_NUM_THREADS=1
+#        Rscript {params.script} \
+#                                  --geno {input.geno} \
+#                                  --test_ids {input.tids} \
+#                                  --output {output} \
+#                                  --seed {params.dataset} \
+#                                  --chr {params.chr} \
+#                                  --impute_missing {params.imp_flag} \
+#                                  --temp_dir {params.tmp} \
+#                                  --ncores 8
+#        module unload R/4.2.3
+#        """
+
+rule simulate_phenotype:
+  input:
+    config["BED"]
+  output:
+    config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds"
+  params:
+    p_causal=config["P_CAUSAL"],
+    r=config["R"],
+    r_causal=config["R_CAUSAL"],
+    pve=config["PVE"],
+    B_scale=config["B_SCALE"],
+    B_cor=config["B_COR"],
+    V_cor=config["V_COR"],
+    w=config["W"],
+    dataset="{DATASET}",
+    tmp=config["TMP"],
+    script=config["SCRIPT"]+"sim_pheno_ukb.R"
+  resources: cpus=16, mem_mb=150000, time_min=1440
+  shell:
+        """
+        module load gsl/2.7
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=16
+        Rscript {params.script} \
+                                    --geno {input} \
+                                    --p_causal {params.p_causal} \
+                                    --r {params.r} \
+                                    --r_causal "{params.r_causal}" \
+                                    --pve "{params.pve}" \
+                                    --B_scale "{params.B_scale}" \
+                                    --B_cor "{params.B_cor}" \
+                                    --V_cor {params.V_cor} \
+                                    --w "{params.w}" \
+                                    --seed {params.dataset} \
+                                    --temp_dir {params.tmp} \
+                                    --output {output} \
+                                    --ncores 16
+        module unload R/4.2.3
+        module unload gsl/2.7
+        """
+
+rule assign_missing_pheno:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_{DATASET}.rds",
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
+  output:
+    config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_missing_{DATASET}.rds"
+  params:
+    dataset="{DATASET}",
+    prop_miss=config["MISS_PROP"],
+    prop_miss_by_cases=config["MISS_PROP_BY_CASES"],
+    mech=config["MISS_MECHANISM"],
+    pattern=config["MISS_PATTERN"],
+    script=config["SCRIPT"]+"assign_missing_pheno_values_ukb.R"
+  resources: cpus=2, mem_mb=6000, time_min=1440
+  shell:
+        """
+        module load gsl/2.7
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
+        Rscript {params.script} \
+                                    --pheno {input.pheno} \
+                                    --test_ids {input.tids} \
+                                    --prop_missing {params.prop_miss} \
+                                    --prop_missing_by_cases {params.prop_miss_by_cases} \
+                                    --mechanism {params.mech} \
+                                    --pattern {params.pattern}\
+                                    --output {output} \
+                                    --seed {params.dataset}
+        module unload R/4.2.3
+        module unload gsl/2.7
+        """
+
+rule compute_summary_stats:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_missing_{DATASET}.rds",
+    geno=config["BED"],
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
+  output:
+    config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds"
+  params:
+    dataset="{DATASET}",
+    chr="{CHR}",
+    stand=config["STANDARDIZE"],
+    imp_flag=config["IMPUTE_FLAG"],
+    tmp=config["TMP"],
+    norm_pheno=config["NORMALIZE_PHENO"],
+    script=config["SCRIPT"]+"compute_sumstats_missing_pheno_ukb.R"
+  resources: cpus=5, mem_mb=200000, time_min=1440
+  shell:
+        """
+        module load gsl/2.7
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
+        Rscript {params.script} \
+                                    --pheno {input.pheno} \
+                                    --geno {input.geno} \
+                                    --test_ids {input.tids} \
+                                    --output {output} \
+                                    --seed {params.dataset} \
+                                    --chr {params.chr} \
+                                    --standardize {params.stand} \
+                                    --impute_missing {params.imp_flag} \
+                                    --normalize {params.norm_pheno} \
+                                    --temp_dir {params.tmp} \
+                                    --ncores 5
+        module unload R/4.2.3
+        module unload gsl/2.7
+        """
+
+#rule compute_phenotype_means:
+#  input:
+#    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_missing_{DATASET}.rds",
+#    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
+#  output:
+#    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_missing_means_{DATASET}.rds"
+#  params:
+#    dataset="{DATASET}",
+#    script=config["SCRIPT"]+"compute_phenotype_means_ukb.R"
+#  resources: cpus=1, mem_mb=2000, time_min=30
+#  shell:
+#        """
+#        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+#        module load R/4.2.3
+#        Rscript {params.script} \
+#                                    --pheno {input.pheno} \
+#                                    --test_ids {input.tids} \
+#                                    --output {output} \
+#                                    --seed {params.dataset}
+#        module unload R/4.2.3
+#        """
+
+rule compute_phenotype_covariance:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_missing_{DATASET}.rds",
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt"
+  output:
+    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_phenotypic_cov_{DATASET}.rds"
+  params:
+    dataset="{DATASET}",
+    norm_pheno=config["NORMALIZE_PHENO"],
+    script=config["SCRIPT"]+"compute_phenotypic_cov_missing_pheno_ukb.R"
+  resources: cpus=8, mem_mb=6000, time_min=120
+  shell:
+        """
+        module load gsl/2.7
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=8
+        export OMP_NUM_THREADS=8
+        Rscript {params.script} \
+                                    --pheno {input.pheno} \
+                                    --test_ids {input.tids} \
+                                    --seed {params.dataset} \
+                                    --normalize {params.norm_pheno} \
+                                    --output {output}
+        module unload R/4.2.3
+        module unload gsl/2.7
+        """
+
+def get_sumstats_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    return expand(config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"])
+
+rule compute_residual_covariance_all_chr:
+  input:
+    lambda wildcards: get_sumstats_input_files(wildcards)
+  output:
+    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_residual_cov_{DATASET}.rds"
+  params:
+    prefix="output/summary_statistics/"+config["DATA_PREFIX"]+"_chr",
+    suffix="_sumstats_{DATASET}.rds",
+    chr_r=config["CHR_RANGE"],
+    dataset="{DATASET}",
+    script=config["SCRIPT"]+"compute_residual_cov_all_chr_ukb.R"
+  resources: cpus=1, mem_mb=4000, time_min=60
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
+        Rscript {params.script} \
+                                    --sumstats_prefix {params.prefix} \
+                                    --sumstats_suffix {params.suffix} \
+                                    --chr {params.chr_r} \
+                                    --output {output} \
+                                    --seed {params.dataset}
+        module unload R/4.2.3
+        """
+
+rule compute_data_driven_covariance_all_chr:
+  input:
+    sum_stat=lambda wildcards: get_sumstats_input_files(wildcards),
+    res_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_residual_cov_{DATASET}.rds"
+  output:
+    config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_"+config["DD_ED"]+"_data_driven_cov_{DATASET}.rds"
+  params:
+    prefix="output/summary_statistics/"+config["DATA_PREFIX"]+"_chr",
+    suffix="_sumstats_{DATASET}.rds",
+    chr_r=config["CHR_RANGE"],
+    ed_can_cov=config["DD_ED_CAN_COV"],
+    str_z_thr=config["DD_STRONG_Z_THR"],
+    n_pcs=config["DD_N_PCS"],
+    frs=config["DD_FLASH_REMOVE_SINGLE"],
+    ed=config["DD_ED"],
+    ted_zero=config["DD_TED_ZERO_THRESH"],
+    dataset="{DATASET}",
+    script=config["SCRIPT"]+"compute_data_driven_cov_all_chr_ukb.R"
+  resources: cpus=8, mem_mb=7000, time_min=1440
+  shell:
+        """
+        module load gsl/2.7
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=8
+        export OMP_NUM_THREADS=8
+        Rscript {params.script} \
+                                    --sumstats_prefix {params.prefix} \
+                                    --sumstats_suffix {params.suffix} \
+                                    --chr {params.chr_r} \
+                                    --residual_cov {input.res_cov} \
+                                    --strong_Z_thresh {params.str_z_thr} \
+                                    --n_PCs {params.n_pcs} \
+                                    --flash_remove_singleton {params.frs} \
+                                    --ED_algorithm {params.ed} \
+                                    --ted_zero_thresh {params.ted_zero} \
+                                    --canonical_cov {params.ed_can_cov} \
+                                    --output {output} \
+                                    --seed {params.dataset}
+        module unload R/4.2.3
+        module unload gsl/2.7
+        """
+
+rule fit_ldpred2auto_by_chr_trait:
+  input:
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.rds"
+  output:
+    config["DEST"]+"output/ldpred2_auto_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds"
+  params:
+    h2_init=config["H2_INIT"],
+    burn_in=config["LDPRED_BURN_IN"],
+    num_iter=config["LDPRED_ITER"],
+    trait="{TRAIT}",
+    dataset="{DATASET}",
+    chr="{CHR}",
+    tmp=config["TMP"],
+    script=config["SCRIPT"]+"fit_ldpred2auto_dynamic_n_ukb.R"
+  resources: cpus=4, mem_mb=50000, time_min=720
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
+        Rscript {params.script} \
+                                    --sumstats {input.sumstats} \
+                                    --LD_matrix {input.ldmat} \
+                                    --h2_init {params.h2_init} \
+                                    --burn_in {params.burn_in} \
+                                    --num_iter {params.num_iter} \
+                                    --trait {params.trait} \
+                                    --ncores 4 \
+                                    --seed {params.dataset} \
+                                    --temp_dir {params.tmp} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+rule fit_mrmash_rss_by_chr:
+  input:
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.rds",
+    pheno_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_phenotypic_cov_{DATASET}.rds",
+    res_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_residual_cov_{DATASET}.rds",
+    dd_cov=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_"+config["DD_ED"]+"_data_driven_cov_{DATASET}.rds" #,
+    # x_colm=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_chr{CHR}_geno_means_{DATASET}.rds",
+    # y_colm=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds"
+  output:
+    config["DEST"]+"output/mr_mash_rss_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mr_mash_rss_fit_{DATASET}.rds"
+  params:
+    can_cov=config["MRMASH_CAN_COV"],
+    n=config["MRMASH_N"],
+    prop_nz=config["MRMASH_PROP_NONZERO"],
+    stand=config["STANDARDIZE"],
+    upd_v_met=config["MRMASH_UPDATE_V_METHOD"],
+    w0_thresh=config["MRMASH_W0_THRESH"],
+    traits=config["TRAIT_RANGE"],
+    script=config["SCRIPT"]+"fit_mrmashrss_dynamic_n_ukb.R",
+    chr="{CHR}",
+    dataset="{DATASET}"
+  resources: cpus=4, mem_mb=15000, time_min=4320
+  shell:
+        """
+        module load gsl/2.7
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
+        Rscript {params.script} \
+                                    --sumstats {input.sumstats} \
+                                    --LD_matrix {input.ldmat} \
+                                    --pheno_cov {input.pheno_cov} \
+                                    --residual_cov {input.res_cov} \
+                                    --data_driven_cov {input.dd_cov} \
+                                    --canonical_cov {params.can_cov} \
+                                    --n {params.n} \
+                                    --prop_nonzero {params.prop_nz} \
+                                    --standardize {params.stand} \
+                                    --update_V_method {params.upd_v_met} \
+                                    --w0_threshold {params.w0_thresh} \
+                                    --ncores 4 \
+                                    --traits {params.traits} \
+                                    --seed {params.dataset} \
+                                    --output {output}
+        module unload R/4.2.3
+        module unload gsl/2.7
+        """
+
+rule fit_ldpred2auto_gwide_by_trait:
+  input:
+    sumstats=lambda wildcards: get_sumstats_input_files(wildcards),
+    ldmat=expand(config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.rds", CHR=config["CHR"])
+  output:
+    config["DEST"]+"output/ldpred2_auto_gwide_fit/"+config["DATA_PREFIX"]+"_chrAll_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds"
+  params:
+    ss_prefix="output/summary_statistics/"+config["DATA_PREFIX"]+"_chr",
+    ss_suffix="_sumstats_{DATASET}.rds",
+    ld_prefix="data/LD_matrices/"+config["LDMAT_PREFIX"],
+    ld_suffix="_LD.ld.bin",
+    h2_init=config["H2_INIT_GWIDE"],
+    burn_in=config["LDPRED_BURN_IN"],
+    num_iter=config["LDPRED_ITER"],
+    trait="{TRAIT}",
+    dataset="{DATASET}",
+    chr_r=config["CHR_RANGE"],
+    tmp=config["TMP"],
+    script=config["SCRIPT"]+"fit_ldpred2auto_gwide_ukb.R"
+  resources: cpus=4, mem_mb=50000, time_min=1440
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
+        Rscript {params.script} \
+                                    --sumstats_prefix {params.ss_prefix} \
+                                    --sumstats_suffix {params.ss_suffix} \
+                                    --LD_matrix_prefix {params.ld_prefix} \
+                                    --LD_matrix_suffix {params.ld_suffix} \
+                                    --chr {params.chr_r} \
+                                    --h2_init {params.h2_init} \
+                                    --burn_in {params.burn_in} \
+                                    --num_iter {params.num_iter} \
+                                    --trait {params.trait} \
+                                    --ncores 4 \
+                                    --seed {params.dataset} \
+                                    --temp_dir {params.tmp} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+rule fit_bayesR_by_chr_trait:
+  input:
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.ld.bin"
+  output:
+    config["DEST"]+"output/bayesR_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_bayesR_fit_trait{TRAIT}_{DATASET}.rds"
+  params:
+    h2_init=config["BAYESR_H2_INIT"],
+    pi_init=config["BAYESR_PI_INIT"],
+    nburn=config["BAYESR_NBURN"],
+    nit=config["BAYESR_NIT"],
+    nthin=config["BAYESR_NTHIN"],
+    trait="{TRAIT}",
+    dataset="{DATASET}",
+    chr="{CHR}",
+    script=config["SCRIPT"]+"fit_qgg_sbayes_dynamic_n_ukb.R"
+  resources: cpus=4, mem_mb=7000, time_min=1440
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=4
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --sumstats {input.sumstats} \
+                                    --LD_matrix {input.ldmat} \
+                                    --method bayesR \
+                                    --h2 {params.h2_init} \
+                                    --pi {params.pi_init} \
+                                    --nburn {params.nburn} \
+                                    --nit {params.nit} \
+                                    --nthin {params.nthin} \
+                                    --trait {params.trait} \
+                                    --seed {params.dataset} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+rule fit_bayesC_by_chr_trait:
+  input:
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.ld.bin"
+  output:
+    config["DEST"]+"output/bayesC_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_bayesC_fit_trait{TRAIT}_{DATASET}.rds"
+  params:
+    h2_init=config["BAYESC_H2_INIT"],
+    pi_init=config["BAYESC_PI_INIT"],
+    nburn=config["BAYESC_NBURN"],
+    nit=config["BAYESC_NIT"],
+    nthin=config["BAYESC_NTHIN"],
+    trait="{TRAIT}",
+    dataset="{DATASET}",
+    chr="{CHR}",
+    script=config["SCRIPT"]+"fit_qgg_sbayes_ukb.R"
+  resources: cpus=4, mem_mb=7000, time_min=1440
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=4
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --sumstats {input.sumstats} \
+                                    --LD_matrix {input.ldmat} \
+                                    --method bayesC \
+                                    --h2 {params.h2_init} \
+                                    --pi {params.pi_init} \
+                                    --nburn {params.nburn} \
+                                    --nit {params.nit} \
+                                    --nthin {params.nthin} \
+                                    --trait {params.trait} \
+                                    --seed {params.dataset} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+rule fit_mvbayesC_by_chr:
+  input:
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.ld.bin"
+  output:
+    config["DEST"]+"output/mvbayesC_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mvbayesC_fit_{DATASET}.rds"
+  params:
+    h2_init=config["MVBAYESC_H2_INIT"],
+    pi_init=config["MVBAYESC_PI_INIT"],
+    nburn=config["MVBAYESC_NBURN"],
+    nit=config["MVBAYESC_NIT"],
+    nthin=config["MVBAYESC_NTHIN"],
+    traits=config["TRAIT_RANGE"],
+    dataset="{DATASET}",
+    chr="{CHR}",
+    script=config["SCRIPT"]+"fit_qgg_smvbayes_dynamic_n_ukb.R"
+  resources: cpus=4, mem_mb=7000, time_min=2880
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=4
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --sumstats {input.sumstats} \
+                                    --LD_matrix {input.ldmat} \
+                                    --method bayesC \
+                                    --models NULL \
+                                    --h2 {params.h2_init} \
+                                    --pi {params.pi_init} \
+                                    --nburn {params.nburn} \
+                                    --nit {params.nit} \
+                                    --nthin {params.nthin} \
+                                    --traits {params.traits} \
+                                    --seed {params.dataset} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+
+rule fit_mvbayesC_rest_by_chr:
+  input:
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.ld.bin"
+  output:
+    config["DEST"]+"output/mvbayesC_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mvbayesC_rest_fit_{DATASET}.rds"
+  params:
+    h2_init=config["MVBAYESCREST_H2_INIT"],
+    pi_init=config["MVBAYESCREST_PI_INIT"],
+    nburn=config["MVBAYESCREST_NBURN"],
+    nit=config["MVBAYESCREST_NIT"],
+    nthin=config["MVBAYESCREST_NTHIN"],
+    traits=config["TRAIT_RANGE"],
+    dataset="{DATASET}",
+    chr="{CHR}",
+    script=config["SCRIPT"]+"fit_qgg_smvbayes_dynamic_n_ukb.R"
+  resources: cpus=4, mem_mb=7000, time_min=2880
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=4
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --sumstats {input.sumstats} \
+                                    --LD_matrix {input.ldmat} \
+                                    --method bayesC \
+                                    --models restrictive \
+                                    --h2 {params.h2_init} \
+                                    --pi {params.pi_init} \
+                                    --nburn {params.nburn} \
+                                    --nit {params.nit} \
+                                    --nthin {params.nthin} \
+                                    --traits {params.traits} \
+                                    --seed {params.dataset} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+rule munge_summary_stats_for_mtag:
+  input:
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+  output:
+    temp(config["TMP"]+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_for_mtag_trait{TRAIT}_{DATASET}.txt")
+  params:
+    trait="{TRAIT}",
+    script=config["SCRIPT"]+"munge_sumstats_for_mtag_dynamic_n_ukb.R"
+  resources: cpus=1, mem_mb=2000, time_min=30
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
+        Rscript {params.script} \
+                                    --sumstats {input.sumstats} \
+                                    --trait {params.trait} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+rule compute_mtag_summary_stats_by_chr:
+  input:
+    expand(config["TMP"]+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_for_mtag_trait{TRAIT}_{DATASET}.txt", DATASET="{DATASET}", CHR="{CHR}", TRAIT=config["TRAIT"])
+  output:
+    temp(expand(config["TMP"]+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}_trait_{TRAIT}.txt", DATASET="{DATASET}", CHR="{CHR}", TRAIT=config["TRAIT"]))
+  params:
+    ldscores=config["LDSCORES"],
+    out_prefix=config["TMP"]+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}",
+    maf_min=0.0,
+    n_min=0.0,
+    input=",".join(expand(config["TMP"]+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_for_mtag_trait{TRAIT}_{DATASET}.txt", DATASET="{DATASET}", CHR="{CHR}", TRAIT=config["TRAIT"]))
+  resources: cpus=4, mem_mb=10000, time_min=120
+  shell:
+        """
+        module load python2.7-fm/2.7.18
+        python2 /data2/morgante_lab/fabiom/software/mtag/mtag.py  \
+	              --sumstats {params.input} \
+	              --ld_ref_panel {params.ldscores} \
+	              --out {params.out_prefix} \
+	              --maf_min {params.maf_min} \
+	              --n_min {params.n_min} \
+	              --incld_ambig_snps \
+                      --median_z_cutoff 0.3
+        module unload python2.7-fm/2.7.18
+        """
+
+rule postprocess_mtag_summary_stats:
+  input:
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    mtag_sumstats=expand(config["TMP"]+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}_trait_{TRAIT}.txt", DATASET="{DATASET}", CHR="{CHR}", TRAIT=config["TRAIT"])
+  output:
+    config["DEST"]+"output/mtag_summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}.rds"
+  params:
+    sumstats_mtag_prefix=config["TMP"]+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}_trait_",
+    trait_r=config["TRAIT_RANGE"],
+    script=config["SCRIPT"]+"process_mtag_sumstats_ukb.R"
+  resources: cpus=1, mem_mb=6000, time_min=60
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
+        Rscript {params.script} \
+                                    --sumstats {input.sumstats} \
+                                    --sumstats_mtag_prefix {params.sumstats_mtag_prefix} \
+                                    --traits {params.trait_r} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+rule fit_mtag_ldpred2auto_by_chr_trait:
+  input:
+    sumstats_mtag=config["DEST"]+"output/mtag_summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}.rds",
+    sumstats_ols=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    ldmat=config["LDMAT"]+config["LDMAT_PREFIX"]+"{CHR}_LD_sparse.rds"
+  output:
+    config["DEST"]+"output/mtag_ldpred2_auto_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mtag_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds"
+  params:
+    h2_init=config["H2_INIT"],
+    burn_in=config["MTAG_LDPRED_BURN_IN"],
+    num_iter=config["MTAG_LDPRED_ITER"],
+    shrink_corr=config["MTAG_LDPRED_SHRINK_CORR"],
+    allow_jump_sign=config["MTAG_LDPRED_ALLOW_JUMP_SIGN"],
+    trait="{TRAIT}",
+    dataset="{DATASET}",
+    chr="{CHR}",
+    tmp=config["TMP"],
+    script=config["SCRIPT"]+"fit_ldpred2auto_dynamic_neff_ukb.R"
+  resources: cpus=4, mem_mb=50000, time_min=720
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=1
+        Rscript {params.script} \
+                                    --sumstats_mixed {input.sumstats_mtag} \
+                                    --sumstats_ols {input.sumstats_ols} \
+                                    --LD_matrix {input.ldmat} \
+                                    --h2_init {params.h2_init} \
+                                    --burn_in {params.burn_in} \
+                                    --num_iter {params.num_iter} \
+                                    --shrink_corr {params.shrink_corr} \
+                                    --allow_jump_sign {params.allow_jump_sign} \
+                                    --trait {params.trait} \
+                                    --ncores 4 \
+                                    --seed {params.dataset} \
+                                    --temp_dir {params.tmp} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+rule fit_sblup_by_chr_trait:
+  input:
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    ldscores=config["LDSCORES"]+"{CHR}.l2.ldscore.gz",
+    geno=config["GENO_REF"]+"ukb_caucasian_white_british_unrel_for_LD_genetic_dist_chr{CHR}.bed"
+  output:
+    config["DEST"]+"output/sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_sblup_fit_trait{TRAIT}_{DATASET}.rds"
+  params:
+    geno_noext=config["GENO_REF"]+"ukb_caucasian_white_british_unrel_for_LD_genetic_dist_chr{CHR}",
+    imp=config["IMPUTE_FLAG"],
+    trait="{TRAIT}",
+    dataset="{DATASET}",
+    window=config["SBLUP_WIND_SIZE"],
+    tmp=config["TMP"],
+    script=config["SCRIPT"]+"fit_sblup_dynamic_n_ukb.R"
+  resources: cpus=4, mem_mb=20000, time_min=1440
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --sumstats {input.sumstats} \
+                                    --LD_scores {input.ldscores} \
+                                    --geno {params.geno_noext} \
+                                    --impute_missing {params.imp} \
+                                    --wind_size {params.window} \
+                                    --trait {params.trait} \
+                                    --ncores 4 \
+                                    --seed {params.dataset} \
+                                    --temp_dir {params.tmp} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+def get_sumstats_wmt_sblup_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    CHR = wildcards.CHR
+    return expand(config["DEST"]+"output/sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_sblup_fit_trait{TRAIT}_{DATASET}.rds", DATASET=DATASET, CHR=CHR, TRAIT=config["TRAIT"])
+
+rule fit_wmt_sblup_by_chr:
+  input:
+    sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
+    ldscores=config["LDSCORES"]+"{CHR}.l2.ldscore.gz",
+    list=lambda wildcards: get_sumstats_wmt_sblup_input_files(wildcards),
+  output:
+    config["DEST"]+"output/wmt_sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_wmt_sblup_fit_{DATASET}.rds"
+  params:
+    method=config["WMTSBLUP_METHOD"],
+    meff=config["WMTSBLUP_MEFF"],
+    dataset="{DATASET}",
+    traits=config["TRAIT_RANGE"],
+    prefix=config["DEST"]+"output/sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_sblup_fit",
+    script=config["SCRIPT"]+"fit_wmt_sblup_dynamic_n_ukb.R"
+  resources: cpus=4, mem_mb=7000, time_min=120
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=4
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --sumstats {input.sumstats} \
+                                    --LD_scores {input.ldscores} \
+                                    --sblub_fit_prefix {params.prefix} \
+                                    --method {params.method} \
+                                    --meff {params.meff} \
+                                    --traits {params.traits} \
+                                    --data_id {params.dataset} \
+                                    --seed {params.dataset} \
+                                    --output {output}
+        module unload R/4.2.3
+        """
+
+def get_pred_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    return expand(config["DEST"]+"output/ldpred2_auto_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"],TRAIT=config["TRAIT"])
+
+rule compute_prediction_accuracy_ldpred:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_missing_{DATASET}.rds",
+    geno=config["BED"],
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
+    list=lambda wildcards: get_pred_input_files(wildcards)
+  output:
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_ldpred2_auto_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_pred_acc_{DATASET}.rds"
+  params:
+    model=config["LDPRED_MODEL"],
+    model_fit_dir=config["LDPRED_MODEL_FIT_DIR"],
+    dataset="{DATASET}",
+    chr_r=config["CHR_RANGE"],
+    trait_r=config["TRAIT_RANGE"],
+    imp_flag=config["IMPUTE_FLAG"],
+    script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R",
+    tmp=config["TMP"],
+    norm_pheno=config["NORMALIZE_PHENO"],
+    prefix=config["DATA_PREFIX"]
+  resources: cpus=4, mem_mb=20000, time_min=120
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --model {params.model} \
+                                    --model_fit_dir {params.model_fit_dir} \
+                                    --pheno {input.pheno} \
+                                    --geno {input.geno} \
+                                    --test_ids {input.tids} \
+                                    --data_id {params.dataset} \
+                                    --chr {params.chr_r} \
+                                    --trait {params.trait_r} \
+                                    --impute_missing {params.imp_flag} \
+                                    --output_eff {output.eff} \
+                                    --output_pred_acc {output.pred_acc} \
+                                    --temp_dir {params.tmp} \
+                                    --normalize {params.norm_pheno} \
+                                    --ncores 4 \
+                                    --prefix {params.prefix}
+        module unload R/4.2.3
+        """
+       
+def get_mrmashrss_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    return expand(config["DEST"]+"output/mr_mash_rss_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mr_mash_rss_fit_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"])
+
+rule compute_prediction_accuracy_mrmashrss:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_missing_{DATASET}.rds",
+    geno=config["BED"],
+    #pheno_means=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds",
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
+    list=lambda wildcards: get_mrmashrss_input_files(wildcards)
+  output:
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mr_mash_rss_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mr_mash_rss_pred_acc_{DATASET}.rds"
+  params:
+    model=config["MRMASH_MODEL"],
+    model_fit_dir=config["MRMASH_MODEL_FIT_DIR"],
+    dataset="{DATASET}",
+    chr_r=config["CHR_RANGE"],
+    trait_r=config["TRAIT_RANGE"],
+    imp_flag=config["IMPUTE_FLAG"],
+    prefix=config["DATA_PREFIX"],
+    norm_pheno=config["NORMALIZE_PHENO"],
+    tmp=config["TMP"],
+    script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R"
+  resources: cpus=4, mem_mb=20000, time_min=120
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --model {params.model} \
+                                    --model_fit_dir {params.model_fit_dir} \
+                                    --pheno {input.pheno} \
+                                    --geno {input.geno} \
+                                    --test_ids {input.tids} \
+                                    --data_id {params.dataset} \
+                                    --chr {params.chr_r} \
+                                    --trait {params.trait_r} \
+                                    --impute_missing {params.imp_flag} \
+                                    --output_eff {output.eff} \
+                                    --output_pred_acc {output.pred_acc} \
+                                    --prefix {params.prefix} \
+                                    --normalize {params.norm_pheno} \
+                                    --temp_dir {params.tmp} \
+                                    --ncores 4
+        module unload R/4.2.3
+        """
+        
+def get_ldpred_gwide_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    return expand(config["DEST"]+"output/ldpred2_auto_gwide_fit/"+config["DATA_PREFIX"]+"_chrAll_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds", DATASET=DATASET, TRAIT=config["TRAIT"])
+
+rule compute_prediction_accuracy_ldpred_gwide:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_missing_{DATASET}.rds",
+    geno=config["BED"],
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
+    list=lambda wildcards: get_ldpred_gwide_input_files(wildcards)
+  output:
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_ldpred2_auto_gwide_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_ldpred2_auto_gwide_pred_acc_{DATASET}.rds"
+  params:
+    model=config["LDPRED_MODEL"],
+    model_fit_dir=config["LDPRED_MODEL_FIT_GWIDE_DIR"],
+    dataset="{DATASET}",
+    chr="0",
+    trait_r=config["TRAIT_RANGE"],
+    imp_flag=config["IMPUTE_FLAG"],
+    script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R",
+    tmp=config["TMP"],
+    norm_pheno=config["NORMALIZE_PHENO"],
+    prefix=config["DATA_PREFIX"]
+  resources: cpus=4, mem_mb=20000, time_min=120
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --model {params.model} \
+                                    --model_fit_dir {params.model_fit_dir} \
+                                    --pheno {input.pheno} \
+                                    --geno {input.geno} \
+                                    --test_ids {input.tids} \
+                                    --data_id {params.dataset} \
+                                    --chr {params.chr} \
+                                    --trait {params.trait_r} \
+                                    --impute_missing {params.imp_flag} \
+                                    --output_eff {output.eff} \
+                                    --output_pred_acc {output.pred_acc} \
+                                    --temp_dir {params.tmp} \
+                                    --normalize {params.norm_pheno} \
+                                    --ncores 4 \
+                                    --prefix {params.prefix}
+        module unload R/4.2.3
+        """
+
+def get_bayesR_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    return expand(config["DEST"]+"output/bayesR_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_bayesR_fit_trait{TRAIT}_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"],TRAIT=config["TRAIT"])
+
+rule compute_prediction_accuracy_bayesR:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_missing_{DATASET}.rds",
+    geno=config["BED"],
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
+    list=lambda wildcards: get_bayesR_input_files(wildcards)
+  output:
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_bayesR_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesR_pred_acc_{DATASET}.rds"
+  params:
+    model=config["BAYESR_MODEL"],
+    model_fit_dir=config["BAYESR_MODEL_FIT_DIR"],
+    dataset="{DATASET}",
+    chr_r=config["CHR_RANGE"],
+    trait_r=config["TRAIT_RANGE"],
+    imp_flag=config["IMPUTE_FLAG"],
+    script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R",
+    tmp=config["TMP"],
+    norm_pheno=config["NORMALIZE_PHENO"],
+    prefix=config["DATA_PREFIX"]
+  resources: cpus=4, mem_mb=20000, time_min=120
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --model {params.model} \
+                                    --model_fit_dir {params.model_fit_dir} \
+                                    --pheno {input.pheno} \
+                                    --geno {input.geno} \
+                                    --test_ids {input.tids} \
+                                    --data_id {params.dataset} \
+                                    --chr {params.chr_r} \
+                                    --trait {params.trait_r} \
+                                    --impute_missing {params.imp_flag} \
+                                    --output_eff {output.eff} \
+                                    --output_pred_acc {output.pred_acc} \
+                                    --temp_dir {params.tmp} \
+                                    --normalize {params.norm_pheno} \
+                                    --ncores 4 \
+                                    --prefix {params.prefix}
+        module unload R/4.2.3
+        """
+
+def get_bayesC_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    return expand(config["DEST"]+"output/bayesC_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_bayesC_fit_trait{TRAIT}_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"],TRAIT=config["TRAIT"])
+
+rule compute_prediction_accuracy_bayesC:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_missing_{DATASET}.rds",
+    geno=config["BED"],
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
+    list=lambda wildcards: get_bayesC_input_files(wildcards)
+  output:
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_bayesC_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesC_pred_acc_{DATASET}.rds"
+  params:
+    model=config["BAYESC_MODEL"],
+    model_fit_dir=config["BAYESC_MODEL_FIT_DIR"],
+    dataset="{DATASET}",
+    chr_r=config["CHR_RANGE"],
+    trait_r=config["TRAIT_RANGE"],
+    imp_flag=config["IMPUTE_FLAG"],
+    script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R",
+    tmp=config["TMP"],
+    norm_pheno=config["NORMALIZE_PHENO"],
+    prefix=config["DATA_PREFIX"]
+  resources: cpus=4, mem_mb=20000, time_min=120
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --model {params.model} \
+                                    --model_fit_dir {params.model_fit_dir} \
+                                    --pheno {input.pheno} \
+                                    --geno {input.geno} \
+                                    --test_ids {input.tids} \
+                                    --data_id {params.dataset} \
+                                    --chr {params.chr_r} \
+                                    --trait {params.trait_r} \
+                                    --impute_missing {params.imp_flag} \
+                                    --output_eff {output.eff} \
+                                    --output_pred_acc {output.pred_acc} \
+                                    --temp_dir {params.tmp} \
+                                    --normalize {params.norm_pheno} \
+                                    --ncores 4 \
+                                    --prefix {params.prefix}
+        module unload R/4.2.3
+        """
+
+
+def get_mvbayesC_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    return expand(config["DEST"]+"output/mvbayesC_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mvbayesC_fit_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"])
+
+rule compute_prediction_accuracy_mvbayesC:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_missing_{DATASET}.rds",
+    geno=config["BED"],
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
+    list=lambda wildcards: get_mvbayesC_input_files(wildcards)
+  output:
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mvbayesC_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_pred_acc_{DATASET}.rds"
+  params:
+    model=config["MVBAYESC_MODEL"],
+    model_fit_dir=config["MVBAYESC_MODEL_FIT_DIR"],
+    dataset="{DATASET}",
+    chr_r=config["CHR_RANGE"],
+    trait_r=config["TRAIT_RANGE"],
+    imp_flag=config["IMPUTE_FLAG"],
+    script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R",
+    tmp=config["TMP"],
+    norm_pheno=config["NORMALIZE_PHENO"],
+    prefix=config["DATA_PREFIX"]
+  resources: cpus=4, mem_mb=20000, time_min=120
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --model {params.model} \
+                                    --model_fit_dir {params.model_fit_dir} \
+                                    --pheno {input.pheno} \
+                                    --geno {input.geno} \
+                                    --test_ids {input.tids} \
+                                    --data_id {params.dataset} \
+                                    --chr {params.chr_r} \
+                                    --trait {params.trait_r} \
+                                    --impute_missing {params.imp_flag} \
+                                    --output_eff {output.eff} \
+                                    --output_pred_acc {output.pred_acc} \
+                                    --temp_dir {params.tmp} \
+                                    --normalize {params.norm_pheno} \
+                                    --ncores 4 \
+                                    --prefix {params.prefix}
+        module unload R/4.2.3
+        """
+
+def get_mvbayesC_rest_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    return expand(config["DEST"]+"output/mvbayesC_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mvbayesC_rest_fit_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"])
+
+rule compute_prediction_accuracy_mvbayesC_rest:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_missing_{DATASET}.rds",
+    geno=config["BED"],
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
+    list=lambda wildcards: get_mvbayesC_rest_input_files(wildcards)
+  output:
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mvbayesC_rest_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_rest_pred_acc_{DATASET}.rds"
+  params:
+    model=config["MVBAYESCREST_MODEL"],
+    model_fit_dir=config["MVBAYESCREST_MODEL_FIT_DIR"],
+    dataset="{DATASET}",
+    chr_r=config["CHR_RANGE"],
+    trait_r=config["TRAIT_RANGE"],
+    imp_flag=config["IMPUTE_FLAG"],
+    script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R",
+    tmp=config["TMP"],
+    norm_pheno=config["NORMALIZE_PHENO"],
+    prefix=config["DATA_PREFIX"]
+  resources: cpus=4, mem_mb=20000, time_min=120
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --model {params.model} \
+                                    --model_fit_dir {params.model_fit_dir} \
+                                    --pheno {input.pheno} \
+                                    --geno {input.geno} \
+                                    --test_ids {input.tids} \
+                                    --data_id {params.dataset} \
+                                    --chr {params.chr_r} \
+                                    --trait {params.trait_r} \
+                                    --impute_missing {params.imp_flag} \
+                                    --output_eff {output.eff} \
+                                    --output_pred_acc {output.pred_acc} \
+                                    --temp_dir {params.tmp} \
+                                    --normalize {params.norm_pheno} \
+                                    --ncores 4 \
+                                    --prefix {params.prefix}
+        module unload R/4.2.3
+        """
+
+def get_mtag_ldpred2_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    return expand(config["DEST"]+"output/mtag_ldpred2_auto_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_mtag_ldpred2_auto_fit_trait{TRAIT}_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"],TRAIT=config["TRAIT"])
+
+rule compute_prediction_accuracy_mtag_ldpred2:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_missing_{DATASET}.rds",
+    geno=config["BED"],
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
+    list=lambda wildcards: get_mtag_ldpred2_input_files(wildcards)
+  output:
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_pred_acc_{DATASET}.rds"
+  params:
+    model=config["MTAG_LDPRED_MODEL"],
+    model_fit_dir=config["MTAG_LDPRED_MODEL_FIT_DIR"],
+    dataset="{DATASET}",
+    chr_r=config["CHR_RANGE"],
+    trait_r=config["TRAIT_RANGE"],
+    imp_flag=config["IMPUTE_FLAG"],
+    script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R",
+    tmp=config["TMP"],
+    norm_pheno=config["NORMALIZE_PHENO"],
+    prefix=config["DATA_PREFIX"]
+  resources: cpus=4, mem_mb=20000, time_min=120
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --model {params.model} \
+                                    --model_fit_dir {params.model_fit_dir} \
+                                    --pheno {input.pheno} \
+                                    --geno {input.geno} \
+                                    --test_ids {input.tids} \
+                                    --data_id {params.dataset} \
+                                    --chr {params.chr_r} \
+                                    --trait {params.trait_r} \
+                                    --impute_missing {params.imp_flag} \
+                                    --output_eff {output.eff} \
+                                    --output_pred_acc {output.pred_acc} \
+                                    --temp_dir {params.tmp} \
+                                    --normalize {params.norm_pheno} \
+                                    --ncores 4 \
+                                    --prefix {params.prefix}
+        module unload R/4.2.3
+        """
+
+def get_wmtsblup_input_files(wildcards):
+    DATASET = wildcards.DATASET
+    return expand(config["DEST"]+"output/wmt_sblup_fit/"+config["DATA_PREFIX"]+"_chr{CHR}_wmt_sblup_fit_{DATASET}.rds", DATASET=DATASET, CHR=config["CHR"])
+
+rule compute_prediction_accuracy_wmtsblup:
+  input:
+    pheno=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_pheno_missing_{DATASET}.rds",
+    geno=config["BED"],
+    #pheno_means=config["DEST"]+"output/misc/"+config["DATA_PREFIX"]+"_pheno_means_{DATASET}.rds",
+    tids=config["DEST"]+"data/phenotypes/simulated/"+config["DATA_PREFIX"]+"_test_ids_{DATASET}.txt",
+    list=lambda wildcards: get_wmtsblup_input_files(wildcards)
+  output:
+    eff=config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_wmt_sblup_effects_{DATASET}.rds",
+    pred_acc=config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_wmt_sblup_pred_acc_{DATASET}.rds"
+  params:
+    model=config["WMTSBLUP_MODEL"],
+    model_fit_dir=config["WMTSBLUP_MODEL_FIT_DIR"],
+    dataset="{DATASET}",
+    chr_r=config["CHR_RANGE"],
+    trait_r=config["TRAIT_RANGE"],
+    imp_flag=config["IMPUTE_FLAG"],
+    prefix=config["DATA_PREFIX"],
+    norm_pheno=config["NORMALIZE_PHENO"],
+    tmp=config["TMP"],
+    script=config["SCRIPT"]+"compute_prediction_accuracy_ukb.R"
+  resources: cpus=4, mem_mb=20000, time_min=120
+  shell:
+        """
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=1
+        export OMP_NUM_THREADS=4
+        Rscript {params.script} \
+                                    --model {params.model} \
+                                    --model_fit_dir {params.model_fit_dir} \
+                                    --pheno {input.pheno} \
+                                    --geno {input.geno} \
+                                    --test_ids {input.tids} \
+                                    --data_id {params.dataset} \
+                                    --chr {params.chr_r} \
+                                    --trait {params.trait_r} \
+                                    --impute_missing {params.imp_flag} \
+                                    --output_eff {output.eff} \
+                                    --output_pred_acc {output.pred_acc} \
+                                    --prefix {params.prefix} \
+                                    --normalize {params.norm_pheno} \
+                                    --temp_dir {params.tmp} \
+                                    --ncores 4
+        module unload R/4.2.3
+        """
+
+
