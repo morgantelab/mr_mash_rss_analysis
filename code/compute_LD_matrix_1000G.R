@@ -76,8 +76,10 @@ if(sparse){
   LD <- snp_cor(Gna=X, ind.col=inds, size=win, thr_r2=thr_r2, ncores=ncores)
 }
 
-###Filter map and save it to a file
+###Filter map, add allele frequency and save it to a file
 map_filtered <- geno$map[inds, ]
+statz <- bigstatsr::big_colstats(X=X, ind.col=inds, ncores=ncores)
+map_filtered$freq <- (statz$sum/nrow(X))/2
 write.table(map_filtered, paste0(output, ".map"), row.names = FALSE, col.names = TRUE, quote = FALSE, sep="\t")
   
 ###Save to binary file    
