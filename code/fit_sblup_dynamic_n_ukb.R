@@ -48,7 +48,7 @@ Z <- univ_sumstats$Bhat / univ_sumstats$Shat
 ###Compute genetic parameters
 ldscores <- ld_scores$L2
 names(ldscores) <- ld_scores$SNP
-h2 <- qgg::ldsc(ldscores=ldscores, z=Z, n=univ_sumstats$n, what="h2")
+h2 <- qgg::ldsc(ldscores=ldscores, z=Z, n=univ_sumstats$n, what="h2", tol=1e-8)
 
 ###Organize sumstats for SBLUP
 sumstats <- data.frame(SNP=rownames(univ_sumstats$alleles), CHR=univ_sumstats$alleles$chr, BP=univ_sumstats$alleles$bp,

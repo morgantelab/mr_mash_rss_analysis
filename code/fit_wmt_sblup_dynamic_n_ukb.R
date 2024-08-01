@@ -48,10 +48,7 @@ r <- ncol(Z)
 p <- nrow(Z)
 
 ###Compute genetic parameters
-genpar <- ldsc(ldscores=ldscores, z=Z, n=univ_sumstats$n, what="rg")
-
-###If h2 is <= 0, set it to 1e-8
-genpar$h2[which(genpar$h2<=0)] <- 1e-8
+genpar <- ldsc(ldscores=ldscores, z=Z, n=univ_sumstats$n, what="rg", tol=1e-8)
 
 ###Load SBLUP results
 if(method=="blup"){
