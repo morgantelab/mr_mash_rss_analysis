@@ -935,7 +935,7 @@ rule munge_summary_stats_for_mtag:
   input:
     sumstats=config["DEST"]+"output/summary_statistics/"+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_{DATASET}.rds",
   output:
-    config["TMP"]+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_for_mtag_trait{TRAIT}_{DATASET}.txt"
+    temp(config["TMP"]+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_for_mtag_trait{TRAIT}_{DATASET}.txt")
   params:
     n=config["N_TRAIN"],
     trait="{TRAIT}",
@@ -972,7 +972,7 @@ rule compute_mtag_summary_stats_by_chr:
     #lambda wildcards: get_sumstats_for_mtag_input_files(wildcards)
     expand(config["TMP"]+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_for_mtag_trait{TRAIT}_{DATASET}.txt", DATASET="{DATASET}", CHR="{CHR}", TRAIT=config["TRAIT"])
   output:
-    expand(config["TMP"]+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}_trait_{TRAIT}.txt", DATASET="{DATASET}", CHR="{CHR}", TRAIT=config["TRAIT"])
+    temp(expand(config["TMP"]+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}_trait_{TRAIT}.txt", DATASET="{DATASET}", CHR="{CHR}", TRAIT=config["TRAIT"]))
   params:
     ldscores=config["LDSCORES"],
     out_prefix=config["TMP"]+config["DATA_PREFIX"]+"_chr{CHR}_sumstats_mtag_{DATASET}",
