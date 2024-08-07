@@ -10,7 +10,11 @@ compute_accuracy <- function(Y, Yhat) {
   rmse <- rep(as.numeric(NA), ncol(Y))
   
   for(i in 1:ncol(Y)){
-    if(var(Yhat[, i])>0){
+    if(all(is.na(Yhat[, i]))){
+      bias[i] <- NA
+      r2[i] <- NA
+      rmse[i] <- NA
+    } else if(var(Yhat[, i])>0){
       fit  <- lm(Y[, i] ~ Yhat[, i])
       bias[i] <- coef(fit)[2] 
       r2[i] <- summary(fit)$r.squared
@@ -165,11 +169,9 @@ for(i in chr){
     Bhat_all[[it]] <- model_fit$b[, trait]
   } else if(model %in% c("ldpred2_auto","mtag_ldpred2_auto","bayesN","bayesA","bayesL","bayesC","bayesR")){
     
-    it2 <- 0
+    Bhat <- matrix(as.numeric(NA), nrow=length(inds), ncol=length(traits))
     
     for(j in trait){
-      
-      it2 <- it2+1
       
       ##Read in model fit
       model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_trait", j, "_", data_id, ".rds"))
@@ -182,25 +184,24 @@ for(i in chr){
         range_corr <- sapply(model_fit, function(auto) diff(range(auto$corr_est)))
         to_keep <- (range_corr > (0.95 * quantile(range_corr, 0.95, na.rm = TRUE)))
         
-        if(all(is.na(to_keep))){
-          stop("All chains dropped beacuse of divergence!")
+        if(all(is.na(to_keep)) || all(to_keep==FALSE)){
+          warning(paste0("All chains dropped because of divergence! Skipping trait ", j, "for chr", i))
+          next
         } else if(any(is.na(to_keep))){
           to_keep[which(is.na(to_keep))] <- FALSE
-          warning("Some chains dropped beacuse of divergence.")
+          warning("Some chains dropped because of divergence.")
+        } else if(any(to_keep==FALSE)){
+          warning("Some chains dropped because of divergence.")
         }
         
         ##Compute posterior mean after QC
-        if(it2==1){
-          Bhat <- rowMeans(sapply(model_fit[to_keep], function(auto) auto$beta_est))
+        if(sum(to_keep)==1){
+          Bhat[, j] <- sapply(model_fit[to_keep], function(auto) auto$beta_est)
         } else {
-          Bhat <- cbind(Bhat, rowMeans(sapply(model_fit[to_keep], function(auto) auto$beta_est)))
+          Bhat[, j] <- rowMeans(sapply(model_fit[to_keep], function(auto) auto$beta_est))
         }
       } else if(model %in% c("bayesN","bayesA","bayesL","bayesC","bayesR")){
-        if(it2==1){
-          Bhat <- model_fit$bm
-        } else {
-          Bhat <- cbind(Bhat, model_fit$bm)
-        }
+        Bhat[, j] <- model_fit$bm
       }
     }
     
