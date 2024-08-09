@@ -1,19 +1,36 @@
+###Load libraries needed
+library(optparse)
 library(data.table)
 library(dplyr)
+
+###Parse arguments
+parser <- OptionParser()
+parser <- add_option(parser, c("--raw_pheno"), type="character")
+parser <- add_option(parser, c("--bc_pheno"), type="character")
+parser <- add_option(parser, c("--ncores"), type="integer")
+parser <- add_option(parser, c("--output_inds_list"), type="character")
+parser <- add_option(parser, c("--output_pheno_data"), type="character")
+outparse <- parse_args(parser)
+
+output <- outparse$output
+ncores <- outparse$ncores
+raw_pheno <- outparse$raw_pheno
+bc_pheno <- outparse$bc_pheno
+output_pheno_data <- outparse$output_pheno_data
+output_inds_list <- outparse$output_inds_list
 
 ###Set seed
 set.seed(1)
 
 ###Set data.table threads
-setDTthreads(4)
+setDTthreads(ncores)
 
 ###Load data
 ##Raw phenotypes
-dat <- fread("/data2/morgante_lab/data/ukbiobank/download_software/csv/ukb45105.csv", 
-                 data.table = FALSE, showProgress=TRUE, colClasses = "character")
+dat <- fread(raw_pheno, data.table = FALSE, showProgress=TRUE, colClasses = "character")
 
 ##Cleaned blood cell traits
-dat_bc <- readRDS("../data/phenotypes/ukb_cleaned_bc_covar_pheno.rds")
+dat_bc <- readRDS(bc_pheno)
 dat_covar <- dat_bc[, c("id", "sex", "assessment_centre", "age", "genotype_measurement_batch", paste0("pc_genetic", 1:10), "fold")]
 rm(dat_bc); gc()
 
@@ -194,8 +211,7 @@ cat("The training set corresponding to each test set has the following numbers o
 indiv_list <- cbind(dat_filt_final$id, dat_filt_final$id)
 
 ###Write out output
-saveRDS(dat_filt_final, "../data/phenotypes/ukb_cleaned_ot_covar_pheno.rds")
+saveRDS(dat_filt_final, file=output_pheno_data)
 
-fwrite(x=indiv_list, file="../data/misc/ukb_cleaned_ot_ind_ids.txt", 
-       sep = "\t", row.names=FALSE, col.names=FALSE, quote=FALSE, showProgress=FALSE)
+fwrite(x=indiv_list, file=output_inds_list, sep = "\t", row.names=FALSE, col.names=FALSE, quote=FALSE, showProgress=FALSE)
 
