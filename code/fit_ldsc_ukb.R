@@ -20,7 +20,7 @@ sumstats_prefix <- outparse$sumstats_prefix
 sumstats_suffix <- outparse$sumstats_suffix
 LD_matrix_prefix <- outparse$LD_matrix_prefix
 LD_matrix_suffix <- outparse$LD_matrix_suffix
-chr <- outparse$chr
+chr <- eval(parse(text=outparse$chr))
 n <- outparse$n
 ncores <- outparse$ncores
 output <- outparse$output
@@ -30,29 +30,18 @@ trait <- outparse$trait
 ###Set seed
 set.seed(seed)
 
-###Read in data
-chrscar <- unlist(strsplit(chr, ":"))
-
-if(length(chrscar)==1){
-  chrs <- as.integer(chrscar)
-} else {
-  chrs <- as.integer(chrscar[1]):as.integer(chrscar[2])
-}
-
 ###Loop over chromosomes
 it <- 0
 
-for(i in chrs){
+for(i in chr){
   it <- it+1
   
   ##Read in summary stats and LD matrix
   dat_ss <- readRDS(paste0(sumstats_prefix, i, sumstats_suffix))
   
   p <- nrow(dat_ss$Bhat)
-  LD <- matrix(readBin(paste0(LD_matrix_prefix, i, LD_matrix_suffix), what="numeric", n=p^2), 
-               nrow=p, ncol=p, byrow=TRUE)
-  LD <- as(LD, "CsparseMatrix")
-  
+  LD <- readRDS(paste0(LD_matrix_prefix, i, LD_matrix_suffix))
+
   ##Merge summary stats and LD scores
   if(it==1){
     Bhat_all <- dat_ss$Bhat
