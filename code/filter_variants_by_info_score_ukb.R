@@ -30,10 +30,6 @@ dat <- fread(mfi, data.table = FALSE, showProgress=FALSE)
 dat_filt <- dat[which(dat$V8>=info_thresh), ]
 
 ###Create unique ID###
-if(chr %in% c(1:9)){
-  chr <- paste0("0", chr)
-}
-
 unique_id <- paste(chr, with(dat_filt, paste(V3, V4, V5, sep = "_")), sep=":")
 
 ###Write output
