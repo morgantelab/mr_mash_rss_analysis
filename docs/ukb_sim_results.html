@@ -11,7 +11,7 @@
 
 <meta name="author" content="Fabio Morgante &amp; Deborah Kunkel" />
 
-<meta name="date" content="2024-07-23" />
+<meta name="date" content="2024-08-12" />
 
 <title>Simulations with UK Biobank genotypes and different effect structure across traits</title>
 
@@ -374,7 +374,7 @@ div.tocify {
 <h1 class="title toc-ignore">Simulations with UK Biobank genotypes and
 different effect structure across traits</h1>
 <h4 class="author">Fabio Morgante &amp; Deborah Kunkel</h4>
-<h4 class="date">July 23, 2024</h4>
+<h4 class="date">August 12, 2024</h4>
 
 </div>
 
@@ -403,7 +403,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-07-23
+<strong>Last updated:</strong> 2024-08-12
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree62b5969304ae4b95824e875b50292f36d591355ctargetblank62b5969a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree0c5240da423cabfce6bf7a2dfc0bb1cde4cca516targetblank0c5240da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/62b5969304ae4b95824e875b50292f36d591355c" target="_blank">62b5969</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/0c5240da423cabfce6bf7a2dfc0bb1cde4cca516" target="_blank">0c5240d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree62b5969304ae4b95824e875b50292f36d591355ctargetblank62b5969a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree0c5240da423cabfce6bf7a2dfc0bb1cde4cca516targetblank0c5240da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/62b5969304ae4b95824e875b50292f36d591355c" target="_blank">62b5969</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/0c5240da423cabfce6bf7a2dfc0bb1cde4cca516" target="_blank">0c5240d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -569,6 +569,7 @@ were generated:
 Ignored files:
     Ignored:    .snakemake/
     Ignored:    data/
+    Ignored:    output/GWAS_for_regions/
     Ignored:    output/bayesC_fit/
     Ignored:    output/bayesR_fit/
     Ignored:    output/estimated_effects/
@@ -578,6 +579,8 @@ Ignored files:
     Ignored:    output/ldsc_fit/
     Ignored:    output/misc/
     Ignored:    output/mr_mash_rss_fit/
+    Ignored:    output/mtag_ldpred2_auto_fit/
+    Ignored:    output/mtag_summary_statistics/
     Ignored:    output/mvbayesC_fit/
     Ignored:    output/prediction_accuracy/
     Ignored:    output/sblup_fit/
@@ -588,11 +591,14 @@ Ignored files:
 
 Untracked files:
     Untracked:  Snakefile_old
+    Untracked:  analysis/ukb_sim_external_LD_results.Rmd
+    Untracked:  analysis/ukb_sim_missing_pheno_results.Rmd
     Untracked:  code/adjust_LD_test.R
     Untracked:  code/compute_sumstats_test_bc_ukb.R
     Untracked:  code/compute_sumstats_ukb_2.R
     Untracked:  code/fit_kriging_rss_ukb.R
     Untracked:  code/fit_mrmashrss_test_ukb.R
+    Untracked:  code/match_sumstats_with_LD_ukb.R
     Untracked:  code/merge_sumstats_all_chr_ukb.R
     Untracked:  code/split_effects_by_chr_imp_ukb.R
     Untracked:  scripts/11_run_fit_mrmashrss_by_chr_V_all_chr_bc_ukb.sbatch
@@ -606,6 +612,11 @@ Untracked files:
     Untracked:  scripts/run_fit_kriging_rss_by_chr_and_trait_bc_ukb.sbatch
     Untracked:  vs_sm_convert/
     Untracked:  vs_sm_test/
+
+Unstaged changes:
+    Modified:   ukb_sim_equal_effects_10traits_indep_resid.yaml
+    Modified:   ukb_sim_snakefile
+    Modified:   ukb_sim_snakemake_submitter.sh
 
 </code></pre>
 <p>
@@ -651,6 +662,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/0c5240da423cabfce6bf7a2dfc0bb1cde4cca516/analysis/ukb_sim_results.Rmd" target="_blank">0c5240d</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-08-12
+</td>
+<td>
+Update all results
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/10e76a589d2d9476dce7e2d684d9c6339fc6d194/docs/ukb_sim_results.html" target="_blank">10e76a5</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-07-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2427,6 +2472,19 @@ per-chromosome, with <span class="math inline">\(M_{eff}=60000\)</span>
 and SBLUP estimate obtained with a window size of 2 Mb (using the
 <em>SumTool</em> R package implementation). NB this is a multivariate
 method. We used the implementation in the <em>qgg</em> R package.</li>
+<li><a
+href="https://www.nature.com/articles/s41588-017-0009-4">MTAG+LDpred2</a>
+with all variants. Because MTAG does not allow analyzing small indels
+and our data has a small numaber of those, we kept assigned the OLS
+estimates to those variants (instead of dropping them) before running
+LDpred2. LDpred2 was run with the same parameter as above, but with
+“shrink_corr=0.95” and “allow_jump_sign=FALSE” to avoid convergence
+issues. The effective sample size was estimated from the median <span
+class="math inline">\(\chi^2\)</span> statistics of the OLS estimates
+and the MTAG estimates as done <a
+href="https://github.com/privefl/paper-misspec/blob/1f459fd0d6aac66f0f2945446bfaa435b585747b/code/prepare-sumstats-bbj/BMI.R#L30">here</a>.
+However, convergence issues still remained and some combinations of
+trait/replicate were dropped because of that.</li>
 </ul>
 <p>Prediction accuracy was evaluated as the <span
 class="math inline">\(R^2\)</span> of the regression of true phenotypes
@@ -2442,7 +2500,7 @@ per-trait variance of 1 and a correlation across traits of 1. This
 implies that the effects of the causal variants are equal across
 responses.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;equal_effects_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;mvbayesC_rest&quot;, &quot;wmt_sblup&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;mvbayesC_rest&quot;, &quot;wmt_sblup&quot;, &quot;mtag_ldpred2_auto&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
 
 i &lt;- 0
 
@@ -2509,6 +2567,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/10e76a589d2d9476dce7e2d684d9c6339fc6d194/docs/figure/ukb_sim_results.Rmd/equal effects-1.png" target="_blank">10e76a5</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-07-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/58afe0c63186fa76e1f5b3d6ddff23866d3210cc/docs/figure/ukb_sim_results.Rmd/equal effects-1.png" target="_blank">58afe0c</a>
@@ -2699,7 +2768,9 @@ clearly does better than <em>LDpred2 auto</em> <em>BayesC</em>, and
 versions) does better than the univariate methods, but not as well as
 <em>mr.mash.rss</em>. <em>wMT-SBLUP</em> does poorly as its
 infinitesimal architecture assumption is not well-suited for the true
-genetic architecture of the traits.</p>
+genetic architecture of the traits. <em>MTAG+LDpred2</em> does a little
+worse than <em>LDpred2</em>, potentially because the method is designed
+to be used with OLS estimates.</p>
 </div>
 <div id="mostly-null-scenario" class="section level2">
 <h2>Mostly null scenario</h2>
@@ -2708,7 +2779,7 @@ distribution with mean vector 0 and covariance matrix that achieves
 effects (with variance 1) to be present only trait 1. The other 4 traits
 are only random noise.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;trait_1_only_effects_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;mvbayesC_rest&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;mvbayesC_rest&quot;, &quot;wmt_sblup&quot;, &quot;mtag_ldpred2_auto&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
 
 i &lt;- 0
 
@@ -2746,12 +2817,16 @@ p_mostly_null &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
   ylim(0.0, 0.51) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;lightblue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;orange&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;lightblue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
 
 print(p_mostly_null)</code></pre>
+<pre><code>Warning: Removed 80 rows containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
+<pre><code>Warning: Removed 80 rows containing non-finite outside the scale range
+(`stat_summary()`).</code></pre>
 <p><img src="figure/ukb_sim_results.Rmd/mostly%20null-1.png" width="1248" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-mostly-null-1">
@@ -2775,6 +2850,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/10e76a589d2d9476dce7e2d684d9c6339fc6d194/docs/figure/ukb_sim_results.Rmd/mostly null-1.png" target="_blank">10e76a5</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-07-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/3e703046456d97239799fa078fb3a5ca9d56d754/docs/figure/ukb_sim_results.Rmd/mostly null-1.png" target="_blank">3e70304</a>
@@ -2907,8 +2993,9 @@ modeled jointly with the signal. The results show that
 <em>mr.mash.rss</em> can learn this structure from the data and performs
 similar to <em>LDpred2 auto</em> and <em>BayesR</em>, although a little
 worse. <em>mvBayesC</em> performs slightly worse than
-<em>mr.mash.rss</em>. <em>mvBayesCrest</em> cannot adapt well to this
-scenario.</p>
+<em>mr.mash.rss</em>. <em>mvBayesCrest</em> and <em>wMT-SBLUP</em>
+cannot adapt well to this scenario, while <em>MTAG+LDpred2</em> does
+better than them but worse than the other methods.</p>
 </div>
 <div id="shared-in-subgroups-scenario" class="section level2">
 <h2>Shared in subgroups scenario</h2>
@@ -2925,7 +3012,7 @@ of the mixture applies to traits 1-3 while the second component applies
 to traits 4-5. The per-trait <span class="math inline">\(h^2_g\)</span>
 is 0.3 for traits 1-3 and 0.5 for the traits 4-5.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;blocks_shared_effects_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;mvbayesC_rest&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;mvbayesC_rest&quot;, &quot;wmt_sblup&quot;, &quot;mtag_ldpred2_auto&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
 
 i &lt;- 0
 
@@ -2963,13 +3050,17 @@ p_blocks_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
   ylim(0, 0.51) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;lightblue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;orange&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;lightblue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   geom_hline(yintercept=0.3, linetype=&quot;dashed&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
 
 print(p_blocks_shared)</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_summary()`).</code></pre>
 <p><img src="figure/ukb_sim_results.Rmd/shared%20in%20subgroups-1.png" width="1248" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-shared-in-subgroups-1">
@@ -2993,6 +3084,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/10e76a589d2d9476dce7e2d684d9c6339fc6d194/docs/figure/ukb_sim_results.Rmd/shared in subgroups-1.png" target="_blank">10e76a5</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-07-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/3e703046456d97239799fa078fb3a5ca9d56d754/docs/figure/ukb_sim_results.Rmd/shared in subgroups-1.png" target="_blank">3e70304</a>
@@ -3149,7 +3251,10 @@ and <em>mvBayesC</em> methods perform better than the univariate methods
 and <em>mvBayesCrest</em> in traits 1-3, due to the higher effect
 correlation across traits, the larger number of traits with shared
 effects, and the smaller <span class="math inline">\(h^2_g\)</span>
-(harder scenario for univariate methods).</p>
+(harder scenario for univariate methods). <em>MTAG+LDpred2</em> performs
+worse than the other multivariate methods except for <em>wMT-SBLUP</em>,
+which is not well-suited for the true genetic architecture of the
+traits.</p>
 </div>
 <div id="equal-effects-scenario-low-pve" class="section level2">
 <h2>Equal effects scenario – low PVE</h2>
@@ -3162,7 +3267,7 @@ responses. In addition, the per-trait genomic heritability was set to
 initialized as 0.01 in <em>BayesC</em>, <em>BayesR</em>,
 <em>mvBayesC</em> and <em>mvBayesCrest</em>.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;equal_effects_low_pve_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;mvbayesC_rest&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;mvbayesC_rest&quot;, &quot;wmt_sblup&quot;, &quot;mtag_ldpred2_auto&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
 
 i &lt;- 0
 
@@ -3200,12 +3305,16 @@ p_methods_shared_lowpve &lt;- ggplot(res, aes(x = trait, y = score, fill = metho
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
   ylim(0, 0.2) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;lightblue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;orange&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;lightblue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.2, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
 
 print(p_methods_shared_lowpve)</code></pre>
+<pre><code>Warning: Removed 31 rows containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
+<pre><code>Warning: Removed 31 rows containing non-finite outside the scale range
+(`stat_summary()`).</code></pre>
 <p><img src="figure/ukb_sim_results.Rmd/equal%20effects%20low%20pve-1.png" width="1248" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-equal-effects-low-pve-1">
@@ -3229,6 +3338,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/10e76a589d2d9476dce7e2d684d9c6339fc6d194/docs/figure/ukb_sim_results.Rmd/equal effects low pve-1.png" target="_blank">10e76a5</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-07-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/3e703046456d97239799fa078fb3a5ca9d56d754/docs/figure/ukb_sim_results.Rmd/equal effects low pve-1.png" target="_blank">3e70304</a>
@@ -3338,8 +3458,10 @@ class="math inline">\(h^2_g = 0.5\)</span>. This is because with smaller
 signal-to-noise ratio, it is harder for univariate methods to estimate
 effects accurately. Multivariate methods can borrow information across
 traits (if effects are shared) and improve accuracy. The results show
-that the multivariate methods outperform the univariate methods, with
-<em>mr.mash.rss</em> being the best overall.</p>
+that the multivariate methods (including <em>MTAG+LDpred2</em>)
+outperform the univariate methods except for <em>wMT-SBLUP</em>, which
+is not well-suited for the true genetic architecture of the traits.
+<em>mr.mash.rss</em> achieves the highest accuracy.</p>
 </div>
 <div id="equal-effects-scenario-more-polygenic" class="section level2">
 <h2>Equal effects scenario – more polygenic</h2>
@@ -3352,7 +3474,7 @@ In this scenario, <span class="math inline">\(\pi\)</span> was
 initialized as 0.01 in <em>BayesC</em>, <em>BayesR</em>,
 <em>mvBayesC</em>, and <em>mvBayesCrest</em>.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;equal_effects_50000causal_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;mvbayesC_rest&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;mvbayesC_rest&quot;, &quot;wmt_sblup&quot;, &quot;mtag_ldpred2_auto&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
 
 i &lt;- 0
 
@@ -3384,18 +3506,22 @@ res &lt;- transform(res, scenario=as.factor(scenario),
                       method=as.factor(method),
                       trait=as.factor(trait))
 
-p_methods_shared_lowpve &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
+p_methods_more_poly &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
   geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
   stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
   ylim(0, 0.5) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;lightblue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;orange&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;lightblue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
 
-print(p_methods_shared_lowpve)</code></pre>
+print(p_methods_more_poly)</code></pre>
+<pre><code>Warning: Removed 74 rows containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
+<pre><code>Warning: Removed 74 rows containing non-finite outside the scale range
+(`stat_summary()`).</code></pre>
 <p><img src="figure/ukb_sim_results.Rmd/equal%20effects%20poly%20filt-1.png" width="1248" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-equal-effects-poly-filt-1">
@@ -3419,6 +3545,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/10e76a589d2d9476dce7e2d684d9c6339fc6d194/docs/figure/ukb_sim_results.Rmd/equal effects poly filt-1.png" target="_blank">10e76a5</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-07-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/3e703046456d97239799fa078fb3a5ca9d56d754/docs/figure/ukb_sim_results.Rmd/equal effects poly filt-1.png" target="_blank">3e70304</a>
@@ -3517,8 +3654,10 @@ proportion of the total <span class="math inline">\(h^2_g=0.5\)</span>.
 Multivariate methods can borrow information across traits (if effects
 are shared) and improve accuracy. The results show that
 <em>mr.mash.rss</em> clearly does better than the univariate methods in
-this scenario too. <em>mvBayesC</em> (both versions) seems to have
-difficulties in this scenario.</p>
+this scenario too. <em>MTAG+LDpred2</em> also performs really well in
+this scenario. <em>mvBayesC</em> (both versions) seems to have
+difficulties in this scenario. <em>wMT-SBLUP</em> is not well-suited for
+the true genetic architecture of the traits.</p>
 </div>
 <div id="equal-effects-scenario-10-traits" class="section level2">
 <h2>Equal effects scenario – 10 traits</h2>
@@ -3528,12 +3667,11 @@ per-trait variance of 1 and a correlation across traits of 1. This
 implies that the effects of the causal variants are equal across
 responses. In addition, the number of traits was increased to 10.</p>
 <pre class="r"><code>scenarioz &lt;- &quot;equal_effects_10traits_indep_resid&quot;
-methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC_rest&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC_rest&quot;, &quot;wmt_sblup&quot;, &quot;mtag_ldpred2_auto&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
 
 i &lt;- 0
 
 traitz &lt;- 1:10
-repz &lt;- c(1:10, 12:20)
 
 n_col &lt;- 6
 n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
@@ -3569,7 +3707,7 @@ p_methods_shared_10traits &lt;- ggplot(res, aes(x = trait, y = score, fill = met
                position = position_dodge2(width = 0.87,   
                                           preserve = &quot;single&quot;)) +
   ylim(0, 0.51) +
-  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;lightblue&quot;)) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;orange&quot;, &quot;blue&quot;, &quot;lightblue&quot;)) +
   labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
   geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
   theme_cowplot(font_size = 18)
@@ -3598,6 +3736,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/10e76a589d2d9476dce7e2d684d9c6339fc6d194/docs/figure/ukb_sim_results.Rmd/equal effects 10 traits-1.png" target="_blank">10e76a5</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-07-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/b4303c98abdcaf83b97b776aed689fc6b67e2c07/docs/figure/ukb_sim_results.Rmd/equal effects 10 traits-1.png" target="_blank">b4303c9</a>
@@ -3698,7 +3847,9 @@ accuracy. The results show that <em>mr.mash.rss</em> clearly does better
 than the univariate methods, but the improvement compared to the
 scenario with 5 traits is small. <em>mvBayesCrest</em> does better than
 the univariate methods but worse than <em>mr.mash.rss</em>.
-<em>mvBayesC</em> is currently too slow to be run in this scenario.</p>
+<em>mvBayesC</em> is currently too slow to be run in this scenario.
+<em>wMT-SBLUP</em> is not well-suited for the true genetic architecture
+of the traits.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
