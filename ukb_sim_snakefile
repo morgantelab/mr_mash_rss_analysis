@@ -13,12 +13,12 @@ rule all:
     expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesR_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mvbayesC_rest_effects_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_rest_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mvbayesC_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_wmt_sblup_effects_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_wmt_sblup_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
     expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_effects_{DATASET}.rds",DATASET=config["DATASET"]),
-    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])#,
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mtag_ldpred2_auto_pred_acc_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_mvbayesC_effects_{DATASET}.rds",DATASET=config["DATASET"]),
+    expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_mvbayesC_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])#,
     #expand(config["DEST"]+"output/estimated_effects/"+config["DATA_PREFIX"]+"_bayesC_effects_{DATASET}.rds",DATASET=config["DATASET"]),
     #expand(config["DEST"]+"output/prediction_accuracy/"+config["DATA_PREFIX"]+"_bayesC_pred_acc_{DATASET}.rds",DATASET=config["DATASET"])
     
