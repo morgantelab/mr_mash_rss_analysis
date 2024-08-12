@@ -82,6 +82,13 @@ NB this is a multivariate method. We used the implementation in the *qgg* R pack
 * [wMT-SBLUP](https://www.nature.com/articles/s41467-017-02769-6) per-chromosome, with $M_{eff}=60000$ and 
 SBLUP estimate obtained with a window size of 2 Mb (using the *SumTool* R package implementation).
 NB this is a multivariate method. We used the implementation in the *qgg* R package.
+* [MTAG+LDpred2](https://www.nature.com/articles/s41588-017-0009-4) with all variants. Because MTAG does not
+allow analyzing small indels and our data has a small numaber of those, we kept assigned the OLS estimates to those
+variants (instead of dropping them) before running LDpred2. LDpred2 was run with the same parameter as above, but
+with "shrink_corr=0.95" and "allow_jump_sign=FALSE" to avoid convergence issues. The effective sample size was 
+estimated from the median $\chi^2$ statistics of the OLS estimates and the MTAG estimates as done 
+[here](https://github.com/privefl/paper-misspec/blob/1f459fd0d6aac66f0f2945446bfaa435b585747b/code/prepare-sumstats-bbj/BMI.R#L30).
+However, convergence issues still remained and some combinations of trait/replicate were dropped because of that.
 
 Prediction accuracy was evaluated as the $R^2$ of the regression of true phenotypes on the predicted 
 phenotypes. This metric as the attractive property that its upper bound is $h_g^2$.
@@ -96,7 +103,7 @@ This implies that the effects of the causal variants are equal across responses.
 
 ```{r equal effects, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_indep_resid"
-methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "wmt_sblup", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "wmt_sblup", "mtag_ldpred2_auto", "ldpred2_auto", "bayesR")
 
 i <- 0
 
@@ -149,6 +156,8 @@ analysis. As expected, the results show that *mr.mash.rss* clearly does better t
 *BayesC*, and *BayesR*, which perform similarly. *mvBayesC* (both versions) does better than the 
 univariate methods, but not as well as *mr.mash.rss*. *wMT-SBLUP* does poorly as its infinitesimal 
 architecture assumption is not well-suited for the true genetic architecture of the traits.
+*MTAG+LDpred2* does a little worse than *LDpred2*, potentially because the method is designed 
+to be used with OLS estimates.
 
 ## Mostly null scenario
 
@@ -158,7 +167,7 @@ and covariance matrix that achieves effects (with variance 1) to be present only
 
 ```{r mostly null, fig.height=10, fig.width=13}
 scenarioz <- "trait_1_only_effects_indep_resid"
-methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "wmt_sblup", "mtag_ldpred2_auto", "ldpred2_auto", "bayesR")
 
 i <- 0
 
@@ -196,7 +205,7 @@ p_mostly_null <- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0.0, 0.51) +
-  scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) +
+  scale_fill_manual(values = c("pink", "red", "yellow", "orange", "green", "blue", "lightblue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
@@ -208,7 +217,9 @@ In this scenario, there is no advantage to using multivariate methods. In fact, 
 for multivariate methods to do worse than univariate methods because of the large amount of noise
 modeled jointly with the signal. The results show that *mr.mash.rss* can learn this structure
 from the data and performs similar to *LDpred2 auto* and *BayesR*, although a little worse.
-*mvBayesC* performs slightly worse than *mr.mash.rss*. *mvBayesCrest* cannot adapt well to this scenario.
+*mvBayesC* performs slightly worse than *mr.mash.rss*. *mvBayesCrest* and *wMT-SBLUP* cannot adapt 
+well to this scenario, while *MTAG+LDpred2* does better than them but worse than the other methods. 
+
 
 ## Shared in subgroups scenario
 
@@ -221,7 +232,7 @@ traits 4-5.
 
 ```{r shared in subgroups, fig.height=10, fig.width=13}
 scenarioz <- "blocks_shared_effects_indep_resid"
-methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "wmt_sblup", "mtag_ldpred2_auto", "ldpred2_auto", "bayesR")
 
 i <- 0
 
@@ -259,7 +270,7 @@ p_blocks_shared <- ggplot(res, aes(x = trait, y = score, fill = method)) +
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.51) +
-  scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) +
+  scale_fill_manual(values = c("pink", "red", "yellow", "orange", "green", "blue", "lightblue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   geom_hline(yintercept=0.3, linetype="dashed", linewidth=1, color = "black") +
@@ -273,7 +284,9 @@ the former can adapt to the complex structure of the effects. The results show t
 very similarly in traits 3 and 4 -- with *mvBayesC* being a tiny bit better -- but *mvBayesCrest*. 
 However, *mr.mash.rss* and *mvBayesC* methods perform better than the univariate methods and *mvBayesCrest* 
 in traits 1-3, due to the higher effect correlation across traits, the larger number of traits with shared 
-effects, and the smaller $h^2_g$ (harder scenario for univariate methods).
+effects, and the smaller $h^2_g$ (harder scenario for univariate methods). *MTAG+LDpred2* performs worse
+than the other multivariate methods except for *wMT-SBLUP*, which is not well-suited for the true genetic 
+architecture of the traits.
 
 ## Equal effects scenario -- low PVE
 
@@ -285,7 +298,7 @@ per-trait genomic heritability was set to 0.2. In this scenario, $h^2$ was initi
 
 ```{r equal effects low pve, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_low_pve_indep_resid"
-methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "wmt_sblup", "mtag_ldpred2_auto", "ldpred2_auto", "bayesR")
 
 i <- 0
 
@@ -323,7 +336,7 @@ p_methods_shared_lowpve <- ggplot(res, aes(x = trait, y = score, fill = method))
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.2) +
-  scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) +
+  scale_fill_manual(values = c("pink", "red", "yellow", "orange", "green", "blue", "lightblue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.2, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
@@ -335,7 +348,9 @@ In this scenario, we expect the relative improvement of multivariate methods com
 methods to be larger than with $h^2_g = 0.5$. This is because with smaller signal-to-noise ratio,
 it is harder for univariate methods to estimate effects accurately. Multivariate methods can borrow
 information across traits (if effects are shared) and improve accuracy. The results show that 
-the multivariate methods outperform the univariate methods, with *mr.mash.rss* being the best overall. 
+the multivariate methods (including *MTAG+LDpred2*) outperform the univariate methods except for 
+*wMT-SBLUP*, which is not well-suited for the true genetic architecture of the traits. *mr.mash.rss*
+achieves the highest accuracy.
 
 ## Equal effects scenario -- more polygenic
 
@@ -347,7 +362,7 @@ number of causal variants was set to 50,000. In this scenario, $\pi$ was initial
 
 ```{r equal effects poly filt, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_50000causal_indep_resid"
-methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "wmt_sblup", "mtag_ldpred2_auto", "ldpred2_auto", "bayesR")
 
 i <- 0
 
@@ -379,25 +394,27 @@ res <- transform(res, scenario=as.factor(scenario),
                       method=as.factor(method),
                       trait=as.factor(trait))
 
-p_methods_shared_lowpve <- ggplot(res, aes(x = trait, y = score, fill = method)) +
+p_methods_more_poly <- ggplot(res, aes(x = trait, y = score, fill = method)) +
   geom_boxplot(color = "black", outlier.size = 1, width = 0.85) +
   stat_summary(fun=mean, geom="point", shape=23,
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.5) +
-  scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) +
+  scale_fill_manual(values = c("pink", "red", "yellow", "orange", "green", "blue", "lightblue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
 
-print(p_methods_shared_lowpve)
+print(p_methods_more_poly)
 ```
 
 In this scenario, we expect the accuracy to be lower because of the much larger number of causal
 variants, each explaining a much lower proportion of the total $h^2_g=0.5$. Multivariate methods
 can borrow information across traits (if effects are shared) and improve accuracy. The results 
 show that *mr.mash.rss* clearly does better than the univariate methods in this scenario too.
-*mvBayesC* (both versions) seems to have difficulties in this scenario.
+*MTAG+LDpred2* also performs really well in this scenario. *mvBayesC* (both versions) seems to 
+have difficulties in this scenario. *wMT-SBLUP* is not well-suited for the true genetic architecture 
+of the traits.
 
 
 ## Equal effects scenario -- 10 traits
@@ -409,12 +426,11 @@ number of traits was increased to 10.
 
 ```{r equal effects 10 traits, fig.height=10, fig.width=13}
 scenarioz <- "equal_effects_10traits_indep_resid"
-methodz <- c("mr_mash_rss", "mvbayesC_rest", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC_rest", "wmt_sblup", "mtag_ldpred2_auto", "ldpred2_auto", "bayesR")
 
 i <- 0
 
 traitz <- 1:10
-repz <- c(1:10, 12:20)
 
 n_col <- 6
 n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
@@ -450,7 +466,7 @@ p_methods_shared_10traits <- ggplot(res, aes(x = trait, y = score, fill = method
                position = position_dodge2(width = 0.87,   
                                           preserve = "single")) +
   ylim(0, 0.51) +
-  scale_fill_manual(values = c("pink", "red", "yellow", "green", "lightblue")) +
+  scale_fill_manual(values = c("pink", "red", "yellow", "orange", "blue", "lightblue")) +
   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 18)
@@ -463,4 +479,5 @@ methods to be a little larger than with 5 traits. This is because multivariate m
 information across a larger number of traits (if effects are shared) and improve accuracy. The results 
 show that *mr.mash.rss* clearly does better than the univariate methods, but the improvement compared 
 to the scenario with 5 traits is small. *mvBayesCrest* does better than the univariate methods but worse 
-than *mr.mash.rss*. *mvBayesC* is currently too slow to be run in this scenario. 
+than *mr.mash.rss*. *mvBayesC* is currently too slow to be run in this scenario. *wMT-SBLUP* is not 
+well-suited for the true genetic architecture of the traits. 
