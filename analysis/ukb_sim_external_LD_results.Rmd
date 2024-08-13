@@ -1,5 +1,5 @@
 ---
-title: "Simulations with UK Biobank genotypes, missing phenotypic values, and different effect structure across traits"
+title: "Simulations with UK Biobank genotypes, different effect structure across traits, and using external LD"
 author: "Fabio Morgante & Deborah Kunkel"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output: 
