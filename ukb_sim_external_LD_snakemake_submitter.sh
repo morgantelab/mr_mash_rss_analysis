@@ -17,8 +17,8 @@ conda activate mr_mash_rss_proj
 #--dag | display | dot
 #-p -n \
 ## test dag generation
-#snakemake -p -n -s ukb_sim_external_LD_snakefile \
-#          --configfile ukb_sim_external_LD_equal_effects_indep_resid.yaml
+# snakemake -p -n -s ukb_sim_external_LD_snakefile \
+#           --configfile ukb_sim_external_LD_equal_effects_indep_resid.yaml
            #--rerun-triggers mtime \
            #--configfile ukb_sim_external_LD_equal_effects_50000causal_indep_resid.yaml 
            #--configfile ukb_sim_external_LD_trait_1_only_effects_indep_resid.yaml
