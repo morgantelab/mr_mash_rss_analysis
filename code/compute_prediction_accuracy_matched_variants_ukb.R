@@ -53,7 +53,7 @@ outparse <- parse_args(parser)
 
 model <- outparse$model
 chr <- eval(parse(text=outparse$chr))
-trait <- eval(parse(text=outparse$trait))
+traits <- eval(parse(text=outparse$trait))
 pheno_means <- outparse$pheno_means
 pheno_dat <- outparse$pheno
 geno_dat <- outparse$geno
@@ -118,7 +118,7 @@ p <- geno$genotypes$ncol
 
 ###Compute predictions
 ##Get traits to analyze
-r <- length(trait)
+r <- length(traits)
 
 pheno_pred <- vector("list", length=length(chr))
 Bhat_all <- vector("list", length=length(chr))
@@ -141,37 +141,37 @@ for(i in chr){
     
     ##Compute predictions
     if(!is.null(pheno_means)){
-      pheno_pred[[it]] <- t(t(big_prodMat(X, model_fit$mu1[, trait], ind.col=inds, ncores=ncores)) + model_fit$intercept[trait])
+      pheno_pred[[it]] <- t(t(big_prodMat(X, model_fit$mu1[, traits], ind.col=inds, ncores=ncores)) + model_fit$intercept[traits])
     } else {
-      pheno_pred[[it]] <- big_prodMat(X, model_fit$mu1[, trait], ind.col=inds, ncores=ncores)
+      pheno_pred[[it]] <- big_prodMat(X, model_fit$mu1[, traits], ind.col=inds, ncores=ncores)
     }
 
     ##Store effects
-    Bhat_all[[it]] <- model_fit$mu1[, trait]
+    Bhat_all[[it]] <- model_fit$mu1[, traits]
     
   } else if(model %in% c("mvbayesN","mvbayesA","mvbayesL","mvbayesC","mvbayesC_rest","mvbayesR")){
     ##Read in model fit
     model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_", data_id, ".rds"))
     
     ##Compute predictions
-    pheno_pred[[it]] <- big_prodMat(X, model_fit$bm[, trait], ind.col=inds, ncores=ncores)
+    pheno_pred[[it]] <- big_prodMat(X, model_fit$bm[, traits], ind.col=inds, ncores=ncores)
     
     ##Store effects
-    Bhat_all[[it]] <- model_fit$bm[, trait]
+    Bhat_all[[it]] <- model_fit$bm[, traits]
   
   } else if(model=="wmt_sblup"){
     model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_", data_id, ".rds"))
     
     ##Compute predictions
-    pheno_pred[[it]] <- big_prodMat(X, model_fit$b[, trait], ind.col=inds, ncores=ncores)
+    pheno_pred[[it]] <- big_prodMat(X, model_fit$b[, traits], ind.col=inds, ncores=ncores)
     
     ##Store effects
-    Bhat_all[[it]] <- model_fit$b[, trait]
+    Bhat_all[[it]] <- model_fit$b[, traits]
   } else if(model %in% c("ldpred2_auto","mtag_ldpred2_auto","bayesN","bayesA","bayesL","bayesC","bayesR")){
     
     Bhat <- matrix(as.numeric(NA), nrow=length(inds), ncol=length(traits))
     
-    for(j in trait){
+    for(j in traits){
       
       ##Read in model fit
       model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_trait", j, "_", data_id, ".rds"))
@@ -218,7 +218,7 @@ pheno_pred <- Reduce("+", pheno_pred)
 
 ##Remove mean of Y_training which was over counted in the per chromosome estimate of the intercept
 if(!is.null(pheno_means)){
-  pheno_pred <- t(t(pheno_pred) - (pheno_means[trait]*(length(chrs)-1)))
+  pheno_pred <- t(t(pheno_pred) - (pheno_means[traits]*(length(chrs)-1)))
 }
 
 accuracy <- compute_accuracy(pheno_test, pheno_pred)

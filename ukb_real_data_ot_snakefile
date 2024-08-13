@@ -1,6 +1,7 @@
 wildcard_constraints:
     CHR = "|".join(map(str, config["CHR"])),
-    FOLD = "|".join(map(str, config["FOLD"]))
+    FOLD = "|".join(map(str, config["FOLD"])),
+    TRAIT = "|".join(map(str, config["TRAIT"]))
 
 rule all:
 	input:
