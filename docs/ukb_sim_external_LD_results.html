@@ -13,7 +13,7 @@
 
 <meta name="date" content="2024-08-13" />
 
-<title>Simulations with UK Biobank genotypes, missing phenotypic values, and different effect structure across traits</title>
+<title>Simulations with UK Biobank genotypes, different effect structure across traits, and using external LD</title>
 
 <script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -372,8 +372,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Simulations with UK Biobank genotypes,
-missing phenotypic values, and different effect structure across
-traits</h1>
+different effect structure across traits, and using external LD</h1>
 <h4 class="author">Fabio Morgante &amp; Deborah Kunkel</h4>
 <h4 class="date">August 13, 2024</h4>
 
@@ -535,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree986f300be81fd311d265f488edec8999862e7b1ctargetblank986f300a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree60722c739a3878e24e620b750743841d9b613b76targetblank60722c7a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/986f300be81fd311d265f488edec8999862e7b1c" target="_blank">986f300</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/60722c739a3878e24e620b750743841d9b613b76" target="_blank">60722c7</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree986f300be81fd311d265f488edec8999862e7b1ctargetblank986f300a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree60722c739a3878e24e620b750743841d9b613b76targetblank60722c7a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -553,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/986f300be81fd311d265f488edec8999862e7b1c" target="_blank">986f300</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/60722c739a3878e24e620b750743841d9b613b76" target="_blank">60722c7</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -614,9 +613,6 @@ Untracked files:
 
 Unstaged changes:
     Modified:   analysis/index.Rmd
-    Modified:   code/compute_prediction_accuracy_matched_variants_ukb.R
-    Modified:   ukb_real_data_ot_snakefile
-    Modified:   ukb_sim_external_LD_equal_effects_indep_resid.yaml
     Modified:   ukb_sim_external_LD_snakemake_submitter.sh
 
 </code></pre>
@@ -664,6 +660,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/60722c739a3878e24e620b750743841d9b613b76/analysis/ukb_sim_external_LD_results.Rmd" target="_blank">60722c7</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-08-13
+</td>
+<td>
+Fix typo
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/51935b36876ebb1c1e147ede9221ca52606e3f47/docs/ukb_sim_external_LD_results.html" target="_blank">51935b3</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-08-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -892,6 +922,43 @@ print(p_methods_shared)</code></pre>
 <pre><code>Warning: Removed 48 rows containing non-finite outside the scale range
 (`stat_summary()`).</code></pre>
 <p><img src="figure/ukb_sim_external_LD_results.Rmd/equal%20effects-1.png" width="1248" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-equal-effects-1">
+Past versions of "equal effects-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-equal-effects-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/51935b36876ebb1c1e147ede9221ca52606e3f47/docs/figure/ukb_sim_external_LD_results.Rmd/equal effects-1.png" target="_blank">51935b3</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-08-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res %&gt;% group_by(method, trait) %&gt;% summarise(n=sum(!is.na(score))) %&gt;% filter(trait == 1) %&gt;% select(method, n) %&gt;% as.data.frame()</code></pre>
 <pre><code>`summarise()` has grouped output by &#39;method&#39;. You can override using the
 `.groups` argument.</code></pre>
