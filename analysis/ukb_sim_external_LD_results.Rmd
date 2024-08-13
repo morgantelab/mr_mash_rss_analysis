@@ -1,0 +1,174 @@
+---
+title: "Simulations with UK Biobank genotypes, missing phenotypic values, and different effect structure across traits"
+author: "Fabio Morgante & Deborah Kunkel"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: 
+  workflowr::wflow_html:
+    toc: true
+editor_options:
+  chunk_output_type: console
+---
+
+```{r set options}
+###Load libraries
+library(dplyr)
+library(ggplot2)
+library(cowplot)
+
+repz <- c(1,2,3,4,5,6,7,9,10,11,12,13,14,15,16,17,18,19,20,22)
+prefix <- "output/prediction_accuracy/ukb_caucasian_white_british_unrel_100000_external_LD"
+metric <- "r2"
+traitz <- 1:5
+```
+
+## Introduction
+
+The goal of this analysis is to benchmark the newly developed *mr.mash.rss* (aka *mr.mash* with summary 
+data) against already existing methods in the task of predicting phenotypes from genotypes using 
+only summary data. To do so, we used real genotypes from the array data of the UK Biobank. We randomly 
+sampled 105,000 nominally unrelated ($r_A$ < 0.025 between any pair) individuals of European ancestry 
+(i.e., Caucasian and white British fields). After retaining variants with minor allele frequency 
+(MAF) > 0.01, minor allele count (MAC) > 5, genotype missing rate < 0.1 and Hardy-Weinberg Equilibrium (HWE) 
+test p-value > $1 *10^{-10}$, our data consisted of 595,071 genetic variants (i.e., our predictors). 
+Missing genotypes were imputed with the mean genotype for the respective genetic variant.
+
+The linkage disequilibrium (LD) matrices (i.e., the correlation matrices) were computed using 503 individuals 
+of European ancestry from the 1000G project, retaining variants with MAF > 0.05. A block diagonal strategy including 
+denoising via SVD as suggested [here](https://www.biorxiv.org/content/10.1101/2022.04.18.488696v1) was used.
+
+For each replicate, we simulated 5 traits (i.e., our responses) by randomly sampling 5,000 variants 
+(out of the total of 595,071) to be causal, with different effect sharing structures across traits (see below). 
+The genetic effects explain 50\% of the total per-trait variance (except for two scenario as explained below)
+-- in genetics terminology this is called genomic heritability ($h_g^2$). The residuals are uncorrelated across traits. 
+Each trait was quantile normalized before all the analyses were performed.
+
+We randomly sampled 5,000 (out of the 105,000) individuals to be the test set. The test set was only used to 
+evaluate prediction accuracy. All the other steps were carried out on the training set of 100,000 individuals.
+
+Summary statistics (i.e., effect size and its standard error) were obtained by univariate simple linear 
+regression of each trait on each variant, one at a time. Variants were not standardized. Summary statistics were
+subjected to careful and stringent quality control following this [tutorial](https://privefl.github.io/bigsnpr-extdoc/polygenic-scores-pgs.html).
+
+
+
+A few different methods were fitted:
+
+* [LDpred2](https://academic.oup.com/bioinformatics/article/36/22-23/5424/6039173) per-chromosome with 
+the auto option, 1000 iterations (after 500 burn-in iterations), $h^2$ initialized using an estimate from 
+LD Score regression (LDSC), $p$ initialized using the same grid as in the original paper, "shrink_corr=0.95", 
+and "allow_jump_sign=FALSE" to avoid convergence issues.
+NB this is a univariate method.
+<!-- * _LDpred2_ genome-wide with the auto option, 500 iterations (after 500 burn-in iterations), $h^2$  -->
+<!-- initialized as 0.5/22 (WRONG) and $p$ initialized using the same grid as in the original paper. -->
+<!-- NB this is a univariate method. -->
+* _mr.mash.rss_ per-chromosome, with both canonical and data-driven covariance matrices computed 
+as described in the [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1),
+updating the (full rank) residual covariance and the mixture weights, without standardizing the variables. 
+The residual covariance was initialized as in the [mvSuSiE paper](https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1)
+and the mixture weights were initialized as 90\% of the weight on the null component and 10\% of the
+weight split equally across the remaining components. The phenotypic covariance was computed
+as the sample covariance using the individual-level data. NB this is a multivariate method.
+* [BayesR](https://www.nature.com/articles/s41467-019-12653-0) per-chromosome, with 5000 iterations, 
+1000 burn-in iterations, thinning factor of 5, $\pi$ (i.e., the proportion of causal variants) 
+initialized as 0.0001, $h^2$ initialized as 0.1, and other default parameters. NB this is a univariate method. 
+We used the implementation in the *qgg* R package.
+<!-- * [BayesC](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-186) per-chromosome,  -->
+<!-- with 5000 iterations, 1000 burn-in iterations, thinning factor of 5, $\pi$ (i.e., the proportion of causal variants)  -->
+<!-- initialized as 0.0001, $h^2$ initialized as 0.1, and other default parameters. NB this is a univariate method.  -->
+<!-- We used the implementation in the *qgg* R package. -->
+* [mvBayesC](https://academic.oup.com/genetics/article/209/1/89/5931015) per-chromosome, 
+with 5000 iterations, 1000 burn-in iterations, thinning factor of 5, $\pi$ (i.e., the proportion of 
+causal variants) initialized as 0.0001, $h^2$ initialized as 0.1,  and other default parameters. 
+NB this is a multivariate method. We used the implementation in the *qgg* R package.
+* _mvBayesCrest_ -- a version of _mvBayesC_ that only allows a variant to affect all or none of the traits -- 
+per-chromosome, with 5000 iterations, 1000 burn-in iterations, thinning factor of 5, $\pi$ (i.e., the proportion of 
+causal variants) initialized as 0.0001, $h^2$ initialized as 0.1,  and other default parameters. 
+NB this is a multivariate method. We used the implementation in the *qgg* R package.
+* [wMT-SBLUP](https://www.nature.com/articles/s41467-017-02769-6) per-chromosome, with $M_{eff}=60000$ and 
+SBLUP estimate obtained with a window size of 2 Mb (using the *SumTool* R package implementation).
+NB this is a multivariate method. We used the implementation in the *qgg* R package.
+* [MTAG+LDpred2](https://www.nature.com/articles/s41588-017-0009-4) with all variants. Because MTAG does not
+allow analyzing small indels and our data has a small numaber of those, we kept assigned the OLS estimates to those
+variants (instead of dropping them) before running LDpred2. LDpred2 was run with the same parameter as above.
+The effective sample size was estimated from the median $\chi^2$ statistics of the OLS estimates and the MTAG 
+estimates as done [here](https://github.com/privefl/paper-misspec/blob/1f459fd0d6aac66f0f2945446bfaa435b585747b/code/prepare-sumstats-bbj/BMI.R#L30).
+However, convergence issues still remained and some combinations of trait/replicate were dropped because of that.
+
+Prediction accuracy was evaluated as the $R^2$ of the regression of true phenotypes on the predicted 
+phenotypes. This metric as the attractive property that its upper bound is $h_g^2$.
+
+20 replicates for each simulation scenario were run.
+
+## Equal effects scenario
+
+In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0
+and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1.
+This implies that the effects of the causal variants are equal across responses.
+
+```{r equal effects, fig.height=10, fig.width=13}
+scenarioz <- "equal_effects_indep_resid"
+methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "wmt_sblup", "mtag_ldpred2_auto", "ldpred2_auto", "bayesR")
+
+i <- 0
+
+n_col <- 6
+n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score")
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat <- tryCatch(readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds")), 
+                     error = function(e) {
+                       return(NULL)
+                     },
+                     warning = function(w) {
+                       return(NULL)
+                     }
+      )
+      
+      for(trait in traitz){
+        i <- i + 1
+        
+        res[i, 1] <- repp
+        res[i, 2] <- sce
+        res[i, 3] <- met
+        res[i, 4] <- trait
+        res[i, 5] <- metric
+        if(!is.null(dat)){
+          res[i, 6] <- dat$r2[trait]
+        } else {
+          res[i, 6] <- NA
+        }
+        
+      }
+    }
+  }
+}
+
+res1 <- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_methods_shared <- ggplot(res1, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = "black", outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom="point", shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = "single")) +
+  ylim(0, 0.51) +
+  scale_fill_manual(values = c("pink", "red", "yellow", "orange", "green", "blue", "lightblue")) +
+  labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") +
+  geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
+  theme_cowplot(font_size = 18)
+
+print(p_methods_shared)
+
+
+res %>% group_by(method, trait) %>% summarise(n=sum(!is.na(score))) %>% filter(trait == 1) %>% select(method, n) %>% as.data.frame()
+```
+
+In this scenario, all the methods perform worse than with an LD matrix built using larger sample size. 
+However, *mr.mash.rss* remains the best performing method, showing its robustness to the source of LD matrix. 
+In any case, we do NOT recommend using LD matrices computed with such a small sample size with any method.
+
