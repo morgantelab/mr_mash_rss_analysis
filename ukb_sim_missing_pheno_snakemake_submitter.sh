@@ -5,8 +5,8 @@
 #SBATCH --partition=compute
 #SBATCH --time=336:00:00
 #SBATCH --mem=2gb
-#SBATCH --output=run/log/ukb_caucasian_white_british_unrel_100000_missing_pheno_equal_effects_indep_resid.%j.out
-#SBATCH --error=run/log/ukb_caucasian_white_british_unrel_100000_missing_pheno_equal_effects_indep_resid.%j.err
+#SBATCH --output=run/log/ukb_caucasian_white_british_unrel_100000_missing_pheno_02_full_equal_effects_indep_resid.%j.out
+#SBATCH --error=run/log/ukb_caucasian_white_british_unrel_100000_missing_pheno_02_full_equal_effects_indep_resid.%j.err
 #SBATCH --mail-type=fail
 #SBATCH --mail-user=fabiom@clemson.edu
 
@@ -30,6 +30,7 @@ snakemake \
   -s ukb_sim_missing_pheno_snakefile \
   --profile slurm \
   --latency-wait 120 \
+  -k \
   --configfile ukb_sim_missing_pheno_equal_effects_indep_resid.yaml
   #--configfile ukb_sim_missing_pheno_equal_effects_low_pve_indep_resid.yaml
   #--configfile ukb_sim_missing_pheno_blocks_shared_effects_indep_resid.yaml
