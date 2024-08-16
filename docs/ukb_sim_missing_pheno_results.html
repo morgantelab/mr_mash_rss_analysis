@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Fabio Morgante &amp; Deborah Kunkel" />
+
+<meta name="date" content="2024-08-16" />
+
+<title>Simulations with UK Biobank genotypes, missing phenotypic values, and different effect structure across traits</title>
+
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">mr_mash_rss_analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/morgante_lab/mr_mash_rss_analysis">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Simulations with UK Biobank genotypes,
+missing phenotypic values, and different effect structure across
+traits</h1>
+<h4 class="author">Fabio Morgante &amp; Deborah Kunkel</h4>
+<h4 class="date">August 16, 2024</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-08-16
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>mr_mash_rss/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20230612code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20230612)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20230612code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20230612)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree82c2d69e102cde751b0b7e685a713881c071f2adtargetblank82c2d69a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/82c2d69e102cde751b0b7e685a713881c071f2ad" target="_blank">82c2d69</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree82c2d69e102cde751b0b7e685a713881c071f2adtargetblank82c2d69a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/82c2d69e102cde751b0b7e685a713881c071f2ad" target="_blank">82c2d69</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .snakemake/
+    Ignored:    data/
+    Ignored:    output/GWAS_for_regions/
+    Ignored:    output/bayesC_fit/
+    Ignored:    output/bayesR_fit/
+    Ignored:    output/estimated_effects/
+    Ignored:    output/kriging_rss_fit/
+    Ignored:    output/ldpred2_auto_fit/
+    Ignored:    output/ldpred2_auto_gwide_fit/
+    Ignored:    output/ldsc_fit/
+    Ignored:    output/misc/
+    Ignored:    output/mr_mash_rss_fit/
+    Ignored:    output/mtag_ldpred2_auto_fit/
+    Ignored:    output/mtag_summary_statistics/
+    Ignored:    output/mvbayesC_fit/
+    Ignored:    output/prediction_accuracy/
+    Ignored:    output/sblup_fit/
+    Ignored:    output/summary_statistics/
+    Ignored:    output/wmt_sblup_fit/
+    Ignored:    run/
+    Ignored:    tmp/
+
+Untracked files:
+    Untracked:  code/adjust_LD_test.R
+    Untracked:  code/compute_sumstats_test_bc_ukb.R
+    Untracked:  code/compute_sumstats_ukb_2.R
+    Untracked:  code/fit_kriging_rss_ukb.R
+    Untracked:  code/fit_mrmashrss_test_ukb.R
+    Untracked:  code/match_sumstats_with_LD_ukb.R
+    Untracked:  code/merge_sumstats_all_chr_ukb.R
+    Untracked:  code/obtain_finemapping_regions_ot_ukb.R
+    Untracked:  code/split_effects_by_chr_imp_ukb.R
+    Untracked:  scripts/11_run_fit_mrmashrss_by_chr_V_all_chr_bc_ukb.sbatch
+    Untracked:  scripts/11_run_fit_mrmashrss_sparse_LD_mvsusie_paper_prior_by_chr_bc_ukb.sbatch
+    Untracked:  scripts/12_run_compute_pred_accuracy_mrmashrss_sparse_LD_mvsusie_paper_prior_bc_ukb.sbatch
+    Untracked:  scripts/12_run_fit_mrmashrss_sparse_LD_Vcor_all_chr_init_by_chr_bc_ukb.sbatch
+    Untracked:  scripts/13_run_compute_pred_accuracy_mrmashrss_sparse_LD_Vcor_all_chr_init_bc_ukb.sbatch
+    Untracked:  scripts/3_run_compute_sumstats_by_chr_and_fold_test_bc_ukb.sbatch
+    Untracked:  scripts/7_run_compute_residual_cor_all_chr_bc_ukb.sbatch
+    Untracked:  scripts/run_adjust_LD_test.sbatch
+    Untracked:  scripts/run_fit_kriging_rss_by_chr_and_trait_bc_ukb.sbatch
+    Untracked:  scripts/run_obtain_finemapping_regions_ot_ukb.sbatch
+    Untracked:  vs_sm_convert/
+    Untracked:  vs_sm_test/
+
+Unstaged changes:
+    Modified:   analysis/index.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/ukb_sim_missing_pheno_results.Rmd</code>) and HTML
+(<code>docs/ukb_sim_missing_pheno_results.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/82c2d69e102cde751b0b7e685a713881c071f2ad/analysis/ukb_sim_missing_pheno_results.Rmd" target="_blank">82c2d69</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-08-16
+</td>
+<td>
+Add results with missing values
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>###Load libraries
+library(ggplot2)
+library(cowplot)
+
+repz &lt;- 1:20
+prefix &lt;- &quot;output/prediction_accuracy/ukb_caucasian_white_british_unrel_100000_missing_pheno&quot;
+metric &lt;- &quot;r2&quot;
+traitz &lt;- 1:5</code></pre>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>The goal of this analysis is to benchmark the newly developed
+<em>mr.mash.rss</em> (aka <em>mr.mash</em> with summary data) against
+already existing methods in the task of predicting phenotypes from
+genotypes using only summary data. To do so, we used real genotypes from
+the array data of the UK Biobank. We randomly sampled 105,000 nominally
+unrelated (<span class="math inline">\(r_A\)</span> &lt; 0.025 between
+any pair) individuals of European ancestry (i.e., Caucasian and white
+British fields). After retaining variants with minor allele frequency
+(MAF) &gt; 0.01, minor allele count (MAC) &gt; 5, genotype missing rate
+&lt; 0.1 and Hardy-Weinberg Equilibrium (HWE) test p-value &gt; <span
+class="math inline">\(1 *10^{-10}\)</span>, our data consisted of
+595,071 genetic variants (i.e., our predictors). Missing genotypes were
+imputed with the mean genotype for the respective genetic variant.</p>
+<p>The linkage disequilibrium (LD) matrices (i.e., the correlation
+matrices) were computed using 146,288 nominally unrelated (<span
+class="math inline">\(r_A\)</span> &lt; 0.025 between any pair)
+individuals of European ancestry (i.e., Caucasian and white British
+fields), that did not overlap with the 105,000 individuals used for the
+rest of the analyses.</p>
+<p>For each replicate, we simulated 5 traits (i.e., our responses) by
+randomly sampling 5,000 variants (out of the total of 595,071) to be
+causal, with different effect sharing structures across traits (see
+below). The genetic effects explain 50% of the total per-trait variance
+(except for two scenario as explained below) – in genetics terminology
+this is called genomic heritability (<span
+class="math inline">\(h_g^2\)</span>). The residuals are uncorrelated
+across traits. Each trait was quantile normalized before all the
+analyses were performed.</p>
+<p>We randomly sampled 5,000 (out of the 105,000) individuals to be the
+test set. The test set was only used to evaluate prediction accuracy.
+All the other steps were carried out on the training set of 100,000
+individuals.</p>
+<p>We assigned missing values completely at random (MCAR) to the
+phenotype matrix for the training individuals.</p>
+<p>Summary statistics (i.e., effect size and its standard error) were
+obtained by univariate simple linear regression of each trait on each
+variant, one at a time. Variants were not standardized.</p>
+<p>A few different methods were fitted:</p>
+<ul>
+<li><a
+href="https://academic.oup.com/bioinformatics/article/36/22-23/5424/6039173">LDpred2</a>
+per-chromosome with the auto option, 1000 iterations (after 500 burn-in
+iterations), <span class="math inline">\(h^2\)</span> initialized using
+an estimate from LD Score regression (LDSC) and <span
+class="math inline">\(p\)</span> initialized using the same grid as in
+the original paper. NB this is a univariate method.
+<!-- * _LDpred2_ genome-wide with the auto option, 500 iterations (after 500 burn-in iterations), $h^2$  -->
+<!-- initialized as 0.5/22 (WRONG) and $p$ initialized using the same grid as in the original paper. -->
+<!-- NB this is a univariate method. --></li>
+<li><em>mr.mash.rss</em> per-chromosome, with both canonical and
+data-driven covariance matrices computed as described in the <a
+href="https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1">mvSuSiE
+paper</a>, updating the (full rank) residual covariance and the mixture
+weights, without standardizing the variables. The residual covariance
+was initialized as in the <a
+href="https://www.biorxiv.org/content/10.1101/2023.04.14.536893v1">mvSuSiE
+paper</a> and the mixture weights were initialized as 90% of the weight
+on the null component and 10% of the weight split equally across the
+remaining components. The phenotypic covariance was computed as the
+sample covariance using the individual-level data. NB this is a
+multivariate method.</li>
+<li><a
+href="https://www.nature.com/articles/s41467-019-12653-0">BayesR</a>
+per-chromosome, with 5000 iterations, 1000 burn-in iterations, thinning
+factor of 5, <span class="math inline">\(\pi\)</span> (i.e., the
+proportion of causal variants) initialized as 0.0001, <span
+class="math inline">\(h^2\)</span> initialized as 0.1, and other default
+parameters. NB this is a univariate method. We used the implementation
+in the <em>qgg</em> R package.
+<!-- * [BayesC](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-186) per-chromosome,  -->
+<!-- with 5000 iterations, 1000 burn-in iterations, thinning factor of 5, $\pi$ (i.e., the proportion of causal variants)  -->
+<!-- initialized as 0.0001, $h^2$ initialized as 0.1, and other default parameters. NB this is a univariate method.  -->
+<!-- We used the implementation in the *qgg* R package. --></li>
+<li><a
+href="https://academic.oup.com/genetics/article/209/1/89/5931015">mvBayesC</a>
+per-chromosome, with 5000 iterations, 1000 burn-in iterations, thinning
+factor of 5, <span class="math inline">\(\pi\)</span> (i.e., the
+proportion of causal variants) initialized as 0.0001, <span
+class="math inline">\(h^2\)</span> initialized as 0.1, and other default
+parameters. NB this is a multivariate method. We used the implementation
+in the <em>qgg</em> R package.</li>
+<li><em>mvBayesCrest</em> – a version of <em>mvBayesC</em> that only
+allows a variant to affect all or none of the traits – per-chromosome,
+with 5000 iterations, 1000 burn-in iterations, thinning factor of 5,
+<span class="math inline">\(\pi\)</span> (i.e., the proportion of causal
+variants) initialized as 0.0001, <span
+class="math inline">\(h^2\)</span> initialized as 0.1, and other default
+parameters. NB this is a multivariate method. We used the implementation
+in the <em>qgg</em> R package.</li>
+<li><a
+href="https://www.nature.com/articles/s41467-017-02769-6">wMT-SBLUP</a>
+per-chromosome, with <span class="math inline">\(M_{eff}=60000\)</span>
+and SBLUP estimate obtained with a window size of 2 Mb (using the
+<em>SumTool</em> R package implementation). NB this is a multivariate
+method. We used the implementation in the <em>qgg</em> R package.</li>
+<li><a
+href="https://www.nature.com/articles/s41588-017-0009-4">MTAG+LDpred2</a>
+with all variants. Because MTAG does not allow analyzing small indels
+and our data has a small numaber of those, we kept assigned the OLS
+estimates to those variants (instead of dropping them) before running
+LDpred2. LDpred2 was run with the same parameter as above, but with
+“shrink_corr=0.95” and “allow_jump_sign=FALSE” to avoid convergence
+issues. The effective sample size was estimated from the median <span
+class="math inline">\(\chi^2\)</span> statistics of the OLS estimates
+and the MTAG estimates as done <a
+href="https://github.com/privefl/paper-misspec/blob/1f459fd0d6aac66f0f2945446bfaa435b585747b/code/prepare-sumstats-bbj/BMI.R#L30">here</a>.</li>
+</ul>
+<p>Prediction accuracy was evaluated as the <span
+class="math inline">\(R^2\)</span> of the regression of true phenotypes
+on the predicted phenotypes. This metric as the attractive property that
+its upper bound is <span class="math inline">\(h_g^2\)</span>.</p>
+<p>20 replicates for each simulation scenario were run.</p>
+</div>
+<div id="equal-effects-scenario-medium-proportion-of-missing-values"
+class="section level2">
+<h2>Equal effects scenario, medium proportion of missing values</h2>
+<p>In this scenario, the effects were drawn from a Multivariate Normal
+distribution with mean vector 0 and covariance matrix that achieves a
+per-trait variance of 1 and a correlation across traits of 1. This
+implies that the effects of the causal variants are equal across
+responses. Missing values were assigned to 20% of the cells of the
+phenotype matrix.</p>
+<pre class="r"><code>scenarioz &lt;- &quot;02_full_equal_effects_indep_resid&quot;
+methodz &lt;- c(&quot;mr_mash_rss&quot;, &quot;mvbayesC&quot;, &quot;mvbayesC_rest&quot;, &quot;wmt_sblup&quot;, &quot;mtag_ldpred2_auto&quot;, &quot;ldpred2_auto&quot;, &quot;bayesR&quot;)
+
+i &lt;- 0
+
+n_col &lt;- 6
+n_row &lt;- length(repz) * length(scenarioz) * length(methodz) * length(traitz)
+res &lt;- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row))
+colnames(res) &lt;- c(&quot;rep&quot;, &quot;scenario&quot;, &quot;method&quot;, &quot;trait&quot;, &quot;metric&quot;, &quot;score&quot;)
+
+for(sce in scenarioz){
+  for(met in methodz){
+    for(repp in repz){
+      dat &lt;- readRDS(paste0(prefix, &quot;_&quot;, sce, &quot;_&quot;, met, &quot;_pred_acc_&quot;, repp, &quot;.rds&quot;))
+      
+      for(trait in traitz){
+        i &lt;- i + 1
+        
+        res[i, 1] &lt;- repp
+        res[i, 2] &lt;- sce
+        res[i, 3] &lt;- met
+        res[i, 4] &lt;- trait
+        res[i, 5] &lt;- metric
+        res[i, 6] &lt;- dat$r2[trait]
+      }
+    }
+  }
+}
+
+res &lt;- transform(res, scenario=as.factor(scenario),
+                      method=as.factor(method),
+                      trait=as.factor(trait))
+
+p_methods_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
+  geom_boxplot(color = &quot;black&quot;, outlier.size = 1, width = 0.85) +
+  stat_summary(fun=mean, geom=&quot;point&quot;, shape=23,
+               position = position_dodge2(width = 0.87,   
+                                          preserve = &quot;single&quot;)) +
+  ylim(0, 0.51) +
+  scale_fill_manual(values = c(&quot;pink&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;orange&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;lightblue&quot;)) +
+  labs(x = &quot;Trait&quot;, y = expression(italic(R)^2), fill=&quot;Method&quot;, title=&quot;&quot;) +
+  geom_hline(yintercept=0.5, linetype=&quot;dotted&quot;, linewidth=1, color = &quot;black&quot;) +
+  theme_cowplot(font_size = 18)
+
+print(p_methods_shared)</code></pre>
+<p><img src="figure/ukb_sim_missing_pheno_results.Rmd/equal%20effects-1.png" width="1248" style="display: block; margin: auto;" /></p>
+<p>The results show that <em>mr.mash.rss</em> and <em>mvBayesC</em>
+(both versions) perform similarly and better than the univariate
+methods. Having missing values violates an assumption of
+<em>mr.mash.rss</em>. This results in the method achieving lower
+accuracy than without missing values. However, it is still competitive
+with the other actual multivariate methods and is better than the
+univariate methods. <em>wMT-SBLUP</em> does poorly as its infinitesimal
+architecture assumption is not well-suited for the true genetic
+architecture of the traits.</p>
+<!-- ## Mostly null scenario -->
+<!-- In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0 -->
+<!-- and covariance matrix that achieves effects (with variance 1) to be present only trait 1. The other  -->
+<!-- 4 traits are only random noise. -->
+<!-- ```{r mostly null, fig.height=10, fig.width=13} -->
+<!-- scenarioz <- "trait_1_only_effects_indep_resid" -->
+<!-- methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesR") -->
+<!-- i <- 0 -->
+<!-- n_col <- 6 -->
+<!-- n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz) -->
+<!-- res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row)) -->
+<!-- colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score") -->
+<!-- for(sce in scenarioz){ -->
+<!--   for(met in methodz){ -->
+<!--     for(repp in repz){ -->
+<!--       dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds")) -->
+<!--       for(trait in traitz){ -->
+<!--         i <- i + 1 -->
+<!--         res[i, 1] <- repp -->
+<!--         res[i, 2] <- sce -->
+<!--         res[i, 3] <- met -->
+<!--         res[i, 4] <- trait -->
+<!--         res[i, 5] <- metric -->
+<!--         res[i, 6] <- dat$r2[trait] -->
+<!--       } -->
+<!--     } -->
+<!--   } -->
+<!-- } -->
+<!-- res <- transform(res, scenario=as.factor(scenario), -->
+<!--                       method=as.factor(method), -->
+<!--                       trait=as.factor(trait)) -->
+<!-- p_mostly_null <- ggplot(res, aes(x = trait, y = score, fill = method)) + -->
+<!--   geom_boxplot(color = "black", outlier.size = 1, width = 0.85) + -->
+<!--   stat_summary(fun=mean, geom="point", shape=23, -->
+<!--                position = position_dodge2(width = 0.87,    -->
+<!--                                           preserve = "single")) + -->
+<!--   ylim(0.0, 0.51) + -->
+<!--   scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) + -->
+<!--   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") + -->
+<!--   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") + -->
+<!--   theme_cowplot(font_size = 18) -->
+<!-- print(p_mostly_null) -->
+<!-- ``` -->
+<!-- In this scenario, there is no advantage to using multivariate methods. In fact, there is potential -->
+<!-- for multivariate methods to do worse than univariate methods because of the large amount of noise -->
+<!-- modeled jointly with the signal. The results show that *mr.mash.rss* can learn this structure -->
+<!-- from the data and performs similar to *LDpred2 auto* and *BayesR*, although a little worse. -->
+<!-- *mvBayesC* performs slightly worse than *mr.mash.rss*. *mvBayesCrest* cannot adapt well to this scenario. -->
+<!-- ## Shared in subgroups scenario -->
+<!-- In this scenario, the effects were drawn from a mixture of two Multivariate Normal distributions, i.e.,  -->
+<!-- $w_1 MVN(0, \Sigma_1) + w_2 MVN(0, \Sigma_2)$, where $w_1$ = 0.5 and $w_2$ = 0.5, $\Sigma_1$ is such  -->
+<!-- that it achieves correlation across traits of 0.9 and variance of 1, $\Sigma_2$ is such that it achieves  -->
+<!-- correlation across traits of 0.7 and variance of 1. The first component of the mixture applies to traits 1-3 -->
+<!-- while the second component applies to traits 4-5. The per-trait $h^2_g$ is 0.3 for traits 1-3 and 0.5 for the -->
+<!-- traits 4-5. -->
+<!-- ```{r shared in subgroups, fig.height=10, fig.width=13} -->
+<!-- scenarioz <- "blocks_shared_effects_indep_resid" -->
+<!-- methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesR") -->
+<!-- i <- 0 -->
+<!-- n_col <- 6 -->
+<!-- n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz) -->
+<!-- res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row)) -->
+<!-- colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score") -->
+<!-- for(sce in scenarioz){ -->
+<!--   for(met in methodz){ -->
+<!--     for(repp in repz){ -->
+<!--       dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds")) -->
+<!--       for(trait in traitz){ -->
+<!--         i <- i + 1 -->
+<!--         res[i, 1] <- repp -->
+<!--         res[i, 2] <- sce -->
+<!--         res[i, 3] <- met -->
+<!--         res[i, 4] <- trait -->
+<!--         res[i, 5] <- metric -->
+<!--         res[i, 6] <- dat$r2[trait] -->
+<!--       } -->
+<!--     } -->
+<!--   } -->
+<!-- } -->
+<!-- res <- transform(res, scenario=as.factor(scenario), -->
+<!--                       method=as.factor(method), -->
+<!--                       trait=as.factor(trait)) -->
+<!-- p_blocks_shared <- ggplot(res, aes(x = trait, y = score, fill = method)) + -->
+<!--   geom_boxplot(color = "black", outlier.size = 1, width = 0.85) + -->
+<!--   stat_summary(fun=mean, geom="point", shape=23, -->
+<!--                position = position_dodge2(width = 0.87,    -->
+<!--                                           preserve = "single")) + -->
+<!--   ylim(0, 0.51) + -->
+<!--   scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) + -->
+<!--   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") + -->
+<!--   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") + -->
+<!--   geom_hline(yintercept=0.3, linetype="dashed", linewidth=1, color = "black") + -->
+<!--   theme_cowplot(font_size = 18) -->
+<!-- print(p_blocks_shared) -->
+<!-- ``` -->
+<!-- In this scenario, multivariate methods can have some advantage over univariate methods, provided that -->
+<!-- the former can adapt to the complex structure of the effects. The results show that all the methods perform -->
+<!-- very similarly in traits 3 and 4 -- with *mvBayesC* being a tiny bit better -- but *mvBayesCrest*.  -->
+<!-- However, *mr.mash.rss* and *mvBayesC* methods perform better than the univariate methods and *mvBayesCrest*  -->
+<!-- in traits 1-3, due to the higher effect correlation across traits, the larger number of traits with shared  -->
+<!-- effects, and the smaller $h^2_g$ (harder scenario for univariate methods). -->
+<!-- ## Equal effects scenario -- low PVE -->
+<!-- In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0 -->
+<!-- and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1. -->
+<!-- This implies that the effects of the causal variants are equal across responses. In addition, the  -->
+<!-- per-trait genomic heritability was set to 0.2. In this scenario, $h^2$ was initialized as 0.01 in  -->
+<!-- *BayesC*, *BayesR*, *mvBayesC* and *mvBayesCrest*. -->
+<!-- ```{r equal effects low pve, fig.height=10, fig.width=13} -->
+<!-- scenarioz <- "equal_effects_low_pve_indep_resid" -->
+<!-- methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesR") -->
+<!-- i <- 0 -->
+<!-- n_col <- 6 -->
+<!-- n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz) -->
+<!-- res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row)) -->
+<!-- colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score") -->
+<!-- for(sce in scenarioz){ -->
+<!--   for(met in methodz){ -->
+<!--     for(repp in repz){ -->
+<!--       dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds")) -->
+<!--       for(trait in traitz){ -->
+<!--         i <- i + 1 -->
+<!--         res[i, 1] <- repp -->
+<!--         res[i, 2] <- sce -->
+<!--         res[i, 3] <- met -->
+<!--         res[i, 4] <- trait -->
+<!--         res[i, 5] <- metric -->
+<!--         res[i, 6] <- dat$r2[trait] -->
+<!--       } -->
+<!--     } -->
+<!--   } -->
+<!-- } -->
+<!-- res <- transform(res, scenario=as.factor(scenario), -->
+<!--                       method=as.factor(method), -->
+<!--                       trait=as.factor(trait)) -->
+<!-- p_methods_shared_lowpve <- ggplot(res, aes(x = trait, y = score, fill = method)) + -->
+<!--   geom_boxplot(color = "black", outlier.size = 1, width = 0.85) + -->
+<!--   stat_summary(fun=mean, geom="point", shape=23, -->
+<!--                position = position_dodge2(width = 0.87,    -->
+<!--                                           preserve = "single")) + -->
+<!--   ylim(0, 0.2) + -->
+<!--   scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) + -->
+<!--   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") + -->
+<!--   geom_hline(yintercept=0.2, linetype="dotted", linewidth=1, color = "black") + -->
+<!--   theme_cowplot(font_size = 18) -->
+<!-- print(p_methods_shared_lowpve) -->
+<!-- ``` -->
+<!-- In this scenario, we expect the relative improvement of multivariate methods compared to univariate -->
+<!-- methods to be larger than with $h^2_g = 0.5$. This is because with smaller signal-to-noise ratio, -->
+<!-- it is harder for univariate methods to estimate effects accurately. Multivariate methods can borrow -->
+<!-- information across traits (if effects are shared) and improve accuracy. The results show that  -->
+<!-- the multivariate methods outperform the univariate methods, with *mr.mash.rss* being the best overall.  -->
+<!-- ## Equal effects scenario -- more polygenic -->
+<!-- In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0 -->
+<!-- and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1. -->
+<!-- This implies that the effects of the causal variants are equal across responses. In addition, the  -->
+<!-- number of causal variants was set to 50,000. In this scenario, $\pi$ was initialized as 0.01 in  -->
+<!-- *BayesC*, *BayesR*, *mvBayesC*, and *mvBayesCrest*. -->
+<!-- ```{r equal effects poly filt, fig.height=10, fig.width=13} -->
+<!-- scenarioz <- "equal_effects_50000causal_indep_resid" -->
+<!-- methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesR") -->
+<!-- i <- 0 -->
+<!-- n_col <- 6 -->
+<!-- n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz) -->
+<!-- res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row)) -->
+<!-- colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score") -->
+<!-- for(sce in scenarioz){ -->
+<!--   for(met in methodz){ -->
+<!--     for(repp in repz){ -->
+<!--       dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds")) -->
+<!--       for(trait in traitz){ -->
+<!--         i <- i + 1 -->
+<!--         res[i, 1] <- repp -->
+<!--         res[i, 2] <- sce -->
+<!--         res[i, 3] <- met -->
+<!--         res[i, 4] <- trait -->
+<!--         res[i, 5] <- metric -->
+<!--         res[i, 6] <- dat$r2[trait] -->
+<!--       } -->
+<!--     } -->
+<!--   } -->
+<!-- } -->
+<!-- res <- transform(res, scenario=as.factor(scenario), -->
+<!--                       method=as.factor(method), -->
+<!--                       trait=as.factor(trait)) -->
+<!-- p_methods_shared_lowpve <- ggplot(res, aes(x = trait, y = score, fill = method)) + -->
+<!--   geom_boxplot(color = "black", outlier.size = 1, width = 0.85) + -->
+<!--   stat_summary(fun=mean, geom="point", shape=23, -->
+<!--                position = position_dodge2(width = 0.87,    -->
+<!--                                           preserve = "single")) + -->
+<!--   ylim(0, 0.5) + -->
+<!--   scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) + -->
+<!--   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") + -->
+<!--   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") + -->
+<!--   theme_cowplot(font_size = 18) -->
+<!-- print(p_methods_shared_lowpve) -->
+<!-- ``` -->
+<!-- In this scenario, we expect the accuracy to be lower because of the much larger number of causal -->
+<!-- variants, each explaining a much lower proportion of the total $h^2_g=0.5$. Multivariate methods -->
+<!-- can borrow information across traits (if effects are shared) and improve accuracy. The results  -->
+<!-- show that *mr.mash.rss* clearly does better than the univariate methods in this scenario too. -->
+<!-- *mvBayesC* (both versions) seems to have difficulties in this scenario. -->
+<!-- ## Equal effects scenario -- 10 traits -->
+<!-- In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0 -->
+<!-- and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1. -->
+<!-- This implies that the effects of the causal variants are equal across responses. In addition, the  -->
+<!-- number of traits was increased to 10. -->
+<!-- ```{r equal effects 10 traits, fig.height=10, fig.width=13} -->
+<!-- scenarioz <- "equal_effects_10traits_indep_resid" -->
+<!-- methodz <- c("mr_mash_rss", "mvbayesC_rest", "ldpred2_auto", "bayesR") -->
+<!-- i <- 0 -->
+<!-- traitz <- 1:10 -->
+<!-- repz <- c(1:10, 12:20) -->
+<!-- n_col <- 6 -->
+<!-- n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz) -->
+<!-- res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row)) -->
+<!-- colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score") -->
+<!-- for(sce in scenarioz){ -->
+<!--   for(met in methodz){ -->
+<!--     for(repp in repz){ -->
+<!--       dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds")) -->
+<!--       for(trait in traitz){ -->
+<!--         i <- i + 1 -->
+<!--         res[i, 1] <- repp -->
+<!--         res[i, 2] <- sce -->
+<!--         res[i, 3] <- met -->
+<!--         res[i, 4] <- trait -->
+<!--         res[i, 5] <- metric -->
+<!--         res[i, 6] <- dat$r2[trait] -->
+<!--       } -->
+<!--     } -->
+<!--   } -->
+<!-- } -->
+<!-- res <- transform(res, scenario=as.factor(scenario), -->
+<!--                       method=as.factor(method), -->
+<!--                       trait=as.factor(trait)) -->
+<!-- p_methods_shared_10traits <- ggplot(res, aes(x = trait, y = score, fill = method)) + -->
+<!--   geom_boxplot(color = "black", outlier.size = 1, width = 0.85) + -->
+<!--   stat_summary(fun=mean, geom="point", shape=23, -->
+<!--                position = position_dodge2(width = 0.87,    -->
+<!--                                           preserve = "single")) + -->
+<!--   ylim(0, 0.51) + -->
+<!--   scale_fill_manual(values = c("pink", "red", "yellow", "green", "lightblue")) + -->
+<!--   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") + -->
+<!--   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") + -->
+<!--   theme_cowplot(font_size = 18) -->
+<!-- print(p_methods_shared_10traits) -->
+<!-- ``` -->
+<!-- In this scenario, we expect the relative improvement of multivariate methods compared to univariate -->
+<!-- methods to be a little larger than with 5 traits. This is because multivariate methods can borrow -->
+<!-- information across a larger number of traits (if effects are shared) and improve accuracy. The results  -->
+<!-- show that *mr.mash.rss* clearly does better than the univariate methods, but the improvement compared  -->
+<!-- to the scenario with 5 traits is small. *mvBayesCrest* does better than the univariate methods but worse  -->
+<!-- than *mr.mash.rss*. *mvBayesC* is currently too slow to be run in this scenario.  -->
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.2 (2021-11-01)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Rocky Linux 8.5 (Green Obsidian)
+
+Matrix products: default
+BLAS/LAPACK: /opt/ohpc/pub/libs/gnu9/openblas/0.3.7/lib/libopenblasp-r0.3.7.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] cowplot_1.1.3 ggplot2_3.5.1
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.13       highr_0.11        pillar_1.9.0      compiler_4.1.2   
+ [5] bslib_0.7.0       later_1.3.2       jquerylib_0.1.4   git2r_0.32.0     
+ [9] workflowr_1.7.0   tools_4.1.2       digest_0.6.35     gtable_0.3.5     
+[13] jsonlite_1.8.8    evaluate_0.23     lifecycle_1.0.4   tibble_3.2.1     
+[17] pkgconfig_2.0.3   rlang_1.1.4       cli_3.6.2         rstudioapi_0.16.0
+[21] yaml_2.3.8        xfun_0.44         fastmap_1.2.0     withr_3.0.0      
+[25] dplyr_1.1.4       stringr_1.5.1     knitr_1.47        generics_0.1.3   
+[29] fs_1.6.4          vctrs_0.6.5       sass_0.4.9        tidyselect_1.2.1 
+[33] rprojroot_2.0.4   grid_4.1.2        glue_1.7.0        R6_2.5.1         
+[37] fansi_1.0.6       rmarkdown_2.27    farver_2.1.2      magrittr_2.0.3   
+[41] whisker_0.4.1     scales_1.3.0      promises_1.3.0    htmltools_0.5.8.1
+[45] colorspace_2.1-0  httpuv_1.6.11     labeling_0.4.3    utf8_1.2.4       
+[49] stringi_1.8.4     munsell_0.5.1     cachem_1.1.0     </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
