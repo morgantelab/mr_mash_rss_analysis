@@ -31,6 +31,7 @@ Rscript ../code/filter_variants_by_info_score_ukb.R --mfi /data2/morgante_lab/da
     --bgen /data2/morgante_lab/data/ukbiobank/genotypes/imputed/ukb22828_c"${CHR}"_b0_v3.bgen ref-first \
     --sample /data2/morgante_lab/data/ukbiobank/genotypes/imputed/ukb22828_c"${CHR}"_b0_v3_s487271.sample \
     --snps-only \
+    --import-max-alleles 2 \
     --max-alleles 2 \
     --make-pgen \
     --out ../data/genotypes/ukb22828_c"${CHR}"_b0_v3_biallelic_snps_only \
