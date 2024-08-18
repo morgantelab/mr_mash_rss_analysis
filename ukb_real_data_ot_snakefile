@@ -9,11 +9,11 @@ rule all:
 	  config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_HM3.rds",
 	  expand(config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chr{CHR}_sumstats_{FOLD}.rds",CHR=config["CHR"],FOLD=config["FOLD"]),
 	  expand(config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_phenotypic_cov_{FOLD}.rds",FOLD=config["FOLD"]),
-	  expand(config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_bc_adjusted_pheno_test_{FOLD}.rds",FOLD=config["FOLD"]),
+	  expand(config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_ot_adjusted_pheno_test_{FOLD}.rds",FOLD=config["FOLD"]),
 	  expand(config["WORKDIR"]+"/"+"output/ldsc_fit/"+config["PREFIX"]+"_chrAll_ldsc_fit_trait{TRAIT}_{FOLD}.rds",TRAIT=config["TRAIT"],FOLD=config["FOLD"]),
 	  expand(config["WORKDIR"]+"/"+"output/ldpred2_auto_fit/"+config["PREFIX"]+"_chr{CHR}_ldpred2_auto_fit_trait{TRAIT}_{FOLD}.rds",CHR=config["CHR"],TRAIT=config["TRAIT"],FOLD=config["FOLD"]),
 	  expand(config["WORKDIR"]+"/"+"output/bayesR_fit/"+config["PREFIX"]+"_chr{CHR}_bayesR_fit_trait{TRAIT}_{FOLD}.rds",CHR=config["CHR"],TRAIT=config["TRAIT"],FOLD=config["FOLD"])
-		# "/scratch"+config["SCRATCH"]+"/fabiom/ukbiobank_files/"+config["PREFIX"]+"_geno_imp_prior.rds",
+		# config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_prior.rds",
 		# expand(config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_chrAll_residual_cov_{FOLD}.rds",FOLD=config["FOLD"]),
 		# expand(config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chrAll_prior_sumstats_{FOLD}.rds",FOLD=config["FOLD"]),
 		# expand(config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"_prior_finemapped_{FOLD}.rds",FOLD=config["FOLD"]),
@@ -167,147 +167,157 @@ def generate_file_paths(config, fold_wildcard):
 
 all_file_paths = {fold: generate_file_paths(config, fold) for fold in config["FOLD"]}
 
-# rule compute_residual_cov_all_chr:
-# 	input:
-# 		lambda wildcards: all_file_paths[wildcards.FOLD]
-# 	output:
-# 		config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_chrAll_residual_cov_{FOLD}.rds"
-# 	params:
-# 		CODE=config["CODE"]+"/"+"compute_residual_cov_all_chr_ukb.R",
-# 		PREFIX=config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"],
-# 		SUFFIX="_sumstats_{FOLD}.rds",
-# 		CHR_RANGE=config["CHR_RANGE"],
-# 		FOLD="{FOLD}"
-# 	resources: cpus=1, mem_mb=4000, time_min=60
-# 	shell:
-# 		"""
-# 		module load gsl/2.7
-# 		source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
-# 		module load R/4.2.3
-# 
-# 		Rscript {params.CODE} \
-# 			--sumstats_prefix {params.PREFIX}\
-# 			--sumstats_suffix {params.SUFFIX}\
-# 			--chr {params.CHR_RANGE} \
-# 			--output {output}\
-# 			--seed {params.FOLD}\
-# 
-# 
-# 		module unload R/4.2.3
-# 		module unload gsl/2.7
-# 		"""
-# 
-# rule prepare_bc_prior_imp_geno:
-# 	input:
-# 		REG="/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/data/blood_cell_finemapping_regions/bloodcells_chr1.1526269.3336301_snp_names.txt",
-# 		IDS=config["UKB_RESOURCES"]+"/"+"genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample",
-# 		SEL=config["WORKDIR"]+"/"+"data/misc/ukb_cleaned_bc_ind_ids.txt",
-# 		BGEN=expand(config["UKB_RESOURCES"]+"/"+"genotypes/imputed/ukb22828_c{CHR}_b0_v3.bgen",CHR=config["CHR"])
-# 	output:
-# 		BCK=config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_prior.rds"
-# 	params:
-# 		CODE=config["CODE"]+"/"+"prepare_bc_prior_imp_geno_ukb.R"
-# 	resources: cpus=22, mem_mb=300000, time_min=720
-# 	shell:
-# 		"""
-# 		source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
-# 		module load R/4.2.3
-# 
-# 		Rscript {params.CODE}
-# 		"""
-# 
-# rule compute_sumstats_prior:
-# 	input:
-# 		IDS=config["UKB_RESOURCES"]+"/"+"genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample",
-# 		RDS=config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_bc_covar_pheno.rds",
-# 		GENO=config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_prior.rds"
-# 	output:
-# 		config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chrAll_prior_sumstats_{FOLD}.rds"
-# 	params:
-# 		CODE=config["CODE"]+"/"+"compute_sumstats_bc_prior_ukb.R",
-# 		CHR="0",
-# 		FOLD="{FOLD}",
-#                 STD_GENO=config["STANDARDIZE_GENO"],
-#                 IMP_MISSING=config["IMPUTE_MISSING"],
-#                 NORM_PHENO=config["NORMALIZE_PHENO"],
-# 		CPU="16"
-# 	resources: cpus=16, mem_mb=100000, time_min=720
-# 	shell:
-# 		"""
-# 		echo "Start analyzing chromosome {params.CHR} and fold {params.FOLD} ..."
-# 
-# 		source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
-# 		module load R/4.2.3
-# 
-# 		Rscript {params.CODE} \
-# 			--fold {params.FOLD} \
-# 			--chr {params.CHR} \
-#                         --standardize {params.STD_GENO} \
-#                         --impute_missing {params.IMP_MISSING} \
-#                         --normalize {params.NORM_PHENO} \
-# 			--ncores {params.CPU}
-# 
-# 		echo "Finished analyzing chromosome {params.CHR} and fold {params.FOLD}."
-# 
-# 		module unload R/4.2.3
-# 		"""
-# 
-# rule compute_prior_all_regions_finemapped:
-# 	input:
-# 		SUMS=config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chrAll_prior_sumstats_{FOLD}.rds",
-# 		GENO=config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_prior.rds",
-# 		PHENO=config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_bc_covar_pheno.rds",
-# 		SAMP=config["UKB_RESOURCES"]+"/"+"genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample"
-# 	output:
-# 		config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"_prior_finemapped_{FOLD}.rds"
-# 	params:
-# 		CODE=config["CODE"]+"/"+"compute_prior_all_regions_finemapped_bc_ukb.R",
-# 		N_WEAK=config["MRMASHRSS_PRIOR_N_WEAK"],
-# 		N_PCS=config["MRMASHRSS_PRIOR_N_PCS"],
-# 		ED=config["MRMASHRSS_PRIOR_ED_METHOD"],
-#                 CAN_COV=config["MRMASHRSS_PRIOR_CANONICAL_COV"],
-#                 RES_COV=config["MRMASHRSS_PRIOR_RESIDUAL_COV"],
-#                 REM_SING=config["MRMASHRSS_PRIOR_FLASH_REMOVE_SINGLETONS"],
-# 		FOLD="{FOLD}",
-# 		CPU="16",
-# 		RDIR=config["WORKDIR"]+"/"+"data/blood_cell_finemapping_regions",
-# 		TMP=config["TMP_DIR"]
-# 	resources: cpus=16, mem_mb=200000, time_min=5760
-# 	shell:
-# 		"""
-# 		module load gsl/2.7
-# 		source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
-# 		module load R/4.2.3
-# 
-# 		export MKL_NUM_THREADS={params.CPU}
-# 		export OMP_NUM_THREADS={params.CPU}
-# 
-# 		echo "Start analyzing fold {params.FOLD} ..."
-# 
-# 		Rscript {params.CODE} \
-# 			--sumstats {input.SUMS} \
-# 			--regions_dir {params.RDIR} \
-# 			--residual_cov {params.RES_COV} \
-# 			--canonical_cov {params.CAN_COV} \
-# 			--geno {input.GENO} \
-# 			--fold_file {input.PHENO} \
-# 			--sample_file {input.SAMP} \
-# 			--n_weak {params.N_WEAK} \
-# 			--n_PCs {params.N_PCS} \
-# 			--flash_remove_singleton {params.REM_SING} \
-# 			--ED_algorithm {params.ED} \
-# 			--fold {params.FOLD} \
-# 			--output {output} \
-# 			--seed {params.FOLD} \
-# 			--temp_dir {params.TMP}
-# 
-# 		echo "Finished analyzing fold {params.FOLD}."
-# 
-# 		module unload R/4.2.3
-# 		"""
+rule compute_residual_cov_all_chr:
+	input:
+		lambda wildcards: all_file_paths[wildcards.FOLD]
+	output:
+		config["WORKDIR"]+"/output/misc/"+config["PREFIX"]+"_chrAll_residual_cov_{FOLD}.rds"
+	params:
+		CODE=config["CODE"]+"/"+"compute_residual_cov_all_chr_ukb.R",
+		PREFIX=config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chr",
+		SUFFIX="_sumstats_{FOLD}.rds",
+		CHR_RANGE=config["CHR_RANGE"],
+		FOLD="{FOLD}"
+	resources: cpus=1, mem_mb=4000, time_min=60
+	shell:
+		"""
+		module load gsl/2.7
+		source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+		module load R/4.2.3
+
+		Rscript {params.CODE} \
+			--sumstats_prefix {params.PREFIX}\
+			--sumstats_suffix {params.SUFFIX}\
+			--chr {params.CHR_RANGE} \
+			--output {output}\
+			--seed {params.FOLD}\
+
+
+		module unload R/4.2.3
+		module unload gsl/2.7
+		"""
+
+rule prepare_ot_prior_imp_geno:
+	input:
+		#REG=config["WORKDIR"]+"/data/other_traits_finemapping_regions/othertraits_chr1.1526269.3336301_snp_names.txt",
+		IDS=config["UKB_RESOURCES"]+"/"+"genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample",
+		SEL=config["WORKDIR"]+"/"+"data/misc/ukb_cleaned_ot_ind_ids.txt",
+		BGEN=expand(config["UKB_RESOURCES"]+"/"+"genotypes/imputed/ukb22828_c{CHR}_b0_v3.bgen",CHR=config["CHR"])
+	output:
+		BCK=config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_prior.rds",
+    RDS=config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_prior.rds"
+	params:
+    GENO_LOC=config["UKB_RESOURCES"]+"/genotypes/imputed/",
+    REG_LOC=config["WORKDIR"]+"/data/other_traits_finemapping_regions"
+	  OUT_PREFIX=config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_prior",
+	  CPU="22",
+		CODE=config["CODE"]+"/"+"prepare_ot_prior_imp_geno_ukb.R"
+	resources: cpus=22, mem_mb=300000, time_min=720
+	shell:
+		"""
+		source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+		module load R/4.2.3
+
+      Rscript {params.CODE} --ukb_geno_location {params.GENO_LOC} \
+		                        --regions_location {params.REG_LOC} \
+		                        --selected_inds {input.SEL} \
+		                        --output {params.OUT_PREFIX} \
+		                        --ncores {params.CPU}
+		"""
+
+rule compute_sumstats_prior:
+	input:
+		PHENO=config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_ot_covar_pheno.rds",
+		SAMPLE=config["UKB_RESOURCES"]+"/"+"genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample",
+		GENO=config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_prior.rds"
+	output:
+		config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chrAll_prior_sumstats_{FOLD}.rds"
+	params:
+		CODE=config["CODE"]+"/"+"compute_sumstats_ot_ukb.R",
+		CPU="7",
+		CHR="0",
+		FOLD="{FOLD}",
+		STD_GENO=config["STANDARDIZE_GENO"],
+		IMP_MISSING=config["IMPUTE_MISSING"],
+		NORM_PHENO=config["NORMALIZE_PHENO"]
+	resources: cpus=7, mem_mb=35000, time_min=720
+	shell:
+		"""
+		source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+		module load R/4.2.3
+		
+		export MKL_NUM_THREADS=1
+		export OMP_NUM_THREADS=1
+
+		Rscript {params.CODE} \
+		  --geno {input.GENO} \
+		  --pheno {input.PHENO} \
+		  --sample_file {input.SAMPLE} \
+			--fold {params.FOLD} \
+			--chr {params.CHR} \
+			--standardize {params.STD_GENO} \
+			--impute_missing {params.IMP_MISSING} \
+			--normalize {params.NORM_PHENO} \
+			--ncores {params.CPU} \
+			--output {output}
+
+		module unload R/4.2.3
+		"""
+
+rule compute_prior_all_regions_finemapped:
+	input:
+		SUMS=config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chrAll_prior_sumstats_{FOLD}.rds",
+		GENO=config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_prior.rds",
+		PHENO=config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_ot_covar_pheno.rds",
+		SAMP=config["UKB_RESOURCES"]+"/"+"genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample"
+	output:
+		config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"_prior_finemapped_{FOLD}.rds"
+	params:
+		CODE=config["CODE"]+"/"+"compute_prior_all_regions_finemapped_ot_ukb.R",
+		N_WEAK=config["MRMASHRSS_PRIOR_N_WEAK"],
+		N_PCS=config["MRMASHRSS_PRIOR_N_PCS"],
+		ED=config["MRMASHRSS_PRIOR_ED_METHOD"],
+    CAN_COV=config["MRMASHRSS_PRIOR_CANONICAL_COV"],
+    RES_COV=config["MRMASHRSS_PRIOR_RESIDUAL_COV"],
+    REM_SING=config["MRMASHRSS_PRIOR_FLASH_REMOVE_SINGLETONS"],
+		FOLD="{FOLD}",
+		CPU="16",
+		RDIR=config["WORKDIR"]+"/"+"data/other_traits_finemapping_regions",
+		TMP=config["TMP_DIR"]
+	resources: cpus=16, mem_mb=200000, time_min=5760
+	shell:
+		"""
+		module load gsl/2.7
+		source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+		module load R/4.2.3
+
+		export MKL_NUM_THREADS={params.CPU}
+		export OMP_NUM_THREADS={params.CPU}
+
+
+		Rscript {params.CODE} \
+			--sumstats {input.SUMS} \
+			--regions_dir {params.RDIR} \
+			--residual_cov {params.RES_COV} \
+			--canonical_cov {params.CAN_COV} \
+			--geno {input.GENO} \
+			--fold_file {input.PHENO} \
+			--sample_file {input.SAMP} \
+			--n_weak {params.N_WEAK} \
+			--n_PCs {params.N_PCS} \
+			--flash_remove_singleton {params.REM_SING} \
+			--ED_algorithm {params.ED} \
+			--fold {params.FOLD} \
+			--output {output} \
+			--seed {params.FOLD} \
+			--temp_dir {params.TMP}
+
+
+		module unload R/4.2.3
+		"""
 
 def generate_file_paths2(config, fold_wildcard):
-    base_path = config["WORKDIR"]+"/"+"data/LD_matrices/ukb_bc_chr{CHR}_LD_sparse_{FOLD}.rds"
+    base_path = config["WORKDIR"]+"/"+"data/LD_matrices/ukb_ot_chr{CHR}_LD_sparse_{FOLD}.rds"
     chr_values = config["CHR"]
     file_paths = []
     
@@ -448,6 +458,62 @@ rule fit_bayesR_by_chr_and_trait:
 
 		module unload R/4.2.3
 		"""
+		
+rule fit_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped_by_chr:
+	input:
+		SUMS=config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chr{CHR}_sumstats_{FOLD}.rds",
+		LD_MAT=config["WORKDIR"]+"/"+"data/LD_matrices/"+config["PREFIX"]+"_chr{CHR}_LD_sparse_{FOLD}.rds",
+		PCOV=config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_phenotypic_cov_{FOLD}.rds",
+		RCOV=config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_chrAll_residual_cov_{FOLD}.rds",
+		DDCOV=config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"_prior_finemapped_{FOLD}.rds",
+		MU1_INIT=config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_chr{CHR}_"+config["MRMASHRSS_MU1_INIT_METHOD"]+"_effects_{FOLD}.rds"
+	output:
+		config["WORKDIR"]+"/"+"output/mr_mash_rss_fit/"+config["PREFIX"]+"_chr{CHR}_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MU1_INIT_METHOD"]+"_init_prior_finemapped_fit_{FOLD}.rds"
+	params:
+		CODE=config["CODE"]+"/"+"fit_mrmashrss_ukb.R",
+		N=config["TRAIN_NUM"],
+		PNZ=config["MRMASHRSS_PROP_NONZERO"],
+		W_THR=config["MRMASHRSS_W0_THRES"],
+    UPDATE_V=config["MRMASHRSS_UPDATE_V"],
+    UPDATE_V_METHOD=config["MRMASHRSS_UPDATE_V_METHOD"],
+    STD_GENO=config["STANDARDIZE_GENO"],
+    CAN_COVA=config["MRMASHRSS_CANONICAL_COV"],
+		CPU="4",
+		FOLD="{FOLD}",
+		CHR="{CHR}",
+		ED=config["MRMASHRSS_PRIOR_ED_METHOD"]
+	resources: cpus=4, mem_mb=30000, time_min=5760
+	shell:
+		"""
+		module load gsl/2.7
+		source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+		module load R/4.2.3
+
+		export MKL_NUM_THREADS=1
+		export OMP_NUM_THREADS=1
+
+		Rscript {params.CODE} \
+			--sumstats {input.SUMS} \
+			--LD_matrix {input.LD_MAT} \
+			--pheno_cov {input.PCOV} \
+			--residual_cov {input.RCOV} \
+			--data_driven_cov {input.DDCOV} \
+			--mu1_init {input.MU1_INIT} \
+			--canonical_cov {params.CAN_COVA} \
+			--n {params.N} \
+			--prop_nonzero {params.PNZ} \
+			--standardize {params.CPU} \
+			--update_V {params.UPDATE_V} \
+			--update_V_method {params.UPDATE_V_METHOD} \
+			--w0_threshold {params.W_THR} \
+			--ncores {params.CPU} \
+			--seed {params.FOLD} \
+			--output {output}
+
+		module unload R/4.2.3
+		module unload gsl/2.7
+		"""
+
 
 def generate_file_paths3(config, fold_wildcard):
     base_path = config["WORKDIR"]+"/"+"output/ldpred2_auto_fit/"+config["PREFIX"]+"_chr{CHR}_ldpred2_auto_fit_trait{TRAIT}_{FOLD}.rds"
@@ -468,19 +534,19 @@ rule compute_pred_accuracy_ldpred2auto:
 	input:
 		LIST=lambda wildcards: all_file_paths3[wildcards.FOLD],
 		SAMP=config["UKB_RESOURCES"]+"/"+"genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample",
-		ID_KEEP=config["WORKDIR"]+"/"+"data/misc/ukb_cleaned_bc_ind_ids.txt",
-		PHENO=config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_bc_adjusted_pheno_test_{FOLD}.rds",
+		ID_KEEP=config["WORKDIR"]+"/"+"data/misc/ukb_cleaned_ot_ind_ids.txt",
+		PHENO=config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_ot_adjusted_pheno_test_{FOLD}.rds",
 		GENO=config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_HM3.rds"
 	output:
 		EFF=config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_ldpred2_auto_effects_{FOLD}.rds",
 		ACC=config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_ldpred2_auto_pred_acc_{FOLD}.rds"
 	params:
-		CODE=config["CODE"]+"/"+"compute_prediction_accuracy_bc_ukb.R",
+		CODE=config["CODE"]+"/"+"compute_prediction_accuracy_ot_ukb.R",
 		MF_DIR=config["WORKDIR"]+"/"+"output/ldpred2_auto_fit/",
 		CHR_RANGE=config["CHR_RANGE"],
 		TRAIT_RANGE=config["TRAIT_RANGE"],
 		PREFIX=config["PREFIX"],
-                IMP_MISSING=config["IMPUTE_MISSING"],
+    IMP_MISSING=config["IMPUTE_MISSING"],
 		CPU="8",
 		MOD="ldpred2_auto",
 		FOLD="{FOLD}"
@@ -530,14 +596,14 @@ rule compute_pred_accuracy_bayesR:
 	input:
 		LIST=lambda wildcards: all_file_paths4[wildcards.FOLD],
 		SAMP=config["UKB_RESOURCES"]+"/"+"genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample",
-		ID_KEEP=config["WORKDIR"]+"/"+"data/misc/ukb_cleaned_bc_ind_ids.txt",
-		PHENO=config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_bc_adjusted_pheno_test_{FOLD}.rds",
+		ID_KEEP=config["WORKDIR"]+"/"+"data/misc/ukb_cleaned_ot_ind_ids.txt",
+		PHENO=config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_ot_adjusted_pheno_test_{FOLD}.rds",
 		GENO=config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_HM3.rds"
 	output:
 		EFF=config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_bayesR_effects_{FOLD}.rds",
 		ACC=config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_bayesR_pred_acc_{FOLD}.rds"
 	params:
-		CODE=config["CODE"]+"/"+"compute_prediction_accuracy_bc_ukb.R",
+		CODE=config["CODE"]+"/"+"compute_prediction_accuracy_ot_ukb.R",
 		MF_DIR=config["WORKDIR"]+"/"+"output/bayesR_fit/",
 		MOD=config["QGG_BAYES_METHOD"],
 		CHR_RANGE=config["CHR_RANGE"],
@@ -573,65 +639,6 @@ rule compute_pred_accuracy_bayesR:
 		module unload R/4.2.3
 		"""
 
-rule fit_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped_by_chr:
-	input:
-		SUMS=config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chr{CHR}_sumstats_{FOLD}.rds",
-		LD_MAT=config["WORKDIR"]+"/"+"data/LD_matrices/"+config["PREFIX"]+"_chr{CHR}_LD_sparse_{FOLD}.ld.bin",
-		PCOV=config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_phenotypic_cov_{FOLD}.rds",
-		RCOV=config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_chrAll_residual_cov_{FOLD}.rds",
-		DDCOV=config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"_prior_finemapped_{FOLD}.rds",
-		MU1_INIT=config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_chr{CHR}_"+config["QGG_BAYES_METHOD"]+"_effects_{FOLD}.rds"
-	output:
-		config["WORKDIR"]+"/"+"output/mr_mash_rss_fit/"+config["PREFIX"]+"_chr{CHR}_mr_mash_rss_sparse_LD_V_all_chr_"+config["QGG_BAYES_METHOD"]+"_init_prior_finemapped_fit_{FOLD}.rds"
-	params:
-		CODE=config["CODE"]+"/"+"fit_mrmashrss_ukb.R",
-		N=config["TRAIN_NUM"],
-		PNZ=config["MRMASHRSS_PROP_NONZERO"],
-		W_THR=config["MRMASHRSS_W0_THRES"],
-                UPDATE_V=config["MRMASHRSS_UPDATE_V"],
-                UPDATE_V_METHOD=config["MRMASHRSS_UPDATE_V_METHOD"],
-                STD_GENO=config["STANDARDIZE_GENO"],
-                CAN_COVA=config["MRMASHRSS_CANONICAL_COV"],
-		CPU="4",
-		FOLD="{FOLD}",
-		CHR="{CHR}",
-		ED=config["MRMASHRSS_PRIOR_ED_METHOD"]
-	resources: cpus=4, mem_mb=250000, time_min=5760
-	shell:
-		"""
-		module load gsl/2.7
-		source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
-		module load R/4.2.3
-
-		export MKL_NUM_THREADS=1
-		export OMP_NUM_THREADS=1
-
-		echo "Start analyzing chromosome {params.CHR} and fold {params.FOLD} ..."
-
-		Rscript {params.CODE} \
-			--sumstats {input.SUMS} \
-			--LD_matrix {input.LD_MAT} \
-			--pheno_cov {input.PCOV} \
-			--residual_cov {input.RCOV} \
-			--data_driven_cov {input.DDCOV} \
-			--mu1_init {input.MU1_INIT} \
-			--canonical_cov {params.CAN_COVA} \
-			--n {params.N} \
-			--prop_nonzero {params.PNZ} \
-			--standardize {params.CPU} \
-			--update_V {params.UPDATE_V} \
-			--update_V_method {params.UPDATE_V_METHOD} \
-			--w0_threshold {params.W_THR} \
-			--ncores {params.CPU} \
-			--seed {params.FOLD} \
-			--output {output}
-
-		echo "Finished analyzing chromosome {params.CHR} and fold {params.FOLD}."
-
-		module unload R/4.2.3
-		module unload gsl/2.7
-		"""
-
 def generate_file_paths5(config, fold_wildcard):
     base_path = config["WORKDIR"]+"/"+"output/mr_mash_rss_fit/"+config["PREFIX"]+"_chr{CHR}_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"_init_prior_finemapped_fit_{FOLD}.rds"
     chr_values = config["CHR"]
@@ -649,14 +656,14 @@ rule compute_pred_accuracy_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped:
 	input:
 		LIST=lambda wildcards: all_file_paths5[wildcards.FOLD],
 		SAMP=config["UKB_RESOURCES"]+"/"+"genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample",
-		ID_KEEP=config["WORKDIR"]+"/"+"data/misc/ukb_cleaned_bc_ind_ids.txt",
-		PHENO=config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_bc_adjusted_pheno_test_{FOLD}.rds",
+		ID_KEEP=config["WORKDIR"]+"/"+"data/misc/ukb_cleaned_ot_ind_ids.txt",
+		PHENO=config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_ot_adjusted_pheno_test_{FOLD}.rds",
 		GENO=config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_HM3.rds"
 	output:
 		EFF=config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"+_init_prior_finemapped_effects_{FOLD}.rds",
 		ACC=config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"_init_prior_finemapped_pred_acc_{FOLD}.rds"
 	params:
-		CODE=config["CODE"]+"/"+"compute_prediction_accuracy_bc_ukb.R",
+		CODE=config["CODE"]+"/"+"compute_prediction_accuracy_ot_ukb.R",
 		MF_DIR=config["WORKDIR"]+"/"+"output/mr_mash_rss_fit/",
 		MOD="mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"_init_prior_finemapped",
 		CHR_RANGE=config["CHR_RANGE"],
