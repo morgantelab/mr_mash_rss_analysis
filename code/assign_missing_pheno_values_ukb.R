@@ -49,4 +49,4 @@ pheno_miss <- ampute(data=pheno_train, patterns=missingness_pattern, prop=prop_m
 pheno[training_inds_pheno, ] <- as.matrix(pheno_miss)
 
 ###Write out results
-saveRDS(list(Y=pheno), file=output)
+saveRDS(list(Y=pheno, prop_missing_cells=sum(is.na(pheno_miss))/(nrow(pheno_miss) * ncol(pheno_miss))), file=output)
