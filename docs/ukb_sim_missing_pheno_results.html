@@ -535,15 +535,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree43a7cb41e3c26f7fd8af024b01dc0747bd9ac412targetblank43a7cb4a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree6131dbcb6d70d66c68c926a4b1077c14ae039e1atargetblank6131dbca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/43a7cb41e3c26f7fd8af024b01dc0747bd9ac412" target="_blank">43a7cb4</a>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/6131dbcb6d70d66c68c926a4b1077c14ae039e1a" target="_blank">6131dbc</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree43a7cb41e3c26f7fd8af024b01dc0747bd9ac412targetblank43a7cb4a"
+id="strongRepositoryversionstrongahrefhttpsgithubcommorgantelabmrmashrssanalysistree6131dbcb6d70d66c68c926a4b1077c14ae039e1atargetblank6131dbca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -553,7 +553,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/43a7cb41e3c26f7fd8af024b01dc0747bd9ac412" target="_blank">43a7cb4</a>.
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/tree/6131dbcb6d70d66c68c926a4b1077c14ae039e1a" target="_blank">6131dbc</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -664,6 +664,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/6131dbcb6d70d66c68c926a4b1077c14ae039e1a/analysis/ukb_sim_missing_pheno_results.Rmd" target="_blank">6131dbc</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-08-19
+</td>
+<td>
+Fix typo
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/morgantelab/mr_mash_rss_analysis/c8b1982517732a710ef4bf34322f741ad812e424/docs/ukb_sim_missing_pheno_results.html" target="_blank">c8b1982</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-08-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -852,7 +886,7 @@ per-trait variance of 1 and a correlation across traits of 1. This
 implies that the effects of the causal variants are equal across
 responses. Missing values were assigned to 20% of the individuals such
 that all missing value configurations across traits are equally likely
-for each individual. This resulted in the following percentage of
+for each individual. This resulted in the following proportion of
 missing cells in the phenotype matrix:</p>
 <pre class="r"><code>repz &lt;- c(1:17, 19:21)
 scenarioz &lt;- &quot;02_full_equal_effects_indep_resid&quot;
@@ -919,6 +953,43 @@ p_methods_shared &lt;- ggplot(res, aes(x = trait, y = score, fill = method)) +
 
 print(p_methods_shared)</code></pre>
 <p><img src="figure/ukb_sim_missing_pheno_results.Rmd/equal%20effects%200.2%20missing%20r2-1.png" width="1248" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-equal-effects-0.2-missing-r2-1">
+Past versions of "equal effects 0.2 missing r2-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-equal-effects-0.2-missing-r2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/morgantelab/mr_mash_rss_analysis/blob/c8b1982517732a710ef4bf34322f741ad812e424/docs/figure/ukb_sim_missing_pheno_results.Rmd/equal effects 0.2 missing r2-1.png" target="_blank">c8b1982</a>
+</td>
+<td>
+fmorgante
+</td>
+<td>
+2024-08-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The results are very similar to the equivalent scenario without
 missing values. This highlights that <em>mr.mash-rss</em> is robust to a
 small precentage of missing values.</p>
@@ -932,7 +1003,7 @@ per-trait variance of 1 and a correlation across traits of 1. This
 implies that the effects of the causal variants are equal across
 responses. Missing values were assigned to 80% of the individuals such
 that all missing value configurations across traits are equally likely
-for each individual. This resulted in the following percentage of
+for each individual. This resulted in the following proportion of
 missing cells in the phenotype matrix:</p>
 <pre class="r"><code>repz &lt;- 1:20
 scenarioz &lt;- &quot;08_full_equal_effects_indep_resid&quot;
