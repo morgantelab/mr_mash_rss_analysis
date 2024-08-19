@@ -14,8 +14,6 @@ editor_options:
 library(ggplot2)
 library(cowplot)
 
-repz <- 1:20
-prefix <- "output/prediction_accuracy/ukb_caucasian_white_british_unrel_100000_missing_pheno"
 metric <- "r2"
 traitz <- 1:5
 ```
@@ -96,14 +94,37 @@ phenotypes. This metric as the attractive property that its upper bound is $h_g^
 
 20 replicates for each simulation scenario were run.
 
-## Equal effects scenario, medium proportion of missing values
+## Equal effects scenario, small proportion of missing values
 
 In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0
 and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1.
 This implies that the effects of the causal variants are equal across responses. Missing values
-were assigned to 20% of the cells of the phenotype matrix.
+were assigned to 20% of the individuals such that all missing value configurations across traits
+are equally likely for each individual. This resulted in the following percentage of missing cells
+in the phenotype matrix:
 
-```{r equal effects, fig.height=10, fig.width=13}
+```{r equal effects 0.2 missing prop, fig.height=10, fig.width=13}
+repz <- c(1:17, 19:21)
+scenarioz <- "02_full_equal_effects_indep_resid"
+prefix <- "data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_missing_pheno"
+
+missingness <- vector("numeric", length(repz))
+
+i <- 0
+for(repp in repz){
+  i <- i+1
+  dat <- readRDS(paste0(prefix, "_", scenarioz, "_pheno_missing_", repp, ".rds"))
+  missingness[i] <- dat$prop_missing_cells
+}
+
+summary(missingness)
+```
+
+Here's the methods comparison.
+
+```{r equal effects 0.2 missing r2, fig.height=10, fig.width=13}
+repz <- c(1:17, 19:21)
+prefix <- "output/prediction_accuracy/ukb_caucasian_white_british_unrel_100000_missing_pheno"
 scenarioz <- "02_full_equal_effects_indep_resid"
 methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "wmt_sblup", "mtag_ldpred2_auto", "ldpred2_auto", "bayesR")
 
@@ -151,85 +172,42 @@ p_methods_shared <- ggplot(res, aes(x = trait, y = score, fill = method)) +
 print(p_methods_shared)
 ```
 
-The results show that *mr.mash.rss* and *mvBayesC* (both versions) perform similarly and 
-better than the univariate methods. Having missing values violates an assumption of *mr.mash.rss*.
-This results in the method achieving lower accuracy than without missing values. However,
-it is still competitive with the other actual multivariate methods and is better than the 
-univariate methods. *wMT-SBLUP* does poorly as its infinitesimal architecture 
-assumption is not well-suited for the true genetic architecture of the traits.
+The results are very similar to the equivalent scenario without missing values. This highlights that *mr.mash-rss*
+is robust to a small precentage of missing values.
 
-<!-- ## Mostly null scenario -->
+## Equal effects scenario, medium proportion of missing values
 
-<!-- In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0 -->
-<!-- and covariance matrix that achieves effects (with variance 1) to be present only trait 1. The other  -->
-<!-- 4 traits are only random noise. -->
+In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0
+and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1.
+This implies that the effects of the causal variants are equal across responses. Missing values
+were assigned to 80% of the individuals such that all missing value configurations across traits
+are equally likely for each individual. This resulted in the following percentage of missing cells
+in the phenotype matrix:
 
-<!-- ```{r mostly null, fig.height=10, fig.width=13} -->
-<!-- scenarioz <- "trait_1_only_effects_indep_resid" -->
-<!-- methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesR") -->
+```{r equal effects 0.8 missing prop, fig.height=10, fig.width=13}
+repz <- 1:20
+scenarioz <- "08_full_equal_effects_indep_resid"
+prefix <- "data/phenotypes/simulated/ukb_caucasian_white_british_unrel_100000_missing_pheno"
 
-<!-- i <- 0 -->
+missingness <- vector("numeric", length(repz))
 
-<!-- n_col <- 6 -->
-<!-- n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz) -->
-<!-- res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row)) -->
-<!-- colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score") -->
+i <- 0
+for(repp in repz){
+  i <- i+1
+  dat <- readRDS(paste0(prefix, "_", scenarioz, "_pheno_missing_", repp, ".rds"))
+  missingness[i] <- dat$prop_missing_cells
+}
 
-<!-- for(sce in scenarioz){ -->
-<!--   for(met in methodz){ -->
-<!--     for(repp in repz){ -->
-<!--       dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds")) -->
+summary(missingness)
+```
 
-<!--       for(trait in traitz){ -->
-<!--         i <- i + 1 -->
+<!-- Here's the methods comparison. -->
 
-<!--         res[i, 1] <- repp -->
-<!--         res[i, 2] <- sce -->
-<!--         res[i, 3] <- met -->
-<!--         res[i, 4] <- trait -->
-<!--         res[i, 5] <- metric -->
-<!--         res[i, 6] <- dat$r2[trait] -->
-<!--       } -->
-<!--     } -->
-<!--   } -->
-<!-- } -->
-
-<!-- res <- transform(res, scenario=as.factor(scenario), -->
-<!--                       method=as.factor(method), -->
-<!--                       trait=as.factor(trait)) -->
-
-<!-- p_mostly_null <- ggplot(res, aes(x = trait, y = score, fill = method)) + -->
-<!--   geom_boxplot(color = "black", outlier.size = 1, width = 0.85) + -->
-<!--   stat_summary(fun=mean, geom="point", shape=23, -->
-<!--                position = position_dodge2(width = 0.87,    -->
-<!--                                           preserve = "single")) + -->
-<!--   ylim(0.0, 0.51) + -->
-<!--   scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) + -->
-<!--   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") + -->
-<!--   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") + -->
-<!--   theme_cowplot(font_size = 18) -->
-
-<!-- print(p_mostly_null) -->
-<!-- ``` -->
-
-<!-- In this scenario, there is no advantage to using multivariate methods. In fact, there is potential -->
-<!-- for multivariate methods to do worse than univariate methods because of the large amount of noise -->
-<!-- modeled jointly with the signal. The results show that *mr.mash.rss* can learn this structure -->
-<!-- from the data and performs similar to *LDpred2 auto* and *BayesR*, although a little worse. -->
-<!-- *mvBayesC* performs slightly worse than *mr.mash.rss*. *mvBayesCrest* cannot adapt well to this scenario. -->
-
-<!-- ## Shared in subgroups scenario -->
-
-<!-- In this scenario, the effects were drawn from a mixture of two Multivariate Normal distributions, i.e.,  -->
-<!-- $w_1 MVN(0, \Sigma_1) + w_2 MVN(0, \Sigma_2)$, where $w_1$ = 0.5 and $w_2$ = 0.5, $\Sigma_1$ is such  -->
-<!-- that it achieves correlation across traits of 0.9 and variance of 1, $\Sigma_2$ is such that it achieves  -->
-<!-- correlation across traits of 0.7 and variance of 1. The first component of the mixture applies to traits 1-3 -->
-<!-- while the second component applies to traits 4-5. The per-trait $h^2_g$ is 0.3 for traits 1-3 and 0.5 for the -->
-<!-- traits 4-5. -->
-
-<!-- ```{r shared in subgroups, fig.height=10, fig.width=13} -->
-<!-- scenarioz <- "blocks_shared_effects_indep_resid" -->
-<!-- methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesR") -->
+<!-- ```{r equal effects 0.8 missing r2, fig.height=10, fig.width=13} -->
+<!-- repz <- 1:20 -->
+<!-- prefix <- "output/prediction_accuracy/ukb_caucasian_white_british_unrel_100000_missing_pheno" -->
+<!-- scenarioz <- "08_full_equal_effects_indep_resid" -->
+<!-- methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "wmt_sblup", "mtag_ldpred2_auto", "ldpred2_auto", "bayesR") -->
 
 <!-- i <- 0 -->
 
@@ -261,214 +239,19 @@ assumption is not well-suited for the true genetic architecture of the traits.
 <!--                       method=as.factor(method), -->
 <!--                       trait=as.factor(trait)) -->
 
-<!-- p_blocks_shared <- ggplot(res, aes(x = trait, y = score, fill = method)) + -->
+<!-- p_methods_shared <- ggplot(res, aes(x = trait, y = score, fill = method)) + -->
 <!--   geom_boxplot(color = "black", outlier.size = 1, width = 0.85) + -->
 <!--   stat_summary(fun=mean, geom="point", shape=23, -->
 <!--                position = position_dodge2(width = 0.87,    -->
 <!--                                           preserve = "single")) + -->
 <!--   ylim(0, 0.51) + -->
-<!--   scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) + -->
-<!--   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") + -->
-<!--   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") + -->
-<!--   geom_hline(yintercept=0.3, linetype="dashed", linewidth=1, color = "black") + -->
-<!--   theme_cowplot(font_size = 18) -->
-
-<!-- print(p_blocks_shared) -->
-<!-- ``` -->
-
-<!-- In this scenario, multivariate methods can have some advantage over univariate methods, provided that -->
-<!-- the former can adapt to the complex structure of the effects. The results show that all the methods perform -->
-<!-- very similarly in traits 3 and 4 -- with *mvBayesC* being a tiny bit better -- but *mvBayesCrest*.  -->
-<!-- However, *mr.mash.rss* and *mvBayesC* methods perform better than the univariate methods and *mvBayesCrest*  -->
-<!-- in traits 1-3, due to the higher effect correlation across traits, the larger number of traits with shared  -->
-<!-- effects, and the smaller $h^2_g$ (harder scenario for univariate methods). -->
-
-<!-- ## Equal effects scenario -- low PVE -->
-
-<!-- In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0 -->
-<!-- and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1. -->
-<!-- This implies that the effects of the causal variants are equal across responses. In addition, the  -->
-<!-- per-trait genomic heritability was set to 0.2. In this scenario, $h^2$ was initialized as 0.01 in  -->
-<!-- *BayesC*, *BayesR*, *mvBayesC* and *mvBayesCrest*. -->
-
-<!-- ```{r equal effects low pve, fig.height=10, fig.width=13} -->
-<!-- scenarioz <- "equal_effects_low_pve_indep_resid" -->
-<!-- methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesR") -->
-
-<!-- i <- 0 -->
-
-<!-- n_col <- 6 -->
-<!-- n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz) -->
-<!-- res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row)) -->
-<!-- colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score") -->
-
-<!-- for(sce in scenarioz){ -->
-<!--   for(met in methodz){ -->
-<!--     for(repp in repz){ -->
-<!--       dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds")) -->
-
-<!--       for(trait in traitz){ -->
-<!--         i <- i + 1 -->
-
-<!--         res[i, 1] <- repp -->
-<!--         res[i, 2] <- sce -->
-<!--         res[i, 3] <- met -->
-<!--         res[i, 4] <- trait -->
-<!--         res[i, 5] <- metric -->
-<!--         res[i, 6] <- dat$r2[trait] -->
-<!--       } -->
-<!--     } -->
-<!--   } -->
-<!-- } -->
-
-<!-- res <- transform(res, scenario=as.factor(scenario), -->
-<!--                       method=as.factor(method), -->
-<!--                       trait=as.factor(trait)) -->
-
-<!-- p_methods_shared_lowpve <- ggplot(res, aes(x = trait, y = score, fill = method)) + -->
-<!--   geom_boxplot(color = "black", outlier.size = 1, width = 0.85) + -->
-<!--   stat_summary(fun=mean, geom="point", shape=23, -->
-<!--                position = position_dodge2(width = 0.87,    -->
-<!--                                           preserve = "single")) + -->
-<!--   ylim(0, 0.2) + -->
-<!--   scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) + -->
-<!--   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") + -->
-<!--   geom_hline(yintercept=0.2, linetype="dotted", linewidth=1, color = "black") + -->
-<!--   theme_cowplot(font_size = 18) -->
-
-<!-- print(p_methods_shared_lowpve) -->
-<!-- ``` -->
-
-<!-- In this scenario, we expect the relative improvement of multivariate methods compared to univariate -->
-<!-- methods to be larger than with $h^2_g = 0.5$. This is because with smaller signal-to-noise ratio, -->
-<!-- it is harder for univariate methods to estimate effects accurately. Multivariate methods can borrow -->
-<!-- information across traits (if effects are shared) and improve accuracy. The results show that  -->
-<!-- the multivariate methods outperform the univariate methods, with *mr.mash.rss* being the best overall.  -->
-
-<!-- ## Equal effects scenario -- more polygenic -->
-
-<!-- In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0 -->
-<!-- and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1. -->
-<!-- This implies that the effects of the causal variants are equal across responses. In addition, the  -->
-<!-- number of causal variants was set to 50,000. In this scenario, $\pi$ was initialized as 0.01 in  -->
-<!-- *BayesC*, *BayesR*, *mvBayesC*, and *mvBayesCrest*. -->
-
-<!-- ```{r equal effects poly filt, fig.height=10, fig.width=13} -->
-<!-- scenarioz <- "equal_effects_50000causal_indep_resid" -->
-<!-- methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesR") -->
-
-<!-- i <- 0 -->
-
-<!-- n_col <- 6 -->
-<!-- n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz) -->
-<!-- res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row)) -->
-<!-- colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score") -->
-
-<!-- for(sce in scenarioz){ -->
-<!--   for(met in methodz){ -->
-<!--     for(repp in repz){ -->
-<!--       dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds")) -->
-
-<!--       for(trait in traitz){ -->
-<!--         i <- i + 1 -->
-
-<!--         res[i, 1] <- repp -->
-<!--         res[i, 2] <- sce -->
-<!--         res[i, 3] <- met -->
-<!--         res[i, 4] <- trait -->
-<!--         res[i, 5] <- metric -->
-<!--         res[i, 6] <- dat$r2[trait] -->
-<!--       } -->
-<!--     } -->
-<!--   } -->
-<!-- } -->
-
-<!-- res <- transform(res, scenario=as.factor(scenario), -->
-<!--                       method=as.factor(method), -->
-<!--                       trait=as.factor(trait)) -->
-
-<!-- p_methods_shared_lowpve <- ggplot(res, aes(x = trait, y = score, fill = method)) + -->
-<!--   geom_boxplot(color = "black", outlier.size = 1, width = 0.85) + -->
-<!--   stat_summary(fun=mean, geom="point", shape=23, -->
-<!--                position = position_dodge2(width = 0.87,    -->
-<!--                                           preserve = "single")) + -->
-<!--   ylim(0, 0.5) + -->
-<!--   scale_fill_manual(values = c("pink", "red", "yellow", "green", "blue", "lightblue")) + -->
+<!--   scale_fill_manual(values = c("pink", "red", "yellow", "orange", "green", "blue", "lightblue")) + -->
 <!--   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") + -->
 <!--   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") + -->
 <!--   theme_cowplot(font_size = 18) -->
 
-<!-- print(p_methods_shared_lowpve) -->
+<!-- print(p_methods_shared) -->
 <!-- ``` -->
 
-<!-- In this scenario, we expect the accuracy to be lower because of the much larger number of causal -->
-<!-- variants, each explaining a much lower proportion of the total $h^2_g=0.5$. Multivariate methods -->
-<!-- can borrow information across traits (if effects are shared) and improve accuracy. The results  -->
-<!-- show that *mr.mash.rss* clearly does better than the univariate methods in this scenario too. -->
-<!-- *mvBayesC* (both versions) seems to have difficulties in this scenario. -->
-
-
-<!-- ## Equal effects scenario -- 10 traits -->
-
-<!-- In this scenario, the effects were drawn from a Multivariate Normal distribution with mean vector 0 -->
-<!-- and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1. -->
-<!-- This implies that the effects of the causal variants are equal across responses. In addition, the  -->
-<!-- number of traits was increased to 10. -->
-
-<!-- ```{r equal effects 10 traits, fig.height=10, fig.width=13} -->
-<!-- scenarioz <- "equal_effects_10traits_indep_resid" -->
-<!-- methodz <- c("mr_mash_rss", "mvbayesC_rest", "ldpred2_auto", "bayesR") -->
-
-<!-- i <- 0 -->
-
-<!-- traitz <- 1:10 -->
-<!-- repz <- c(1:10, 12:20) -->
-
-<!-- n_col <- 6 -->
-<!-- n_row <- length(repz) * length(scenarioz) * length(methodz) * length(traitz) -->
-<!-- res <- as.data.frame(matrix(NA, ncol=n_col, nrow=n_row)) -->
-<!-- colnames(res) <- c("rep", "scenario", "method", "trait", "metric", "score") -->
-
-<!-- for(sce in scenarioz){ -->
-<!--   for(met in methodz){ -->
-<!--     for(repp in repz){ -->
-<!--       dat <- readRDS(paste0(prefix, "_", sce, "_", met, "_pred_acc_", repp, ".rds")) -->
-
-<!--       for(trait in traitz){ -->
-<!--         i <- i + 1 -->
-
-<!--         res[i, 1] <- repp -->
-<!--         res[i, 2] <- sce -->
-<!--         res[i, 3] <- met -->
-<!--         res[i, 4] <- trait -->
-<!--         res[i, 5] <- metric -->
-<!--         res[i, 6] <- dat$r2[trait] -->
-<!--       } -->
-<!--     } -->
-<!--   } -->
-<!-- } -->
-
-<!-- res <- transform(res, scenario=as.factor(scenario), -->
-<!--                       method=as.factor(method), -->
-<!--                       trait=as.factor(trait)) -->
-
-<!-- p_methods_shared_10traits <- ggplot(res, aes(x = trait, y = score, fill = method)) + -->
-<!--   geom_boxplot(color = "black", outlier.size = 1, width = 0.85) + -->
-<!--   stat_summary(fun=mean, geom="point", shape=23, -->
-<!--                position = position_dodge2(width = 0.87,    -->
-<!--                                           preserve = "single")) + -->
-<!--   ylim(0, 0.51) + -->
-<!--   scale_fill_manual(values = c("pink", "red", "yellow", "green", "lightblue")) + -->
-<!--   labs(x = "Trait", y = expression(italic(R)^2), fill="Method", title="") + -->
-<!--   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") + -->
-<!--   theme_cowplot(font_size = 18) -->
-
-<!-- print(p_methods_shared_10traits) -->
-<!-- ``` -->
-
-<!-- In this scenario, we expect the relative improvement of multivariate methods compared to univariate -->
-<!-- methods to be a little larger than with 5 traits. This is because multivariate methods can borrow -->
-<!-- information across a larger number of traits (if effects are shared) and improve accuracy. The results  -->
-<!-- show that *mr.mash.rss* clearly does better than the univariate methods, but the improvement compared  -->
-<!-- to the scenario with 5 traits is small. *mvBayesCrest* does better than the univariate methods but worse  -->
-<!-- than *mr.mash.rss*. *mvBayesC* is currently too slow to be run in this scenario.  -->
+<!-- The results are very similar to the equivalent scenario without missing values. This highlights that *mr.mash-rss* -->
+<!-- is robust to a small precentage of missing values. -->
