@@ -51,6 +51,8 @@ for(k in 1:length(traits)){
   ###Extract chromosome of interest
   dat_chr <- dat[which(dat$chr == chr), ]
   
+  rm(dat); gc()
+  
   ###Extract significant SNPs for that chr
   if(gwas_method=="mtag"){
     dat_chr_sig <- dat_chr[which(dat_chr$mtag_p < sig_threshold), ]
@@ -67,12 +69,9 @@ for(k in 1:length(traits)){
   regions_boundaries <- vector("list", nrow(dat_chr_sig))
   
   for(j in 1:nrow(dat_chr_sig)){
-    regions_snp[[j]] <- dat[which(dat_chr$bp > dat_chr_sig[j, "start"] & dat_chr$bp <= dat_chr_sig[j, "stop"]), "rsid"]
+    regions_snp[[j]] <- dat_chr[which(dat_chr$bp > dat_chr_sig[j, "start"] & dat_chr$bp <= dat_chr_sig[j, "stop"]), "rsid"]
     regions_boundaries[[j]] <- c(dat_chr_sig[j, "chr"], dat_chr_sig[j, "start"], dat_chr_sig[j, "stop"])
   }
-  
-  #regions_snp_1 <- regions_snp
-  #regions_boundaries_1 <- regions_boundaries
   
   ###Merge regions if they share one or more SNPs
   for(j in 2:length(regions_snp)){
