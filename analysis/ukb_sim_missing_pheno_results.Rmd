@@ -100,7 +100,7 @@ In this scenario, the effects were drawn from a Multivariate Normal distribution
 and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1.
 This implies that the effects of the causal variants are equal across responses. Missing values
 were assigned to 20% of the individuals such that all missing value configurations across traits
-are equally likely for each individual. This resulted in the following percentage of missing cells
+are equally likely for each individual. This resulted in the following proportion of missing cells
 in the phenotype matrix:
 
 ```{r equal effects 0.2 missing prop, fig.height=10, fig.width=13}
@@ -181,7 +181,7 @@ In this scenario, the effects were drawn from a Multivariate Normal distribution
 and covariance matrix that achieves a per-trait variance of 1 and a correlation across traits of 1.
 This implies that the effects of the causal variants are equal across responses. Missing values
 were assigned to 80% of the individuals such that all missing value configurations across traits
-are equally likely for each individual. This resulted in the following percentage of missing cells
+are equally likely for each individual. This resulted in the following proportion of missing cells
 in the phenotype matrix:
 
 ```{r equal effects 0.8 missing prop, fig.height=10, fig.width=13}
