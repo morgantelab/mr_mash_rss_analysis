@@ -8,6 +8,7 @@ parser <- add_option(parser, c("--sumstats_prefix"), type="character")
 parser <- add_option(parser, c("--sumstats_suffix"), type="character")
 parser <- add_option(parser, c("--traits"), type="character")
 parser <- add_option(parser, c("--region_size"), type="integer")
+parser <- add_option(parser, c("--mhc"), type="logical")
 parser <- add_option(parser, c("--chr"), type="integer")
 parser <- add_option(parser, c("--sig_threshold"), type="numeric")
 parser <- add_option(parser, c("--gwas_method"), type="character")
@@ -20,6 +21,7 @@ sumstats_prefix <- outparse$sumstats_prefix
 sumstats_suffix <- outparse$sumstats_suffix
 traits <- eval(parse(text=outparse$trait))
 region_size <- outparse$region_size
+mhc <- outparse$mhc
 chr <- outparse$chr
 sig_threshold <- outparse$sig_threshold
 gwas_method <- outparse$gwas_method
@@ -147,6 +149,15 @@ regions_boundaries_all_traits_df_ordered$n_snps <- sapply(regions_snp_all_traits
 ###Write out output
 for(i in 1:length(regions_snp_all_traits_unlist_ordered)){
   df <- data.frame(ID=regions_snp_all_traits_unlist_ordered[[i]])
+  
+  ##Skip MHC region if requested
+  if(!mhc){
+    if(regions_boundaries_all_traits_df_ordered[i,1] == 6 && 
+       (regions_boundaries_all_traits_df_ordered[i,2] >= 25000000 & regions_boundaries_all_traits_df_ordered[i,3] <= 36000000)){
+      next
+    }
+  }
+  
   write.table(df, file=paste0(output_prefix_snp, "_chr", regions_boundaries_all_traits_df_ordered[i,1],
                               ".", regions_boundaries_all_traits_df_ordered[i,2], ".", regions_boundaries_all_traits_df_ordered[i,3], "_snp_names.txt"),
               col.names=TRUE, row.names=FALSE, quote=FALSE, sep="\t")

@@ -23,6 +23,7 @@ Rscript ../code/obtain_finemapping_regions_ot_ukb.R --sumstats_prefix ../output/
                                                     --chr "${CHR}" \
                                                     --traits "c('BMI','BMR','DPa','SPa','WHR','height','hip')" \
                                                     --region_size 250000 \
+                                                    --mhc FALSE \
                                                     --sig_threshold 5e-8 \
                                                     --gwas_method mtag \
                                                     --ncores 4 \
