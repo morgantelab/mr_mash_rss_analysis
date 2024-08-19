@@ -37,5 +37,5 @@ colnames(dat) <- c("rsid", "unique_id", "chr", "bp", "ref", "alt", "a1", "a1_fre
                    "mtag_beta", "mtag_se", "mtag_z", "mtag_p")
   
 ##Write out the results
-fwrite(dat, file=output, quote=FALSE, na="NA", row.names=FALSE, col.names=TRUE, showProgress=FALSE)
+fwrite(dat, file=output, quote=FALSE, na="NA", row.names=FALSE, col.names=TRUE, showProgress=FALSE, sep="\t")
 
