@@ -1,5 +1,6 @@
 ###Load libraries needed
 library(optparse)
+library(data.table)
 library(bigsnpr)
 library(bigreadr)
 library(dplyr)
@@ -25,8 +26,6 @@ selected_inds <- outparse$selected_inds
 
 set.seed(1)
 
-ukb_data_location <- "/data2/morgante_lab/data/ukbiobank/genotypes/imputed/"
-
 ###Load data
 filenames <- list.files(regions_location, pattern="*.txt")
 
@@ -34,8 +33,8 @@ it <- 0
 for(nam in filenames){
   it <- it+1
   
-  dat <- fread(paste0(regions_location, "/", nam), showProgress=FALSE, 
-               colClasses = "character", header=TRUE, data.table = FALSE)
+  dat <- data.table::fread(paste0(regions_location, "/", nam), showProgress=FALSE, 
+                            colClasses = "character", header=TRUE, data.table = FALSE)
   dat$chr <- readr::parse_number(unlist(strsplit(unlist(strsplit(nam, "_"))[2], ".", fixed=TRUE))[1])
   colnames(dat)[1] <- "rsid"
   if(it == 1){
@@ -48,8 +47,8 @@ for(nam in filenames){
 ids <- bigreadr::fread2(paste0(ukb_geno_location, "ukb22828_c1_b0_v3_s487271.sample"))
 sel_ids <- bigreadr::fread2(selected_inds)
 
-###Get list of HM3 SNPs to use
-cl <- makeCluster(22)
+###Get list of SNPs to use
+cl <- makeCluster(ncores)
 clusterExport(cl, c("dat_full", "ukb_geno_location"))
 list_snp_id <- parLapply(cl, 1:22, function(chr) {
   mfi <- paste0(ukb_geno_location, "ukb_mfi_chr", chr, "_v3.txt")
@@ -71,5 +70,5 @@ rds <- bigsnpr::snp_readBGEN(
   backingfile = output,
   list_snp_id = list_snp_id,
   ind_row     = inds_to_keep,
-  ncores      = 22
+  ncores      = ncores
 )  
