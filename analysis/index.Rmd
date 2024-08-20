@@ -11,4 +11,6 @@ editor_options:
 This website includes analyses to assess the performance of *mr.mash.rss*.
 
 + [Simulations based on UK Biobank genotypes.](ukb_sim_results.html)
++ [Simulations based on UK Biobank genotypes and LD from 1000G.](ukb_sim_external_LD_results.html)
++ [Simulations based on UK Biobank genotypes and missing phenotypes.](ukb_sim_missing_pheno_results.html)
 + [Blood cell traits analysis in UK Biobank.](ukb_bc_results.html)
