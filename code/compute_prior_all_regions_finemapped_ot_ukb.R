@@ -136,17 +136,17 @@ for(nam in filenames){
   
   ###Extract strong and weak signals
   if(it==1){
-    Z_strong <- Z_sel[strong_idx, ]
+    Z_strong <- Z_sel[strong_idx, , drop=FALSE]
     
     if(residual_cov=="full"){
-      Z_weak <- Z_sel[weak_id, ]
+      Z_weak <- Z_sel[weak_id, , drop=FALSE]
     }
 
   } else {
-    Z_strong <- rbind(Z_strong, Z_sel[strong_idx, ])
+    Z_strong <- rbind(Z_strong, Z_sel[strong_idx, , drop=FALSE])
 
     if(residual_cov=="full"){
-      Z_weak <- rbind(Z_weak, Z_sel[weak_id, ])
+      Z_weak <- rbind(Z_weak, Z_sel[weak_id, , drop=FALSE])
     }
   }
   
@@ -189,21 +189,21 @@ if(ED_algorithm=="bovy"){
   # if(!is.null(U_flash_nonneg)){
   #   U_datadriven <- c(U_datadriven, U_flash_nonneg)
   # }
-  
+
   if(canonical_cov){
     U_can <- cov_canonical(dat_mash)
     U_datadriven <- c(U_datadriven, U_can)
   }
 
   U_ed <- cov_ed(dat_mash, U_datadriven)
-  
+
 } else if(ED_algorithm=="ted"){
   library(udr)
   # 1. Initialize 50 unconstrained covariance matrices for udr.
   R <- nrow(V)
   K <- 50
 
-  # 2. Add small amount of penalty(inverse-Wishart), strength = R. When sample size is large, 
+  # 2. Add small amount of penalty(inverse-Wishart), strength = R. When sample size is large,
   # the penalty amount R is small.
   fit0 <- ud_init(dat_mash, n_unconstrained = K)
   fit1 <- ud_fit(fit0, control = list(unconstrained.update = "ted", lambda = R, penalty.type = "iw",
