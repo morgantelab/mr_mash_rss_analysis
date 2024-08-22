@@ -145,6 +145,8 @@ regions_snp_all_traits_unlist_ordered <- regions_snp_all_traits_unlist_ordered[-
 
 regions_boundaries_all_traits_df_ordered$n_snps <- sapply(regions_snp_all_traits_unlist_ordered, length)
 
+regions_boundaries_all_traits_df_ordered[regions_boundaries_all_traits_df_ordered$start < 0, "start"] <- 0
+
 ###Write out output
 for(i in 1:length(regions_snp_all_traits_unlist_ordered)){
   df <- data.frame(ID=regions_snp_all_traits_unlist_ordered[[i]])
