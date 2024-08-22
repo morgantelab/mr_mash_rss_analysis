@@ -19,6 +19,8 @@ output <- outparse$output
 ncores <- outparse$ncores
 chr <- outparse$chr
 info_thresh <- outparse$info_thresh
+only_biallelic <- outparse$only_biallelic
+snps_only <- outparse$snps_only
 
 ###Set seed
 set.seed(1)
