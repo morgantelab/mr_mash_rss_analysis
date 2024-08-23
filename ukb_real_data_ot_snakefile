@@ -502,7 +502,7 @@ rule fit_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped_by_chr:
 			--canonical_cov {params.CAN_COVA} \
 			--n {params.N} \
 			--prop_nonzero {params.PNZ} \
-			--standardize {params.CPU} \
+			--standardize {params.STD_GENO} \
 			--update_V {params.UPDATE_V} \
 			--update_V_method {params.UPDATE_V_METHOD} \
 			--w0_threshold {params.W_THR} \
