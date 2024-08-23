@@ -174,11 +174,11 @@ for(i in chrs){
   Bhat_all[[it]] <- Bhat
   
   if(model=="ldpred2_auto"){
-    saveRDS(Bhat, file=paste0("../output/estimated_effects/", prefix, "_chr", i, "_ldpred2_auto_effects_", fold, ".rds"))
+    saveRDS(Bhat, file=paste0("output/estimated_effects/", prefix, "_chr", i, "_ldpred2_auto_effects_", fold, ".rds"))
   }
   
   if(model=="bayesR"){
-    saveRDS(Bhat, file=paste0("../output/estimated_effects/", prefix, "_chr", i, "_bayesR_effects_", fold, ".rds"))
+    saveRDS(Bhat, file=paste0("output/estimated_effects/", prefix, "_chr", i, "_bayesR_effects_", fold, ".rds"))
   }
 
   ##Compute predictions
