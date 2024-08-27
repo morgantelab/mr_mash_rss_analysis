@@ -34,6 +34,7 @@ rule prepare_data:
 		PHENO_RDS=config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_ot_covar_pheno.rds",
 		CLEAN_IDS=config["WORKDIR"]+"/"+"data/misc/ukb_cleaned_ot_ind_ids.txt"
 	params:
+	  N_FOLD=config["INDS_PER_FOLD"],
 		CODE=config["CODE"]+"/"+"prepare_ot_data_ukb.R",
 		CPU="4"
 	resources: cpus=4, mem_mb=50000, time_min=30
@@ -46,6 +47,7 @@ rule prepare_data:
 
 		Rscript {params.CODE} --raw_pheno {input.RAW_PHENO_DAT} \
 		                      --bc_pheno {input.BT_DAT} \
+		                      --n_fold {params.N_FOLD} \
 		                      --output_pheno_data {output.PHENO_RDS} \
 		                      --output_inds_list {output.CLEAN_IDS} \
 		                      --ncores {params.CPU}
