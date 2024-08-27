@@ -19,7 +19,7 @@ outparse <- parse_args(parser)
 
 sumstats_prefix <- outparse$sumstats_prefix
 sumstats_suffix <- outparse$sumstats_suffix
-traits <- eval(parse(text=outparse$trait))
+traits <- eval(parse(text=outparse$traits))
 region_size <- outparse$region_size
 mhc <- outparse$mhc
 chr <- outparse$chr
