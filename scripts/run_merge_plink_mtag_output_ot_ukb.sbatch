@@ -17,14 +17,14 @@ export MKL_NUM_THREADS=1
 
 TRAIT_NUM=0
 
-for TRAIT in BMI BMR WHR height hip DPa SPa;
+for TRAIT in weight waist hip BMI TFM BFP;
 do
     TRAIT_NUM=$[$TRAIT_NUM +1]
 
     Rscript ../code/merge_plink_mtag_output_ot_ukb.R --mtag_sumstats ../output/GWAS_for_regions/ukb_ot_chrAll_biallelic_snps_only_recoded_ids_info_06_gwas_for_regions.rsid.mtag_trait_"${TRAIT_NUM}".txt \
                                                      --plink_sumstats ../output/GWAS_for_regions/ukb_ot_chrAll_biallelic_snps_only_recoded_ids_info_06_gwas_for_regions.rsid."${TRAIT}".glm.linear \
-           		                             --ncores 2 \
-               		                             --output ../output/GWAS_for_regions/ukb_ot_chrAll_biallelic_snps_only_recoded_ids_info_06_gwas_for_regions_rsid_"${TRAIT}"_plink_mtag_combined.txt
+           		                                       --ncores 2 \
+               		                                   --output ../output/GWAS_for_regions/ukb_ot_chrAll_biallelic_snps_only_recoded_ids_info_06_gwas_for_regions_rsid_"${TRAIT}"_plink_mtag_combined.txt
 done
 
 
