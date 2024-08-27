@@ -10,18 +10,18 @@ inv_normalise <- function(x) { #this would also tolerate NAs
 parser <- OptionParser()
 parser <- add_option(parser, c("--output"), type="character")
 parser <- add_option(parser, c("--pheno"), type="character")
+parser <- add_option(parser, c("--traits"), type="character")
 outparse <- parse_args(parser)
 
 output <- outparse$output
 pheno <- outparse$pheno
+pheno_names <- eval(parse(text=outparse$traits))
 
 ###Set seed
 set.seed(1)
 
 ###Read in data
 pheno_dat <- readRDS(pheno)
-
-pheno_names <- c("DPa", "SPa", "height", "hip", "BMI", "BMR", "WHR")
 
 res_mat <- matrix(as.numeric(NA), nrow=nrow(pheno_dat), ncol=length(pheno_names))
 colnames(res_mat) <- pheno_names

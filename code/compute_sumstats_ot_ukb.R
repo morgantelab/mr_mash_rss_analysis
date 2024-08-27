@@ -5,7 +5,7 @@ library(bigstatsr)
 
 ###Function to compute summary stats
 compute_univariate_sumstats_bigsnp <- function(geno_obj, Y, Z=NULL, chr=0, standardize=FALSE, 
-                                               impute_missing=TRUE, train_inds=NULL,
+                                               impute_missing=TRUE, train_inds=NULL, snp_keep=NULL,
                                                normalize=FALSE, standardize.response=FALSE, 
                                                mc.cores=1){
   
@@ -40,6 +40,10 @@ compute_univariate_sumstats_bigsnp <- function(geno_obj, Y, Z=NULL, chr=0, stand
     col_inds <- seq_len(p)
   } else {
     col_inds <- which(geno_obj$map$chromosome==chr)
+  }
+  
+  if(!is.null(snp_keep)){
+    col_inds <- intersect(col_inds, snp_keep)
   }
   
   if(normalize){
@@ -108,6 +112,8 @@ parser <- add_option(parser, c("--sample_file"), type="character")
 parser <- add_option(parser, c("--fold"), type="integer")
 parser <- add_option(parser, c("--chr"), type="character")
 parser <- add_option(parser, c("--standardize"), type="logical")
+parser <- add_option(parser, c("--traits"), type="character")
+parser <- add_option(parser, c("--maf"), type="numeric", default=0)
 parser <- add_option(parser, c("--ncores"), type="integer")
 parser <- add_option(parser, c("--impute_missing"), type="logical")
 parser <- add_option(parser, c("--normalize"), type="logical")
@@ -120,6 +126,8 @@ sample_file <- outparse$sample_file
 chr <- outparse$chr
 fold <- outparse$fold
 standardize <- outparse$standardize
+traits <- eval(parse(text=outparse$traits))
+maf <- outparse$maf
 ncores <- outparse$ncores
 impute_missing <- outparse$impute_missing
 normalize <- outparse$normalize
@@ -150,9 +158,17 @@ train_inds <- which(pheno_dat$fold != fold)
 ###Load genotype data
 geno <- snp_attach(geno)
 
+###Filter genotype data by MAF
+if(maf>0){
+  maf_vals <- snp_MAF(geno$genotypes, ncores=ncores)
+  snps_sel <- which(maf_vals>maf)
+} else {
+  snps_sel <- NULL
+}
+
 ###Compute summary stats
 #Prepare phenotypes
-pheno <- pheno_dat[, c("DPa", "SPa", "height", "hip", "BMI", "BMR", "WHR")]
+pheno <- pheno_dat[, traits]
 
 #Prepare covariates
 covar <- pheno_dat[, c("sex", "assessment_centre", "age", "genotype_measurement_batch",
@@ -169,7 +185,7 @@ if(!normalize){
 }
 
 #Fit linear model
-out <- compute_univariate_sumstats_bigsnp(geno_obj=geno, Y=pheno, Z=covar,
+out <- compute_univariate_sumstats_bigsnp(geno_obj=geno, Y=pheno, Z=covar, snp_keep=snps_sel,
                                           train_inds=train_inds, chr=chr, standardize=standardize,
                                           impute_missing=impute_missing, standardize.response=FALSE, 
                                           normalize=normalize, mc.cores=ncores)

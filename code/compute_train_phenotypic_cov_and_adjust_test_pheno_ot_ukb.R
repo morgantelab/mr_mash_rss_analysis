@@ -10,6 +10,7 @@ inv_normalise <- function(x) { #this would also tolerate NAs
 parser <- OptionParser()
 parser <- add_option(parser, c("--normalize"), type="logical")
 parser <- add_option(parser, c("--pheno"), type="character")
+parser <- add_option(parser, c("--traits"), type="character")
 parser <- add_option(parser, c("--output_pheno"), type="character")
 parser <- add_option(parser, c("--output_cov"), type="character")
 parser <- add_option(parser, c("--fold"), type="integer")
@@ -17,6 +18,7 @@ outparse <- parse_args(parser)
 
 normalize <- outparse$normalize
 pheno <- outparse$pheno
+traits <- eval(parse(text=outparse$traits))
 output_pheno <- outparse$output_pheno
 output_cov <- outparse$output_cov
 fold <- outparse$fold
@@ -28,9 +30,6 @@ set.seed(1)
 pheno_dat <- readRDS(pheno)
 rownames(pheno_dat) <- pheno_dat$id
 pheno_dat$id <- NULL
-
-###Set up 
-traits <- c("DPa", "SPa", "height", "hip", "BMI", "BMR", "WHR")
 
 ###Get training and test individuals indexes
 train_inds <- which(pheno_dat$fold != fold)

@@ -18,6 +18,7 @@ export OMP_NUM_THREADS=1
 
 
 Rscript ../code/prepare_ot_pheno_plink_ukb.R --pheno ../data/phenotypes/ukb_cleaned_ot_covar_pheno.rds \
+                                             --traits "c('weight', 'waist', 'hip', 'BMI', 'TFM', 'BFP')" \
                                              --output ../data/phenotypes/ukb_cleaned_ot_adjusted_pheno_plink.txt
 
 module unload R/4.2.3

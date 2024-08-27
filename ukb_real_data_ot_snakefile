@@ -6,24 +6,24 @@ wildcard_constraints:
 rule all:
 	input:
 		config["WORKDIR"]+"/data/phenotypes/ukb_cleaned_ot_covar_pheno.rds",
-		config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_HM3.rds",
-		expand(config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chr{CHR}_sumstats_{FOLD}.rds",CHR=config["CHR"],FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_phenotypic_cov_{FOLD}.rds",FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_ot_adjusted_pheno_test_{FOLD}.rds",FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/ldsc_fit/"+config["PREFIX"]+"_chrAll_ldsc_fit_trait{TRAIT}_{FOLD}.rds",TRAIT=config["TRAIT"],FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/ldpred2_auto_fit/"+config["PREFIX"]+"_chr{CHR}_ldpred2_auto_fit_trait{TRAIT}_{FOLD}.rds",CHR=config["CHR"],TRAIT=config["TRAIT"],FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/bayesR_fit/"+config["PREFIX"]+"_chr{CHR}_bayesR_fit_trait{TRAIT}_{FOLD}.rds",CHR=config["CHR"],TRAIT=config["TRAIT"],FOLD=config["FOLD"]),
-		config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_prior.rds",
-		expand(config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_chrAll_residual_cov_{FOLD}.rds",FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chrAll_prior_sumstats_{FOLD}.rds",FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"_prior_finemapped_{FOLD}.rds",FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/mr_mash_rss_fit/"+config["PREFIX"]+"_chr{CHR}_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MU1_INIT_METHOD"]+"_init_prior_finemapped_fit_{FOLD}.rds",CHR=config["CHR"],FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_ldpred2_auto_effects_{FOLD}.rds",FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_ldpred2_auto_pred_acc_{FOLD}.rds",FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_"+config["QGG_BAYES_METHOD"]+"_effects_{FOLD}.rds",FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_"+config["QGG_BAYES_METHOD"]+"_pred_acc_{FOLD}.rds",FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["QGG_BAYES_METHOD"]+"_init_prior_finemapped_effects_{FOLD}.rds",FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["QGG_BAYES_METHOD"]+"_init_prior_finemapped_pred_acc_{FOLD}.rds",FOLD=config["FOLD"])
+		config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_HM3.rds" #,
+		# expand(config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chr{CHR}_sumstats_{FOLD}.rds",CHR=config["CHR"],FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_phenotypic_cov_{FOLD}.rds",FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_ot_adjusted_pheno_test_{FOLD}.rds",FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"output/ldsc_fit/"+config["PREFIX"]+"_chrAll_ldsc_fit_trait{TRAIT}_{FOLD}.rds",TRAIT=config["TRAIT"],FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"output/ldpred2_auto_fit/"+config["PREFIX"]+"_chr{CHR}_ldpred2_auto_fit_trait{TRAIT}_{FOLD}.rds",CHR=config["CHR"],TRAIT=config["TRAIT"],FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"output/bayesR_fit/"+config["PREFIX"]+"_chr{CHR}_bayesR_fit_trait{TRAIT}_{FOLD}.rds",CHR=config["CHR"],TRAIT=config["TRAIT"],FOLD=config["FOLD"]),
+		# config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_prior.rds",
+		# expand(config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_chrAll_residual_cov_{FOLD}.rds",FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chrAll_prior_sumstats_{FOLD}.rds",FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"_prior_finemapped_{FOLD}.rds",FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"output/mr_mash_rss_fit/"+config["PREFIX"]+"_chr{CHR}_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MU1_INIT_METHOD"]+"_init_prior_finemapped_fit_{FOLD}.rds",CHR=config["CHR"],FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_ldpred2_auto_effects_{FOLD}.rds",FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_ldpred2_auto_pred_acc_{FOLD}.rds",FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_"+config["QGG_BAYES_METHOD"]+"_effects_{FOLD}.rds",FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_"+config["QGG_BAYES_METHOD"]+"_pred_acc_{FOLD}.rds",FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["QGG_BAYES_METHOD"]+"_init_prior_finemapped_effects_{FOLD}.rds",FOLD=config["FOLD"]),
+		# expand(config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["QGG_BAYES_METHOD"]+"_init_prior_finemapped_pred_acc_{FOLD}.rds",FOLD=config["FOLD"])
 
 
 rule prepare_data:
@@ -97,6 +97,7 @@ rule compute_sumstats_by_chr_fold:
 		CPU="7",
 		CHR="{CHR}",
 		FOLD="{FOLD}",
+		TRAITS=config["TRAIT_NAMES"],
 		STD_GENO=config["STANDARDIZE_GENO"],
 		IMP_MISSING=config["IMPUTE_MISSING"],
 		NORM_PHENO=config["NORMALIZE_PHENO"]
@@ -115,6 +116,7 @@ rule compute_sumstats_by_chr_fold:
 		  --sample_file {input.SAMPLE} \
 			--fold {params.FOLD} \
 			--chr {params.CHR} \
+			--traits {params.TRAITS} \
 			--standardize {params.STD_GENO} \
 			--impute_missing {params.IMP_MISSING} \
 			--normalize {params.NORM_PHENO} \
@@ -133,6 +135,7 @@ rule compute_train_cov_and_adjust_test_pheno:
 	params:
 	  FOLD="{FOLD}",
 	  NORM_PHENO=config["NORMALIZE_PHENO"],
+	  TRAITS=config["TRAIT_NAMES"],
 	  CODE=config["CODE"]+"/"+"compute_train_phenotypic_cov_and_adjust_test_pheno_ot_ukb.R"
 	resources: cpus=1, mem_mb=15000, time_min=120
 	shell:
@@ -146,6 +149,7 @@ rule compute_train_cov_and_adjust_test_pheno:
 		Rscript {params.CODE} \
 		                    --pheno {input} \
                         --normalize {params.NORM_PHENO} \
+                        --traits {params.TRAITS} \
                         --fold {params.FOLD} \
                         --output_pheno {output.ADJ_PHENO} \
                         --output_cov {output.PHENO_COV}
@@ -237,6 +241,8 @@ rule compute_sumstats_prior:
 		CPU="7",
 		CHR="0",
 		FOLD="{FOLD}",
+		TRAITS=config["TRAIT_NAMES"],
+		MAF=config["MRMASHRSS_PRIOR_MAF"],
 		STD_GENO=config["STANDARDIZE_GENO"],
 		IMP_MISSING=config["IMPUTE_MISSING"],
 		NORM_PHENO=config["NORMALIZE_PHENO"]
@@ -255,6 +261,8 @@ rule compute_sumstats_prior:
 		  --sample_file {input.SAMPLE} \
 			--fold {params.FOLD} \
 			--chr {params.CHR} \
+			--traits {params.TRAITS} \
+			--maf {params.MAF} \
 			--standardize {params.STD_GENO} \
 			--impute_missing {params.IMP_MISSING} \
 			--normalize {params.NORM_PHENO} \
@@ -666,7 +674,7 @@ rule compute_pred_accuracy_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped:
 	params:
 		CODE=config["CODE"]+"/"+"compute_prediction_accuracy_ot_ukb.R",
 		MF_DIR=config["WORKDIR"]+"/"+"output/mr_mash_rss_fit/",
-		MOD="mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"_init_prior_finemapped",
+		MOD="mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MU1_INIT_METHOD"]+"_init_prior_finemapped",
 		CHR_RANGE=config["CHR_RANGE"],
 		TRAIT_RANGE=config["TRAIT_RANGE"],
 		IMP_MISSING=config["IMPUTE_MISSING"],
