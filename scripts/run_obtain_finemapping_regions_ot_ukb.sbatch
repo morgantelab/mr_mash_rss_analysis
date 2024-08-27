@@ -21,7 +21,7 @@ export MKL_NUM_THREADS=1
 Rscript ../code/obtain_finemapping_regions_ot_ukb.R --sumstats_prefix ../output/GWAS_for_regions/ukb_ot_chrAll_biallelic_snps_only_recoded_ids_info_06_gwas_for_regions_rsid_ \
                                                     --sumstats_suffix _plink_mtag_combined.txt \
                                                     --chr "${CHR}" \
-                                                    --traits "c('BMI','BMR','DPa','SPa','WHR','height','hip')" \
+                                                    --traits "c('weight', 'waist', 'hip', 'BMI', 'TFM', 'BFP')" \
                                                     --region_size 250000 \
                                                     --mhc FALSE \
                                                     --sig_threshold 5e-8 \
