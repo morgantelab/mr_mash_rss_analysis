@@ -34,24 +34,24 @@ Rscript ../code/filter_variants_by_info_score_ukb.R --mfi /data2/morgante_lab/da
     --sample /data2/morgante_lab/data/ukbiobank/genotypes/imputed/ukb22828_c"${CHR}"_b0_v3_s487271.sample \
     --snps-only \
     --make-pgen \
-    --out /scratch1/fabiom/tmp/plink_intermediate_files/ukb22828_c"${CHR}"_b0_v3_snps_only \
+    --out ../data/genotypes/ukb22828_c"${CHR}"_b0_v3_snps_only \
     --memory 310000 \
     --threads 8
-    
-###Recode SNP ids so that they are unique and write a new PVAR file    
+
+###Recode SNP ids so that they are unique and write a new PVAR file
 /data2/morgante_lab/fabiom/software/plink2 \
-    --pfile /scratch1/fabiom/tmp/plink_intermediate_files/ukb22828_c"${CHR}"_b0_v3_snps_only \
+    --pfile ../data/genotypes/ukb22828_c"${CHR}"_b0_v3_snps_only \
     --set-all-var-ids @:#_\$r_\$a \
     --make-just-pvar \
-    --out /scratch1/fabiom/tmp/plink_intermediate_files/ukb22828_c"${CHR}"_b0_v3_snps_only_recoded_ids \
+    --out ../data/genotypes/ukb22828_c"${CHR}"_b0_v3_snps_only_recoded_ids \
     --memory 310000 \
     --threads 8
 
 ###Perform GWAS for variants with INFO >= 0.6, MAF > 0.001
 /data2/morgante_lab/fabiom/software/plink2 \
-    --pgen /scratch1/fabiom/tmp/plink_intermediate_files/ukb22828_c"${CHR}"_b0_v3_snps_only.pgen \
-    --pvar /scratch1/fabiom/tmp/plink_intermediate_files/ukb22828_c"${CHR}"_b0_v3_snps_only_recoded_ids.pvar \
-    --psam /scratch1/fabiom/tmp/plink_intermediate_files/ukb22828_c"${CHR}"_b0_v3_snps_only.psam \
+    --pgen ../data/genotypes/ukb22828_c"${CHR}"_b0_v3_snps_only.pgen \
+    --pvar ../data/genotypes/ukb22828_c"${CHR}"_b0_v3_snps_only_recoded_ids.pvar \
+    --psam ../data/genotypes/ukb22828_c"${CHR}"_b0_v3_snps_only.psam \
     --extract ../data/misc/ukb_imp_chr"${CHR}"_biallelic_snps_info_06.txt \
     --keep ../data/misc/ukb_cleaned_ot_ind_ids.txt \
     --pheno ../data/phenotypes/ukb_cleaned_ot_adjusted_pheno_plink.txt \
