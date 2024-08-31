@@ -121,6 +121,9 @@ for(nam in filenames){
     file.remove(paste0(tmp, ".bk"))
     warning(paste0("Region ", nam, " does not have any finemapped SNP."))
     cat(sprintf("Finished analyzing region %d.\n", it))
+    if(it==1){
+      it <- 0
+    }
     next
   }
   
