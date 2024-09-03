@@ -17,7 +17,7 @@ export MKL_NUM_THREADS=1
 
 TRAIT_NUM=0
 
-for TRAIT in weight waist hip BMI TFM BFP;
+for TRAIT in waist hip TFM DPa SPa PPa;
 do
     TRAIT_NUM=$[$TRAIT_NUM +1]
 

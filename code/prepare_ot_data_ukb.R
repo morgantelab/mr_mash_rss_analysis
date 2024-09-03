@@ -37,10 +37,12 @@ rm(dat_bc); gc()
 
 ###Select columns to keep and filter the raw data
 #weight, waist, hip, BMI, TFM, BFP
-cols_to_keep <- c("eid", "21002-0.0", "48-0.0", "49-0.0", "21001-0.0", "23128-0.0", "23099-0.0")
+cols_to_keep <- c("eid", "6153-0.0", "6153-0.1", "6153-0.2", "6153-0.3", "6177-0.0", "6177-0.1", "6177-0.2", 
+                  "4079-0.0", "4080-0.0", "48-0.0", "49-0.0", "23128-0.0")
 
 dat_filt <- dat[, cols_to_keep]
-colnames(dat_filt) <- c("id", "weight", "waist", "hip", "BMI", "TFM", "BFP")
+colnames(dat_filt) <- c("id", "med_F1", "med_F2", "med_F3", "med_F4", "med_M1", "med_M2", "med_M3", 
+                        "DP", "SP", "waist", "hip", "TFM")
 
 rm(dat); gc()
 
@@ -56,6 +58,73 @@ for (i in 2:n) {
   }
 }
 
+###Adjust blood pressure for blodd pressure medication (+10 to DP and +15 to SP)
+# 6153-0.0	270845	Categorical (multiple)	Medication for cholesterol, blood pressure, diabetes, or take exogenous hormones (Females)
+dat_filt$mediblood1 <- as.numeric(NA)
+dat_filt$mediblood1 <- replace(dat_filt$mediblood1, dat_filt$med_F1%in%c("-7", "1", "3", "4", "5"), 0)
+dat_filt$mediblood1 <- replace(dat_filt$mediblood1, dat_filt$med_F1%in%c("-1", "-3"), NA)
+dat_filt$mediblood1 <- replace(dat_filt$mediblood1, dat_filt$med_F1%in%c("2"), 1)
+
+# 6153-0.1	270845	Categorical (multiple)	Medication for cholesterol, blood pressure, diabetes, or take exogenous hormones (Females)
+dat_filt$mediblood3 <- as.numeric(NA)
+dat_filt$mediblood3 <- replace(dat_filt$mediblood3, dat_filt$med_F2%in%c("-7","1","3", "4", "5"), 0)
+dat_filt$mediblood3 <- replace(dat_filt$mediblood3, dat_filt$med_F2%in%c("-1", "-3"), NA)
+dat_filt$mediblood3 <- replace(dat_filt$mediblood3, dat_filt$med_F2%in%c("2"), 1)
+
+# 6153-0.2	270845	Categorical (multiple)	Medication for cholesterol, blood pressure, diabetes, or take exogenous hormones (Females)
+dat_filt$mediblood5 <- as.numeric(NA)
+dat_filt$mediblood5 <- replace(dat_filt$mediblood5, dat_filt$med_F3%in%c("-7","1","3", "4", "5"), 0)
+dat_filt$mediblood5 <- replace(dat_filt$mediblood5, dat_filt$med_F3%in%c("-1", "-3"), NA)
+dat_filt$mediblood5 <- replace(dat_filt$mediblood5, dat_filt$med_F3%in%c("2"), 1)
+
+# 6153-0.3	270845	Categorical (multiple)	Medication for cholesterol, blood pressure, diabetes, or take exogenous hormones (Females)
+dat_filt$mediblood6 <- as.numeric(NA)
+dat_filt$mediblood6 <- replace(dat_filt$mediblood6, dat_filt$med_F4%in%c("-7","1","3", "4", "5"), 0)
+dat_filt$mediblood6 <- replace(dat_filt$mediblood6, dat_filt$med_F4%in%c("-1", "-3"), NA)
+dat_filt$mediblood6 <- replace(dat_filt$mediblood6, dat_filt$med_F4%in%c("2"), 1)
+
+# 6177-0.0	226928	Categorical (multiple) (Males)
+dat_filt$mediblood2 <- as.numeric(NA)
+dat_filt$mediblood2 <- replace(dat_filt$mediblood2, dat_filt$med_M1%in%c("-7","1","3"), 0)
+dat_filt$mediblood2 <- replace(dat_filt$mediblood2, dat_filt$med_M1%in%c("-1", "-3"), NA)
+dat_filt$mediblood2 <- replace(dat_filt$mediblood2, dat_filt$med_M1%in%c(2), 1)
+
+# 6177-0.1	226928	Categorical (multiple) (Males)
+dat_filt$mediblood4 <- as.numeric(NA)
+dat_filt$mediblood4 <- replace(dat_filt$mediblood4, dat_filt$med_M2%in%c("-7","1","3"), 0)
+dat_filt$mediblood4 <- replace(dat_filt$mediblood4, dat_filt$med_M2%in%c("-1", "-3"), NA)
+dat_filt$mediblood4 <- replace(dat_filt$mediblood4, dat_filt$med_M2%in%c("2"), 1)
+
+# 6177-0.2	226928	Categorical (multiple) (Males)
+dat_filt$mediblood7 <- as.numeric(NA)
+dat_filt$mediblood7 <- replace(dat_filt$mediblood7, dat_filt$med_M3%in%c("-7","1","3"), 0)
+dat_filt$mediblood7 <- replace(dat_filt$mediblood7, dat_filt$med_M3%in%c("-1", "-3"), NA)
+dat_filt$mediblood7 <- replace(dat_filt$mediblood7, dat_filt$med_M3%in%c("2"), 1)
+
+dat_filt$add.med10 <- dat_filt$add.med15 <- as.numeric(NA)
+dat_filt$add.med10 <- replace(dat_filt$add.med10, dat_filt$mediblood1==0 | dat_filt$mediblood2==0 |
+                                dat_filt$mediblood3==0 | dat_filt$mediblood4==0 | dat_filt$mediblood5==0 |
+                                dat_filt$mediblood6==0 | dat_filt$mediblood7==0, 0)
+dat_filt$add.med15 <- replace(dat_filt$add.med15, dat_filt$mediblood1==0 | dat_filt$mediblood2==0 |
+                                dat_filt$mediblood3==0 | dat_filt$mediblood4==0 | dat_filt$mediblood5==0 |
+                                dat_filt$mediblood6==0 | dat_filt$mediblood7==0, 0)
+dat_filt$add.med10 <- replace(dat_filt$add.med10, dat_filt$mediblood1==1 | dat_filt$mediblood2==1 |
+                                dat_filt$mediblood3==1 | dat_filt$mediblood4==1 | dat_filt$mediblood5==1 |
+                                dat_filt$mediblood6==1 | dat_filt$mediblood7==1, 10)
+dat_filt$add.med15 <- replace(dat_filt$add.med15, dat_filt$mediblood1==1 | dat_filt$mediblood2==1 |
+                                dat_filt$mediblood3==1 | dat_filt$mediblood4==1 | dat_filt$mediblood5==1 |
+                                dat_filt$mediblood6==1 | dat_filt$mediblood7==1, 15)
+
+dat_filt$SPa <- dat_filt$SP + dat_filt$add.med15
+dat_filt$DPa <- dat_filt$DP + dat_filt$add.med10
+
+###Create pulse pressure
+dat_filt$PPa <- dat_filt$SPa - dat_filt$DPa
+
+###Keep only variables of interest
+dat_filt <- dat_filt[, c("id", "waist", "hip", "TFM", "DPa", "SPa", "PPa")]
+
+
 ###Join bc covariate data with BP data
 dat_filt1 <- inner_join(dat_covar, dat_filt, by = join_by(id))
 rm(dat_filt); gc()
@@ -63,7 +132,7 @@ rm(dat_filt); gc()
 # library(reshape2)
 # library(ggplot2)
 # 
-# corr <- cor(dat_filt1[, c("weight", "waist", "hip", "BMI", "TFM", "BFP")], use="pairwise.complete.obs")
+# corr <- cor(dat_filt1[, c("waist", "hip", "TFM", "DPa", "SPa", "PPa")], use="pairwise.complete.obs")
 # 
 # melted_cormat <- melt(corr)
 # 
@@ -81,7 +150,7 @@ rm(dat_filt); gc()
 dat_filt1 <- dat_filt1[complete.cases(dat_filt1), ]
 
 ###Remove individuals with "abnormal" measurements
-pheno_names <- c("weight", "waist", "hip", "BMI", "TFM", "BFP")
+pheno_names <- c("waist", "hip", "TFM", "DPa", "SPa", "PPa")
 pheno_names_rint <- paste(pheno_names, "rint", sep="_")
 
 ##RINT
@@ -114,6 +183,14 @@ if(n_fold > 0){
   
   fwrite(x=indiv_list, file=output_inds_list_full, sep = "\t", row.names=FALSE, col.names=FALSE, quote=FALSE, showProgress=FALSE)
   
+  ###Write full data BEFORE sampling
+  base_out_pheno <- unlist(strsplit(output_pheno_data, ".", fixed=TRUE))
+  base_out_pheno_full <- paste(base_out_pheno[1], "full_data", sep="_")
+  output_pheno_data_full <- paste(base_out_pheno_full, base_out_pheno[2], sep=".")
+  
+  saveRDS(dat_filt_final, file=output_pheno_data_full)
+  
+  ##Sample
   dat_filt_final <- dat_filt_final %>% group_by(fold) %>% slice_sample(n=n_fold) %>% ungroup() %>% 
     arrange(as.numeric(id)) %>% as.data.frame()
 }

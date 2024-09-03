@@ -15,13 +15,13 @@ module load R/4.2.3
 ###Set variables
 export MKL_NUM_THREADS=1
 
-for TRAIT in BMI BFP TFM hip waist weight;
+for TRAIT in waist hip TFM DPa SPa PPa;
 do
     Rscript ../code/merge_plink_output_across_chrs_ot_ukb.R --prefix ../output/GWAS_for_regions/ukb_ot_chr \
                                                             --suffix _biallelic_snps_only_recoded_ids_info_06_gwas_for_regions.rsid."${TRAIT}".glm.linear \
-       		                                            --chr 1:22 \
-           		                                    --ncores 8 \
-               		                                    --output ../output/GWAS_for_regions/ukb_ot_chrAll_biallelic_snps_only_recoded_ids_info_06_gwas_for_regions.rsid."${TRAIT}".glm.linear
+       		                                                  --chr 1:22 \
+           		                                              --ncores 8 \
+               		                                          --output ../output/GWAS_for_regions/ukb_ot_chrAll_biallelic_snps_only_recoded_ids_info_06_gwas_for_regions.rsid."${TRAIT}".glm.linear
 done
 
 

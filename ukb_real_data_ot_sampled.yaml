@@ -4,7 +4,7 @@ CODE: "/data2/morgante_lab/ukbiobank_projects/mr_mash_rss/code"
 UKB_RESOURCES: "/data2/morgante_lab/data/ukbiobank"
 FOLD: ['1','2','3','4','5']
 CHR_RANGE: "1:22"
-TRAIT_NAMES: "c('weight', 'waist', 'hip', 'BMI', 'TFM', 'BFP')"
+TRAIT_NAMES: "c('waist', 'hip', 'TFM', 'DPa', 'SPa', 'PPa')"
 TRAIT: ['1','2','3','4','5','6']
 TRAIT_RANGE: "1:6"
 PREFIX: "ukb_ot_sampled"

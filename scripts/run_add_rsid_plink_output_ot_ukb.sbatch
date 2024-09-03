@@ -18,13 +18,13 @@ module load R/4.2.3
 ###Set variables
 export MKL_NUM_THREADS=1
 
-for TRAIT in BMI BFP TFM hip weight waist;
+for TRAIT in waist hip TFM DPa SPa PPa;
 do
     Rscript ../code/add_rsid_plink_output_ot_ukb.R --mfi /data2/morgante_lab/data/ukbiobank/genotypes/imputed/ukb_mfi_chr"${CHR}"_v3.txt \
                                                    --plink_sumstats ../output/GWAS_for_regions/ukb_ot_chr"${CHR}"_biallelic_snps_only_recoded_ids_info_06_gwas_for_regions."${TRAIT}".glm.linear \
-       		                                   --chr "${CHR}" \
-           		                           --ncores 8 \
-               		                           --output ../output/GWAS_for_regions/ukb_ot_chr"${CHR}"_biallelic_snps_only_recoded_ids_info_06_gwas_for_regions.rsid."${TRAIT}".glm.linear
+       		                                         --chr "${CHR}" \
+           		                                     --ncores 8 \
+               		                                 --output ../output/GWAS_for_regions/ukb_ot_chr"${CHR}"_biallelic_snps_only_recoded_ids_info_06_gwas_for_regions.rsid."${TRAIT}".glm.linear
 done
 
 
