@@ -19,7 +19,10 @@ dat_more_traits <- dat[which(dat$scenario=="equal_effects_10traits_indep_resid")
 
 ###Equal Effects
 res_equal_effects <- transform(dat_equal_effects, scenario=as.factor(scenario),
-                                    method=as.factor(method),
+                                    method=factor(method, 
+                                                  levels = c("bayesR", "ldpred2_auto", 
+                                                             "mr_mash_rss", "mvbayesC", "mvbayesC_rest", 
+                                                             "mtag_ldpred2_auto", "wmt_sblup")),
                                     trait=as.factor(trait))
 
 p_equal_effects <- ggplot(res_equal_effects, aes(x = trait, y = score, fill = method)) +
@@ -29,7 +32,8 @@ p_equal_effects <- ggplot(res_equal_effects, aes(x = trait, y = score, fill = me
   #                                         preserve = "single")) +
   ylim(0, 0.51) +
   scale_fill_manual(values = cbPalette, labels = c("SBayesR", "LDpred2", "mr.mash-rss", 
-                                                   "SmvBayesC", "SmvBayesC-rest")) +
+                                                   "SmvBayesC", "SmvBayesC-rest", 
+                                                   "MTAG+LDpred2", "wMT-SBLUP")) +
   labs(x = "Phenotype", y = expression(italic(R)^2), fill="Method", title="Equal Effects") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 14) +
@@ -39,8 +43,11 @@ p_equal_effects <- ggplot(res_equal_effects, aes(x = trait, y = score, fill = me
 
 ###Mostly null
 res_mostly_null <- transform(dat_mostly_null, scenario=as.factor(scenario),
-                               method=as.factor(method),
-                               trait=as.factor(trait))
+                             method=factor(method, 
+                                           levels = c("bayesR", "ldpred2_auto", 
+                                                      "mr_mash_rss", "mvbayesC", "mvbayesC_rest", 
+                                                      "mtag_ldpred2_auto", "wmt_sblup")),
+                             trait=as.factor(trait))
 
 p_mostly_null <- ggplot(res_mostly_null, aes(x = trait, y = score, fill = method)) +
   geom_boxplot(color = "black", outlier.size = 0.5, width = 0.85) +
@@ -49,7 +56,8 @@ p_mostly_null <- ggplot(res_mostly_null, aes(x = trait, y = score, fill = method
   #                                         preserve = "single")) +
   ylim(0, 0.51) +
   scale_fill_manual(values = cbPalette, labels = c("SBayesR", "LDpred2", "mr.mash-rss", 
-                                                   "SmvBayesC", "SmvBayesC-rest")) +
+                                                   "SmvBayesC", "SmvBayesC-rest", 
+                                                   "MTAG+LDpred2", "wMT-SBLUP")) +
   labs(x = "Phenotype", y = expression(italic(R)^2), fill="Method", title="Mostly Null") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 14) +
@@ -59,8 +67,11 @@ p_mostly_null <- ggplot(res_mostly_null, aes(x = trait, y = score, fill = method
 
 ###Shared in Subgroups
 res_shared_subgroups <- transform(dat_shared_subgroups, scenario=as.factor(scenario),
-                               method=as.factor(method),
-                               trait=as.factor(trait))
+                                  method=factor(method, 
+                                                levels = c("bayesR", "ldpred2_auto", 
+                                                           "mr_mash_rss", "mvbayesC", "mvbayesC_rest", 
+                                                           "mtag_ldpred2_auto", "wmt_sblup")),
+                                  trait=as.factor(trait))
 
 p_shared_subgroups <- ggplot(res_shared_subgroups, aes(x = trait, y = score, fill = method)) +
   geom_boxplot(color = "black", outlier.size = 0.5, width = 0.85) +
@@ -69,7 +80,8 @@ p_shared_subgroups <- ggplot(res_shared_subgroups, aes(x = trait, y = score, fil
   #                                         preserve = "single")) +
   ylim(0, 0.51) +
   scale_fill_manual(values = cbPalette, labels = c("SBayesR", "LDpred2", "mr.mash-rss", 
-                                                   "SmvBayesC", "SmvBayesC-rest")) +
+                                                   "SmvBayesC", "SmvBayesC-rest", 
+                                                   "MTAG+LDpred2", "wMT-SBLUP")) +
   labs(x = "Phenotype", y = expression(italic(R)^2), fill="Method", title="Shared Effects in Subgroups") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   geom_hline(yintercept=0.3, linetype="dashed", linewidth=1, color = "black") +
@@ -80,8 +92,11 @@ p_shared_subgroups <- ggplot(res_shared_subgroups, aes(x = trait, y = score, fil
 
 ###Low h2g
 res_low_h2g <- transform(dat_low_h2g, scenario=as.factor(scenario),
-                                  method=as.factor(method),
-                                  trait=as.factor(trait))
+                         method=factor(method, 
+                                       levels = c("bayesR", "ldpred2_auto", 
+                                                  "mr_mash_rss", "mvbayesC", "mvbayesC_rest", 
+                                                  "mtag_ldpred2_auto", "wmt_sblup")),
+                         trait=as.factor(trait))
 
 p_low_h2g <- ggplot(res_low_h2g, aes(x = trait, y = score, fill = method)) +
   geom_boxplot(color = "black", outlier.size = 0.5, width = 0.85) +
@@ -90,7 +105,8 @@ p_low_h2g <- ggplot(res_low_h2g, aes(x = trait, y = score, fill = method)) +
   #                                         preserve = "single")) +
   ylim(0, 0.51) +
   scale_fill_manual(values = cbPalette, labels = c("SBayesR", "LDpred2", "mr.mash-rss", 
-                                                   "SmvBayesC", "SmvBayesC-rest")) +
+                                                   "SmvBayesC", "SmvBayesC-rest", 
+                                                   "MTAG+LDpred2", "wMT-SBLUP")) +
   labs(x = "Phenotype", y = expression(italic(R)^2), fill="Method", title=expression(bold("Low") ~ bolditalic(h["g"]^2))) +
   
   geom_hline(yintercept=0.3, linetype="dotted", linewidth=1, color = "black") +
@@ -101,7 +117,10 @@ p_low_h2g <- ggplot(res_low_h2g, aes(x = trait, y = score, fill = method)) +
 
 ###High Polygenicity
 res_highly_polygenic <- transform(dat_highly_polygenic, scenario=as.factor(scenario),
-                                  method=as.factor(method),
+                                  method=factor(method, 
+                                                levels = c("bayesR", "ldpred2_auto", 
+                                                           "mr_mash_rss", "mvbayesC", "mvbayesC_rest", 
+                                                           "mtag_ldpred2_auto", "wmt_sblup")),
                                   trait=as.factor(trait))
 
 p_highly_polygenic <- ggplot(res_highly_polygenic, aes(x = trait, y = score, fill = method)) +
@@ -111,7 +130,8 @@ p_highly_polygenic <- ggplot(res_highly_polygenic, aes(x = trait, y = score, fil
   #                                         preserve = "single")) +
   ylim(0, 0.51) +
   scale_fill_manual(values = cbPalette, labels = c("SBayesR", "LDpred2", "mr.mash-rss", 
-                                                   "SmvBayesC", "SmvBayesC-rest")) +
+                                                   "SmvBayesC", "SmvBayesC-rest", 
+                                                   "MTAG+LDpred2", "wMT-SBLUP")) +
   labs(x = "Phenotype", y = expression(italic(R)^2), fill="Method", title="High Polygenicity") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 14) +
@@ -121,8 +141,11 @@ p_highly_polygenic <- ggplot(res_highly_polygenic, aes(x = trait, y = score, fil
 
 ###More Phenotypes
 res_more_traits <- transform(dat_more_traits, scenario=as.factor(scenario),
-                                  method=as.factor(method),
-                                  trait=as.factor(trait))
+                             method=factor(method, 
+                                           levels = c("bayesR", "ldpred2_auto", 
+                                                      "mr_mash_rss", "mvbayesC_rest", 
+                                                      "mtag_ldpred2_auto", "wmt_sblup")),
+                             trait=as.factor(trait))
 
 p_more_traits <- ggplot(res_more_traits, aes(x = trait, y = score, fill = method)) +
   geom_boxplot(color = "black", outlier.size = 0.5, width = 0.85) +
@@ -131,7 +154,8 @@ p_more_traits <- ggplot(res_more_traits, aes(x = trait, y = score, fill = method
   #                                         preserve = "single")) +
   ylim(0, 0.51) +
   scale_fill_manual(values = cbPalette[-4], labels = c("SBayesR", "LDpred2", "mr.mash-rss", 
-                                                   "SmvBayesC-rest")) +
+                                                   "SmvBayesC-rest", 
+                                                   "MTAG+LDpred2", "wMT-SBLUP")) +
   labs(x = "Phenotype", y = expression(italic(R)^2), fill="Method", title="More Phenotypes") +
   geom_hline(yintercept=0.5, linetype="dotted", linewidth=1, color = "black") +
   theme_cowplot(font_size = 14) +
@@ -143,8 +167,8 @@ p_more_traits <- ggplot(res_more_traits, aes(x = trait, y = score, fill = method
 #Extract legend
 legend_1 <- get_legend(
   p_equal_effects + 
-    guides(color = guide_legend(nrow = 1)) +
-    theme(legend.position=c(0.2,0.8),legend.direction = "horizontal")
+    guides(fill = guide_legend(nrow = 1)) +
+    theme(legend.position=c(0.04,0.8),legend.direction = "horizontal")
 )
 
 
@@ -166,8 +190,8 @@ ggsave("../analysis/paper_figures/Fig1.pdf", plot=p_1, device="pdf", units="in",
 #Extract legend
 legend_2 <- get_legend(
   p_low_h2g + 
-    guides(color = guide_legend(nrow = 1)) +
-    theme(legend.position=c(0.2,0.8),legend.direction = "horizontal")
+    guides(fill = guide_legend(nrow = 1)) +
+    theme(legend.position=c(0.04,0.8),legend.direction = "horizontal")
 )
 
 

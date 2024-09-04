@@ -7,7 +7,8 @@ metric <- "r2"
 scenarioz <- c("equal_effects_indep_resid", "trait_1_only_effects_indep_resid",
                "blocks_shared_effects_indep_resid", "equal_effects_low_pve_indep_resid",
                "equal_effects_50000causal_indep_resid", "equal_effects_10traits_indep_resid")
-methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "ldpred2_auto", "bayesR")
+methodz <- c("mr_mash_rss", "mvbayesC", "mvbayesC_rest", "wmt_sblup", "mtag_ldpred2_auto", 
+             "ldpred2_auto", "bayesR")
 
 n_col <- 6
 n_row <- length(repz)
