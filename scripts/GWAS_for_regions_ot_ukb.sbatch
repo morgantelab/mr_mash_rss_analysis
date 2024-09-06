@@ -53,8 +53,8 @@ Rscript ../code/filter_variants_by_info_score_ukb.R --mfi /data2/morgante_lab/da
     --pvar ../data/genotypes/ukb22828_c"${CHR}"_b0_v3_snps_only_recoded_ids.pvar \
     --psam ../data/genotypes/ukb22828_c"${CHR}"_b0_v3_snps_only.psam \
     --extract ../data/misc/ukb_imp_chr"${CHR}"_biallelic_snps_info_06.txt \
-    --keep ../data/misc/ukb_cleaned_ot_sampled_ind_ids_full_data.txt \
-    --pheno ../data/phenotypes/ukb_cleaned_ot_sampled_adjusted_pheno_full_data_plink.txt \
+    --keep ../data/misc/ukb_cleaned_ot_ind_ids.txt \
+    --pheno ../data/phenotypes/ukb_cleaned_ot_adjusted_pheno_plink.txt \
     --glm no-x-sex omit-ref allow-no-covars \
     --maf 0.001 \
     --out ../output/GWAS_for_regions/ukb_ot_chr"${CHR}"_biallelic_snps_only_recoded_ids_info_06_gwas_for_regions \

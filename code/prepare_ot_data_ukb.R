@@ -36,13 +36,13 @@ dat_covar <- dat_bc[, c("id", "sex", "assessment_centre", "age", "genotype_measu
 rm(dat_bc); gc()
 
 ###Select columns to keep and filter the raw data
-#weight, waist, hip, BMI, TFM, BFP
-cols_to_keep <- c("eid", "6153-0.0", "6153-0.1", "6153-0.2", "6153-0.3", "6177-0.0", "6177-0.1", "6177-0.2", 
-                  "4079-0.0", "4080-0.0", "48-0.0", "49-0.0", "23128-0.0")
+#DP, SP, MED_F1, MED_F2, MED_F3, MED_F4, MED_M1, MED_M2, MED_M3, WEIGHT, BFP, WAIST, HIP, BMI, TFM
+cols_to_keep <- c("eid", "4079-0.0", "4080-0.0", "6153-0.0", "6153-0.1", "6153-0.2", "6153-0.3", "6177-0.0", "6177-0.1", "6177-0.2",
+                  "21002-0.0", "23099-0.0", "23105-0.0", "48-0.0", "49-0.0", "21001-0.0", "23128-0.0")
 
 dat_filt <- dat[, cols_to_keep]
-colnames(dat_filt) <- c("id", "med_F1", "med_F2", "med_F3", "med_F4", "med_M1", "med_M2", "med_M3", 
-                        "DP", "SP", "waist", "hip", "TFM")
+colnames(dat_filt) <- c("id", "DP", "SP", "med_F1", "med_F2", "med_F3", "med_F4", "med_M1", "med_M2", "med_M3", 
+                        "weight", "BFP", "waist", "hip", "BMI", "TFM")
 
 rm(dat); gc()
 
@@ -87,7 +87,7 @@ dat_filt$mediblood6 <- replace(dat_filt$mediblood6, dat_filt$med_F4%in%c("2"), 1
 dat_filt$mediblood2 <- as.numeric(NA)
 dat_filt$mediblood2 <- replace(dat_filt$mediblood2, dat_filt$med_M1%in%c("-7","1","3"), 0)
 dat_filt$mediblood2 <- replace(dat_filt$mediblood2, dat_filt$med_M1%in%c("-1", "-3"), NA)
-dat_filt$mediblood2 <- replace(dat_filt$mediblood2, dat_filt$med_M1%in%c(2), 1)
+dat_filt$mediblood2 <- replace(dat_filt$mediblood2, dat_filt$med_M1%in%c("2"), 1)
 
 # 6177-0.1	226928	Categorical (multiple) (Males)
 dat_filt$mediblood4 <- as.numeric(NA)
@@ -115,15 +115,12 @@ dat_filt$add.med15 <- replace(dat_filt$add.med15, dat_filt$mediblood1==1 | dat_f
                                 dat_filt$mediblood3==1 | dat_filt$mediblood4==1 | dat_filt$mediblood5==1 |
                                 dat_filt$mediblood6==1 | dat_filt$mediblood7==1, 15)
 
+
 dat_filt$SPa <- dat_filt$SP + dat_filt$add.med15
 dat_filt$DPa <- dat_filt$DP + dat_filt$add.med10
 
-###Create pulse pressure
-dat_filt$PPa <- dat_filt$SPa - dat_filt$DPa
-
 ###Keep only variables of interest
-dat_filt <- dat_filt[, c("id", "waist", "hip", "TFM", "DPa", "SPa", "PPa")]
-
+dat_filt <- dat_filt[, c("id", "weight", "waist", "hip", "BMI", "TFM", "BFP", "DPa", "SPa")]
 
 ###Join bc covariate data with BP data
 dat_filt1 <- inner_join(dat_covar, dat_filt, by = join_by(id))
@@ -132,7 +129,7 @@ rm(dat_filt); gc()
 # library(reshape2)
 # library(ggplot2)
 # 
-# corr <- cor(dat_filt1[, c("waist", "hip", "TFM", "DPa", "SPa", "PPa")], use="pairwise.complete.obs")
+# corr <- cor(dat_filt1[, c("weight", "waist", "hip", "BMI", "TFM", "BFP", "DPa", "SPa")], use="pairwise.complete.obs")
 # 
 # melted_cormat <- melt(corr)
 # 
@@ -150,7 +147,7 @@ rm(dat_filt); gc()
 dat_filt1 <- dat_filt1[complete.cases(dat_filt1), ]
 
 ###Remove individuals with "abnormal" measurements
-pheno_names <- c("waist", "hip", "TFM", "DPa", "SPa", "PPa")
+pheno_names <- c("weight", "waist", "hip", "BMI", "TFM", "BFP", "DPa", "SPa")
 pheno_names_rint <- paste(pheno_names, "rint", sep="_")
 
 ##RINT

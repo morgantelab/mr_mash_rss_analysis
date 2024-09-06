@@ -23,4 +23,5 @@ snakemake \
   -s ukb_real_data_ot_sampled_snakefile \
   --profile slurm \
   --latency-wait 120 \
+  -k \
   --configfile ukb_real_data_ot_sampled.yaml
