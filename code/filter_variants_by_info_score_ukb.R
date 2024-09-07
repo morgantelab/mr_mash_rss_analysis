@@ -31,13 +31,12 @@ setDTthreads(ncores)
 ###Read in the data
 dat <- fread(mfi, data.table = FALSE, showProgress=FALSE)
 
-###Filter for INFO score > info_thresh
-dat_filt <- dat[which(dat$V8>=info_thresh), ]
-
 ###Filter out multiallelic variants
 if(only_biallelic){
-  multi_all <- which(vec_duplicate_detect(dat_filt$V3))
-  dat_filt <- dat_filt[-multi_all, ]
+  multi_all <- which(vec_duplicate_detect(dat$V3))
+  dat_filt <- dat[-multi_all, ]
+} else {
+  dat_filt <- dat
 }
 
 ###Filter out indels
@@ -47,6 +46,9 @@ if(snps_only){
   indels_alt <- which(!(dat_filt$V5 %in% c("A", "G", "T", "C")))
   dat_filt <- dat_filt[-indels_alt, ]
 }
+
+###Filter for INFO score > info_thresh
+dat_filt <- dat_filt[which(dat_filt$V8>=info_thresh), ]
 
 ###Create unique ID###
 unique_id <- paste(chr, with(dat_filt, paste(V3, V4, V5, sep = "_")), sep=":")
