@@ -488,6 +488,7 @@ rule fit_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped_by_chr:
 		UPDATE_V_METHOD=config["MRMASHRSS_UPDATE_V_METHOD"],
 		STD_GENO=config["STANDARDIZE_GENO"],
 		CAN_COVA=config["MRMASHRSS_CANONICAL_COV"],
+		TOL=config["MRMASHRSS_TOL"],
 		CPU="4",
 		FOLD="{FOLD}",
 		CHR="{CHR}",
@@ -516,6 +517,7 @@ rule fit_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped_by_chr:
 			--update_V {params.UPDATE_V} \
 			--update_V_method {params.UPDATE_V_METHOD} \
 			--w0_threshold {params.W_THR} \
+			--tol {params.TOL} \
 			--ncores {params.CPU} \
 			--seed {params.FOLD} \
 			--output {output}
