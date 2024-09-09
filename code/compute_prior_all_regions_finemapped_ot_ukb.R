@@ -84,6 +84,12 @@ for(nam in filenames){
 
   rsids_common <- intersect(rownames(Z), rsids$ID)
   
+  if(length(rsids_common)==1){
+    warning(paste0("Region ", nam, " only has one SNP. Skipping it."))
+    cat(sprintf("Finished analyzing region %d.\n", it))
+    next
+  }
+  
   Z_sel <- Z[rsids_common, ]
   Bhat_sel <- dat$Bhat[rsids_common, ]
   Shat_sel <- dat$Shat[rsids_common, ]
