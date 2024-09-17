@@ -124,7 +124,8 @@ for(i in chrs){
   }
   
   if(model %in% c("mr_mash_rss_sparse_LD_V_all_chr_ldpred2_auto_init_prior_finemapped",
-                  "mr_mash_rss_sparse_LD_V_all_chr_bayesR_init_prior_finemapped")){
+                  "mr_mash_rss_sparse_LD_V_all_chr_bayesR_init_prior_finemapped",
+                  "mr_mash_rss_sparse_LD_V_all_chr_bayesR_init_prior_finemapped_mash_weights")){
     ##Read in model fit
     model_fit <- readRDS(paste0(model_fit_dir, prefix, "_chr", i, "_", model, "_fit_", fold, ".rds"))
     
