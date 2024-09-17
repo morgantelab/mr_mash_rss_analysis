@@ -18,12 +18,16 @@ rule all:
 		expand(config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chrAll_prior_sumstats_{FOLD}.rds",FOLD=config["FOLD"]),
 		expand(config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"_prior_finemapped_{FOLD}.rds",FOLD=config["FOLD"]),
 		expand(config["WORKDIR"]+"/"+"output/mr_mash_rss_fit/"+config["PREFIX"]+"_chr{CHR}_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MU1_INIT_METHOD"]+"_init_prior_finemapped_fit_{FOLD}.rds",CHR=config["CHR"],FOLD=config["FOLD"]),
+		expand(config["WORKDIR"]+"/"+"output/mash_fit/"+config["PREFIX"]+"_chrAll_mash_fitted_prior_{FOLD}.rds",FOLD=config["FOLD"]),
+		expand(config["WORKDIR"]+"/"+"output/mr_mash_rss_fit/"+config["PREFIX"]+"_chr{CHR}_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MASH_MU1_INIT_METHOD"]+"_init_prior_finemapped_mash_weights_fit_{FOLD}.rds",CHR=config["CHR"],FOLD=config["FOLD"]),
 		expand(config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_ldpred2_auto_effects_{FOLD}.rds",FOLD=config["FOLD"]),
 		expand(config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_ldpred2_auto_pred_acc_{FOLD}.rds",FOLD=config["FOLD"]),
 		expand(config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_"+config["QGG_BAYES_METHOD"]+"_effects_{FOLD}.rds",FOLD=config["FOLD"]),
 		expand(config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_"+config["QGG_BAYES_METHOD"]+"_pred_acc_{FOLD}.rds",FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["QGG_BAYES_METHOD"]+"_init_prior_finemapped_effects_{FOLD}.rds",FOLD=config["FOLD"]),
-		expand(config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["QGG_BAYES_METHOD"]+"_init_prior_finemapped_pred_acc_{FOLD}.rds",FOLD=config["FOLD"])
+		expand(config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MU1_INIT_METHOD"]+"_init_prior_finemapped_effects_{FOLD}.rds",FOLD=config["FOLD"]),
+		expand(config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MU1_INIT_METHOD"]+"_init_prior_finemapped_pred_acc_{FOLD}.rds",FOLD=config["FOLD"]),
+		expand(config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MASH_MU1_INIT_METHOD"]+"_init_prior_finemapped_mash_weights_effects_{FOLD}.rds",FOLD=config["FOLD"]),
+		expand(config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MASH_MU1_INIT_METHOD"]+"_init_prior_finemapped_mash_weights_pred_acc_{FOLD}.rds",FOLD=config["FOLD"])
 
 
 rule prepare_data:
@@ -527,6 +531,112 @@ rule fit_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped_by_chr:
 		"""
 
 
+rule fit_mash_gwide:
+	input:
+		lambda wildcards: all_file_paths[wildcards.FOLD],
+		GENO=config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_HM3.rds",
+		PRIOR_MAT=config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_"+config["MRMASHRSS_PRIOR_ED_METHOD"]+"_prior_finemapped_{FOLD}.rds",
+		RCOV=config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_chrAll_residual_cov_{FOLD}.rds",
+		PHENO=config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_ot_covar_pheno.rds",
+		SAMP=config["UKB_RESOURCES"]+"/"+"genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample"
+	output:
+		config["WORKDIR"]+"/"+"output/mash_fit/"+config["PREFIX"]+"_chrAll_mash_fitted_prior_{FOLD}.rds"
+	params:
+		CODE=config["CODE"]+"/"+"fit_mash_ukb.R",
+		CHR_RANGE=config["CHR_RANGE"],
+		N_RND=config["MASH_RND_SIZE"],
+		FOLD="{FOLD}",
+		CPU="4",
+		SUM_PREFIX=config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chr",
+		SUM_SUFFIX="_sumstats_{FOLD}.rds",
+		LD_R2_THRESH=config["MASH_R2_THRESH"],
+		TMP=config["TMP_DIR"]
+	resources: cpus=4, mem_mb=300000, time_min=720
+	shell:
+		"""
+		module load gsl/2.7
+		module load R/4.1.2
+		
+		export OPENBLAS_NUM_THREADS=1
+		export OMP_NUM_THREADS=1
+
+		Rscript {params.CODE} \
+			--sumstats_prefix {params.SUM_PREFIX} \
+			--sumstats_suffix {params.SUM_SUFFIX} \
+			--geno {input.GENO} \
+			--prior_matrices {input.PRIOR_MAT} \
+			--fold_file {input.PHENO} \
+			--sample_file {input.SAMP} \
+			--fold {params.FOLD} \
+			--chr {params.CHR_RANGE} \
+			--rnd_size {params.N_RND} \
+			--residual_cov {input.RCOV} \
+			--LD_clump_r2_thresh {params.LD_R2_THRESH} \
+			--ncores {params.CPU} \
+			--seed {params.FOLD} \
+			--temp_dir {params.TMP} \
+			--output {output}
+
+		module unload R/4.1.2
+		module unload gsl/2.7
+		"""
+
+rule fit_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped_mash_weights_by_chr:
+	input:
+		SUMS=config["WORKDIR"]+"/"+"output/summary_statistics/"+config["PREFIX"]+"_chr{CHR}_sumstats_{FOLD}.rds",
+		LD_MAT=config["WORKDIR"]+"/"+"data/LD_matrices/ukb_bc_chr{CHR}_LD_sparse_{FOLD}.rds",
+		PCOV=config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_phenotypic_cov_{FOLD}.rds",
+		RCOV=config["WORKDIR"]+"/"+"output/misc/"+config["PREFIX"]+"_chrAll_residual_cov_{FOLD}.rds",
+		PRIOR=config["WORKDIR"]+"/"+"output/mash_fit/"+config["PREFIX"]+"_chrAll_mash_fitted_prior_{FOLD}.rds",
+		MU1_INIT=config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_chr{CHR}_"+config["MRMASHRSS_MASH_MU1_INIT_METHOD"]+"_effects_{FOLD}.rds"
+	output:
+		config["WORKDIR"]+"/"+"output/mr_mash_rss_fit/"+config["PREFIX"]+"_chr{CHR}_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MASH_MU1_INIT_METHOD"]+"_init_prior_finemapped_mash_weights_fit_{FOLD}.rds"
+	params:
+		CODE=config["CODE"]+"/"+"fit_mrmashrss_given_S0_and_w0_ukb.R",
+		N=config["TRAIN_NUM"],
+		UPDATE_V=config["MRMASHRSS_MASH_UPDATE_V"],
+		UPDATE_V_METHOD=config["MRMASHRSS_MASH_UPDATE_V_METHOD"],
+		UPDATE_W0=config["MRMASHRSS_MASH_UPDATE_W0"],
+		UPDATE_W0_MAX_ITER=config["MRMASHRSS_MASH_UPDATE_W0_MAX_ITER"],
+		W0_NULL_SCALE=config["MRMASHRSS_MASH_W0_NULL_SCALE"],
+		STD_GENO=config["STANDARDIZE_GENO"],
+		TOL=config["MRMASHRSS_MASH_TOL"],
+		CPU="4",
+		FOLD="{FOLD}",
+		CHR="{CHR}"
+	resources: cpus=4, mem_mb=35000, time_min=5760
+	shell:
+		"""
+		module load gsl/2.7
+		source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+		module load R/4.2.3
+
+		export MKL_NUM_THREADS=1
+		export OMP_NUM_THREADS=1
+
+		Rscript {params.CODE} \
+			--sumstats {input.SUMS} \
+			--LD_matrix {input.LD_MAT} \
+			--pheno_cov {input.PCOV} \
+			--residual_cov {input.RCOV} \
+			--prior {input.PRIOR} \
+			--w0_null_scale {params.W0_NULL_SCALE} \
+			--mu1_init {input.MU1_INIT} \
+			--n {params.N} \
+			--standardize {params.STD_GENO} \
+			--update_V {params.UPDATE_V} \
+			--update_V_method {params.UPDATE_V_METHOD} \
+			--update_w0 {params.UPDATE_W0} \
+			--update_w0_max_iter {params.UPDATE_W0_MAX_ITER} \
+			--tol {params.TOL} \
+			--ncores {params.CPU} \
+			--seed {params.FOLD} \
+			--output {output}
+
+		module unload R/4.2.3
+		module unload gsl/2.7
+		"""
+
 def generate_file_paths3(config, fold_wildcard):
     base_path = config["WORKDIR"]+"/"+"output/ldpred2_auto_fit/"+config["PREFIX"]+"_chr{CHR}_ldpred2_auto_fit_trait{TRAIT}_{FOLD}.rds"
     chr_values = config["CHR"]
@@ -711,6 +821,70 @@ rule compute_pred_accuracy_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped:
 
 		module unload R/4.2.3
 		"""
+
+def generate_file_paths6(config, fold_wildcard):
+    base_path = config["WORKDIR"]+"/"+"output/mr_mash_rss_fit/"+config["PREFIX"]+"_chr{CHR}_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MASH_MU1_INIT_METHOD"]+"_init_prior_finemapped_mash_weights_fit_{FOLD}.rds"
+    chr_values = config["CHR"]
+    file_paths = []
+    
+    for chr_value in chr_values:
+        file_path = base_path.replace("{CHR}", chr_value).replace("{FOLD}", fold_wildcard)
+        file_paths.append(file_path)
+    
+    return file_paths
+
+all_file_paths6 = {fold: generate_file_paths6(config, fold) for fold in config["FOLD"]}
+
+rule compute_pred_accuracy_mrmashrss_sparse_LD_V_all_chr_init_prior_finemapped_mash_weights:
+	input:
+		LIST=lambda wildcards: all_file_paths6[wildcards.FOLD],
+		SAMP=config["UKB_RESOURCES"]+"/"+"genotypes/imputed/ukb22828_c1_b0_v3_s487271.sample",
+		ID_KEEP=config["WORKDIR"]+"/"+"data/misc/ukb_cleaned_ot_ind_ids.txt",
+		PHENO=config["WORKDIR"]+"/"+"data/phenotypes/ukb_cleaned_ot_adjusted_pheno_test_{FOLD}.rds",
+		GENO=config["BACK_FILES_LOCATION"]+"/"+config["PREFIX"]+"_geno_imp_HM3.rds"
+	output:
+		EFF=config["WORKDIR"]+"/"+"output/estimated_effects/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MASH_MU1_INIT_METHOD"]+"_init_prior_finemapped_mash_weights_effects_{FOLD}.rds",
+		ACC=config["WORKDIR"]+"/"+"output/prediction_accuracy/"+config["PREFIX"]+"_mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MASH_MU1_INIT_METHOD"]+"_init_prior_finemapped_mash_weights_pred_acc_{FOLD}.rds"
+	params:
+		CODE=config["CODE"]+"/"+"compute_prediction_accuracy_ot_ukb.R",
+		MF_DIR=config["WORKDIR"]+"/"+"output/mr_mash_rss_fit/",
+		MOD="mr_mash_rss_sparse_LD_V_all_chr_"+config["MRMASHRSS_MASH_MU1_INIT_METHOD"]+"_init_prior_finemapped_mash_weights",
+		CHR_RANGE=config["CHR_RANGE"],
+		TRAIT_RANGE=config["TRAIT_RANGE"],
+		IMP_MISSING=config["IMPUTE_MISSING"],
+		PREFIX=config["PREFIX"],
+		CPU="8",
+		FOLD="{FOLD}"
+	resources: cpus=8, mem_mb=50000, time_min=360
+	shell:
+		"""
+		source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+		module load R/4.2.3
+
+		export MKL_NUM_THREADS=1
+
+		Rscript {params.CODE} \
+			--model {params.MOD} \
+			--model_fit_dir {params.MF_DIR} \
+			--pheno {input.PHENO} \
+			--geno {input.GENO} \
+			--sample_file {input.SAMP} \
+			--samples_to_keep {input.ID_KEEP} \
+			--chr {params.CHR_RANGE} \
+			--trait {params.TRAIT_RANGE} \
+			--impute_missing {params.IMP_MISSING} \
+			--output_eff {output.EFF} \
+			--output_pred_acc {output.ACC} \
+			--prefix {params.PREFIX} \
+			--fold {params.FOLD} \
+			--ncores {params.CPU}
+
+		module unload R/4.2.3
+		"""
+
+
+
+
 
 #rule template:
 #	input:
