@@ -39,7 +39,7 @@ p_external_LD <- ggplot(res_external_LD, aes(x = trait, y = score, fill = method
 #print(p_external_LD)
 
 ###Fig S1
-ggsave("../analysis/paper_figures/FigS1.pdf", plot=p_external_LD, device="pdf", units="in", height=5, width=8)
+ggsave("../analysis/paper_figures/FigS1.eps", plot=p_external_LD, device="eps", units="in", height=5, width=8)
 
 
 
@@ -111,7 +111,7 @@ p_1 <- plot_grid(p_missing_pheno_02 + theme(legend.position="none"),
 
 p_1 <- plot_grid(p_1, legend_1, ncol = 1, rel_heights = c(1, .1))
 
-ggsave("../analysis/paper_figures/FigS2.pdf", plot=p_1, device="pdf", units="in", height=5, width=11)
+ggsave("../analysis/paper_figures/FigS2.eps", plot=p_1, device="eps", units="in", height=5, width=11)
 
 
 

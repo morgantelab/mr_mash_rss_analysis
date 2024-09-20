@@ -184,7 +184,7 @@ p_1 <- plot_grid(p_equal_effects + theme(legend.position="none"),
 
 p_1 <- plot_grid(p_1, legend_1, ncol = 1, rel_heights = c(1, .1))
 
-ggsave("../analysis/paper_figures/Fig1.pdf", plot=p_1, device="pdf", units="in", height=5, width=11)
+ggsave("../analysis/paper_figures/Fig1.eps", plot=p_1, device="eps", units="in", height=5, width=11)
 
 ###Figure 2
 #Extract legend
@@ -206,6 +206,6 @@ p_2 <- plot_grid(p_low_h2g + theme(legend.position="none"),
 )
 
 p_2 <- plot_grid(p_2, legend_2, ncol = 1, rel_heights = c(1, .1))
-ggsave("../analysis/paper_figures/Fig2.pdf", plot=p_2, device="pdf", units="in", height=5, width=11)
+ggsave("../analysis/paper_figures/Fig2.eps", plot=p_2, device="eps", units="in", height=5, width=11)
 
 

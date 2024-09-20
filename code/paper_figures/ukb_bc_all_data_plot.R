@@ -38,7 +38,7 @@ p_3 <- ggplot(res_full, aes(x = trait, y = score, fill = method)) +
 
 #print(p_3)
 
-ggsave("../analysis/paper_figures/Fig3.pdf", plot=p_3, device="pdf", units="in", height=9, width=11)
+ggsave("../analysis/paper_figures/Fig3.eps", plot=p_3, device="eps", units="in", height=9, width=11)
 
 ###Percentage increase in R2 vs h2g
 h2_dat <- readRDS("../output/paper_figures_intermediate_data/ukb_bc_full_data_h2.rds")
@@ -81,7 +81,7 @@ p_4 <- plot_grid(p_LDpred2, p_bayesR,
 
 #print(p_4)
 
-ggsave("../analysis/paper_figures/Fig4.pdf", plot=p_4, device="pdf", units="in", height=5, width=11)
+ggsave("../analysis/paper_figures/Fig4.eps", plot=p_4, device="eps", units="in", height=5, width=11)
 
 ###Sampled data
 res_sampled <- readRDS("../output/paper_figures_intermediate_data/ukb_bc_sampled_data.rds")
@@ -112,4 +112,4 @@ p_5 <- ggplot(res_sampled, aes(x = trait, y = score, fill = method)) +
 
 #print(p_5)
 
-ggsave("../analysis/paper_figures/Fig5.pdf", plot=p_5, device="pdf", units="in", height=9, width=11)
+ggsave("../analysis/paper_figures/Fig5.eps", plot=p_5, device="eps", units="in", height=9, width=11)

@@ -31,5 +31,5 @@ p <- ggplot(res_full, aes(x = trait, y = score, fill = method)) +
 
 #print(p)
 
-ggsave("../analysis/paper_figures/FigS3.pdf", plot=p, device="pdf", units="in", height=9, width=11)
+ggsave("../analysis/paper_figures/FigS3.eps", plot=p, device="eps", units="in", height=9, width=11)
 
